@@ -1,0 +1,28 @@
+<header>
+    <div class="header_container">
+        <h1 class="h_logo">
+            par3
+        </h1>
+        <nav class="h_nav">
+            <ul class="h_nav_list">
+                <li class="nav_lists n_info">정보</li>
+                <li class="nav_lists n_community">게시판</li>
+                <li class="nav_lists n_join">골프조인</li>
+                <li class="nav_lists n_shop">구매</li>
+                <li class="nav_lists membership">멤버십</li>
+            </ul>
+            {% if g.user %}
+            <div class="my_page">
+                mypage
+            </div>
+            <div class="h_logout_bt">
+                logout
+            </div>
+            {% else %}
+            <div class="h_login_bt">
+                login
+            </div>
+            {% endif %}
+        </nav>
+    </div>
+</header>
