@@ -10,5 +10,4 @@ class User(db.Model):
     username = db.Column(db.String(20), nullable=False)
     phonenumber = db.Column(db.String(20), unique=True, nullable=False)
     user_sex = db.Column(db.String(1), nullable=False)
-    experience_years = db.Column(db.String(1), nullable=True)
-    created_at = db.Column(db.DateTime(), nullable=False, default=datetime.now)
+    experience_years = db.Column(db.Integer, nullable=False)

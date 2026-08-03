@@ -15,7 +15,11 @@ class UserCreateForm(FlaskForm):
             )
         ]
     )
-    username = StringField('이름', validators=[DataRequired('이름을 입력해주세요.'), Length(max=20, message='20자 이내로 입력해주세요.')])
+    username = StringField('이름', validators=[
+        DataRequired('이름을 입력해주세요.'), 
+        Length(max=20, message='20자 이내로 입력해주세요.'),
+        Regexp(r'^[가-힣A-Za-z]+$', message='이름은 한글 또는 영문만 입력할 수 있습니다.')
+        ])
     nickname = StringField('닉네임', validators=[DataRequired('닉네임을 입력해주세요.'), Length(min=2, max=20, message='2~20자 이내로 입력해주세요.')])
     password1 = PasswordField('비밀번호', validators=[
         DataRequired(message='비밀번호를 입력해주세요.'),
@@ -43,7 +47,7 @@ class UserCreateForm(FlaskForm):
         ('F', '여성')
     ], validators=[DataRequired()])
     experience_years = SelectField('구력', choices=[
-        ("", '선택하세요.')
+        ("", '선택하세요.'),
         ('0', '1년 이하'),
         ('1', '1년 ~ 2년'),
         ('2', '2년 ~ 5년'),
