@@ -15,4 +15,5 @@ class UserCreateForm(FlaskForm):
             message='비밀번호는 영문, 숫자, 특수기호를 모두 포함해야 합니다.'
         )
     ])
-    password2 = 
+    password2 = PasswordField('비밀번호 확인', validators=[DataRequired()])
+    email = EmailField('이메일', validators=[DataRequired(), Email()])
