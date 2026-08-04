@@ -27,8 +27,9 @@ def create_app():
     migrate.init_app(app, db)
 
     # 블루프린트 등록
-    from .views import main_views
+    from .views import main_views, join_views
     app.register_blueprint(main_views.bp)
+    app.register_blueprint(join_views.bp)
 
     # 필터 등록
 

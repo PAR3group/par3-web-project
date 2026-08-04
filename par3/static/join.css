@@ -1,0 +1,166 @@
+/* ============================================
+   join.css
+   PAR3 - JOIN (실시간 골프 조인 리스트) 페이지 전용 스타일
+   연결 파일: templates/join.html
+   작성자: 오지 (feature/join-page)
+   ============================================ */
+
+/* ===== 공통 리셋 ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Pretendard', -apple-system, sans-serif; background: #fff; color: #333; }
+
+/* ===== p_join : 페이지 전체 wrapper =====
+   join.html의 최상단 <div class="p_join"> 에 적용됨 */
+.p_join { max-width: 1160px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* ===== j_head : 페이지 상단 타이틀 영역 =====
+   "⛳ JOIN" 제목이 들어가는 부분 */
+.j_head { margin-bottom: 20px; }
+.j_title {
+  font-size: 22px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== j_filter : 지역별 선택 + 검색창 영역 =====
+   드롭다운(j_filter_select) + 검색 인풋(j_filter_search) */
+.j_filter {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.j_filter_select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border-right: 1px solid #ddd;
+  background: #fafafa;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.j_filter_select_text { font-size: 14px; color: #333; }
+
+/* 드롭다운 화살표 아이콘 (CSS로 그린 화살표, 이미지 아님) */
+.j_filter_select_icon {
+  width: 10px;
+  height: 10px;
+  border: solid #888;
+  border-width: 0 1.5px 1.5px 0;
+  display: inline-block;
+  padding: 2px;
+  transform: rotate(45deg);
+  transition: transform 0.2s;
+}
+.j_filter_search {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+/* ===== j_tabs : 전체 / 날짜순 / 가격순 정렬 탭 =====
+   .j_tab--active 로 현재 선택된 탭 표시
+   ⚠️ 나중에 JS 연결 시: 클릭한 탭에 active 클래스 토글하는 로직 필요 */
+.j_tabs {
+  display: flex;
+  gap: 8px;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 24px;
+}
+.j_tab {
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #888;
+  cursor: pointer;
+  background: transparent;
+}
+.j_tab--active {
+  background: #4CAF50;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ===== j_table : 조인 리스트 테이블 =====
+   join.html의 {% for %} 반복문으로 jt_row 가 여러 개 생성됨
+   ⚠️ DB 연동 시: jt_row 안 값들을 {{ join.xxx }} 형태로 교체 예정 */
+.j_table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* 테이블 헤더 (라운드 일정 / 골프장 / 코스 / 내용 등) */
+.jt_head {
+  border-bottom: 2px solid #1a2e22;
+}
+.jt_th {
+  text-align: center;
+  padding: 12px 8px;
+  font-size: 13px;
+  color: #666;
+  font-weight: 600;
+}
+
+/* 테이블 한 줄(row) 공통 스타일 */
+.jt_row {
+  border-bottom: 1px solid #eee;
+}
+.jt_row td {
+  text-align: center;
+  padding: 16px 8px;
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+/* 라운드 일정 날짜 */
+.jt_date { color: #333; }
+
+/* 골프장명 + 코스/시간 서브텍스트 */
+.jt_course_name { font-weight: 600; font-size: 13px; }
+.jt_course_sub { font-size: 12px; color: #888; margin-top: 2px; }
+
+/* 내용 (가격, 인원 조건 텍스트) */
+.jt_content { color: #333; }
+
+/* 참여 조건 (무관/성별/인원수 등) */
+.jt_condition { color: #555; }
+
+/* 참가자 아바타 목록 - 겹쳐서 표시되는 원형 아이콘들
+   ⚠️ 지금은 빈 원(더미)이고, 실제 프로필 이미지 연동은 추후 작업 */
+.jt_participants { display: flex; justify-content: center; }
+.jt_avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #222;
+  margin-left: -8px;
+  border: 1.5px solid #fff;
+}
+.jt_avatar:first-child { margin-left: 0; }
+
+/* 작성자명 */
+.jt_writer { color: #333; }
+
+/* 참여하기 버튼 - <a> 태그로 구현 (/join/{id} 링크 연결)
+   ⚠️ views에서 /join/<id> 라우트 만들어야 정상 작동 */
+.jt_join_bt {
+  background: #1a2e22;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 4px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+.jt_join_bt:hover { background: #2b4536; }

@@ -1,0 +1,121 @@
+/* ============================================
+   join_create.css
+   PAR3 - JOIN CREATE (조인 개설/모집폼) 페이지 전용 스타일
+   연결 파일: templates/join_create.html
+   작성자: 오지 (feature/join-page)
+
+   ⚠️ 참고: g_form 관련 클래스는 p_join_apply(참가 신청폼)와
+   공통으로 쓰는 전역 컴포넌트입니다. 나중에 join_apply.css
+   만들 때 이 부분(g_form ~) 그대로 재사용하시면 돼요.
+   ============================================ */
+
+/* ===== p_join_create : 페이지 전체 wrapper ===== */
+.p_join_create { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* ===== jc_head : 페이지 상단 타이틀 영역 ===== */
+.jc_head { margin-bottom: 8px; }
+.jc_title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 24px 0 16px;
+}
+
+/* ============================================
+   g_form : 공통 폼 컴포넌트 (전역 재사용)
+   p_join_create, p_join_apply 둘 다 여기서 스타일 가져다 씀
+   ============================================ */
+
+/* 폼 섹션 하나 단위 (기본정보/비용/상세 등) */
+.g_form_section {
+  margin-bottom: 24px;
+}
+
+/* 섹션 제목 (초록 바) */
+.g_form_section_title {
+  background: #6b8f76;
+  color: #fff;
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* 필드 한 줄 (라벨 + 입력값) */
+.g_form_row {
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+/* 라벨 영역 (예: "골프장 선택") */
+.g_form_label {
+  width: 160px;
+  flex-shrink: 0;
+  background: #d8e3dc;
+  padding: 12px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+}
+
+/* 입력 영역 공통 */
+.g_form_input {
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+}
+
+/* 텍스트/날짜/시간 인풋 - 테두리 없이 라인 안에 자연스럽게 */
+.g_form_input--text,
+.g_form_input--date,
+.g_form_input--time {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* 라디오 버튼 그룹 (모집 인원, 성별 조건 등) - 가로 나열 */
+.g_form_input--radio {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.g_form_input--radio label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+/* 여러 줄 텍스트 (상세 내용) */
+.g_form_input--textarea {
+  width: 100%;
+  min-height: 80px;
+  border: none;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+/* 체크박스 그룹 (join_apply에서 쓸 예정) */
+.g_form_input--checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ===== jc_submit_bt : CREATE 버튼 ===== */
+.jc_submit_bt {
+  display: block;
+  margin: 24px auto 0;
+  background: #1a2e22;
+  color: #fff;
+  padding: 10px 32px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+}
+.jc_submit_bt:hover { background: #2b4536; }
