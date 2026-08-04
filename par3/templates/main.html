@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3
+{% endblock %}
+
+{% block content %}
+<div class="m_wrap">
+    <section class="m_banner_section">
+        <div class="m_banner">
+            <div class="mb_bg">
+                <div class="mb_text">
+                    <h2 class="mb_text_title">PLAY.</h2>
+                    <h2 class="mb_text_title">SHARE.</h2>
+                    <h2 class="mb_text_title">CONNECT</h2>
+                    <h3 class="mb_text_sub">골프의 모든 정보와 사람을 연결하는 플랫폼, PAR3</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="m_news_section">
+        <div class="m_news_container">
+            <h3>- GOLF NEWS</h3>
+            <div class="m_news_list">
+
+                <article class="m_news_card">
+                    <div class="m_news_rank">
+                        <h4 class="m_news_c_title">LPGA 상금순위</h4>
+                        <p class="m_news_c_rank">1위 김민솔</p>
+                        <p class="m_news_c_value">9,999,999</p>
+                        <a href="#" class="more_view_bt">더보기-></a>
+                    </div>
+                </article>
+
+                <article class="m_news_card">
+                    <div class="m_news_driver">
+                        <h4 class="m_news_c_title">LPGA 드라이버 비거리</h4>
+                        <p class="m_news_c_rank">1위 김민솔</p>
+                        <p class="m_news_c_value">9,999,999 Y</p>
+                        <a href="#" class="more_view_bt">더보기-></a>
+                    </div>
+                </article>
+
+                <article class="m_news_card">
+                    <div class="m_news_tournament">
+                        <h4 class="m_news_c_title">대회 정보</h4>
+                        <p class="m_news_c_rank">제네시스투어</p>
+                        <p class="m_news_c_value">9월9일(목) ~ 9월12일(일)</p>
+                        <p class="m_news_c_place">남서울CC</p>
+                        <a href="#" class="more_view_bt">더보기-></a>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="m_content_section">
+        <div class="m_content_container">
+
+            <article class="m_community_card">
+                <h3 class="m_content_title">커뮤니티</h3>
+                <a href="#" class="more_view_bt">더보기-></a>
+
+                {% for %}
+                <div class="m_community_list">
+                    <img src="" alt="">
+                    <h4>신상후긱ㄱ</h4>
+                    <p>완전좋아</p>
+                    <p>현준이 <span>작성시간</span></p>
+                    <p>
+                        <img src="" alt="">999 <img src="" alt="">999
+                    </p>
+                </div>
+                {% endfor %}
+
+            </article>
+
+            <article class="fitting_card">
+                <p>어떤클럽?</p>
+                <h3 class="m_community_list">PAR3 FITTING ZONE</h3>
+                <button>추천받으러가기</button>
+            </article>
+
+            <article class="join_card">
+                <h3 class="m_content_title">실시간 골프 조인</h3>
+                <a href="#" class="more_view_bt">더보기-></a>
+
+                {% for %}
+                <div class="m_join_list">
+                    <img src="" alt="">
+                    <p>남서울CC</p>
+                    <p>07.09(금)</p>
+                    <p>3/4명</p>
+                    <p>남성, 1인</p>
+                    <button>참여하기</button>
+                </div>
+                {% endfor %}
+
+            </article>
+
+            <article class="m_shop_card">
+                <h3 class="m_content_title">par3 shop</h3>
+                <a href="#" class="more_view_bt">더보기-></a>
+                <div class="shop_product_container">
+                    
+                    {% for %}
+                    <div class="shop_product_card">
+                        <img src="" alt="">
+                        <p>QI-10 드라이버</p>
+                        <p>800,000원</p>
+                        <a href="#">바로 구매하기</a>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </article>
+
+        </div>
+    </section>
+</div>
+{% endblock %}
