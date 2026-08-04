@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="POST">
+
+    {{ form.hidden_tag() }}
+
+    <!-- 기본 정보 -->
+
+    {{ form.gender.label }}
+    {{ form.gender }}
+
+    {{ form.user_height.label }}
+    {{ form.user_height }}
+
+    {{ form.user_weight.label }}
+    {{ form.user_weight }}
+
+    {{ form.distance_unit.label }}
+    {{ form.distance_unit }}
+
+    {{ form.speed_unit.label }}
+    {{ form.speed_unit }}
+
+    {{ form.swing_speed.label }}
+    {{ form.swing_speed }}
+
+    <hr>
+
+    <!-- 드라이버 -->
+
+    {{ form.driver_selected }}
+    {{ form.driver_selected.label }}
+
+    <div id="driver-box">
+        {{ form.driver_distance.label }}
+        {{ form.driver_distance }}
+    </div>
+
+    <hr>
+
+    <!-- 우드 -->
+
+    {{ form.wood5_selected }}
+    {{ form.wood5_selected.label }}
+
+    <div id="wood-box">
+        {{ form.wood5_distance.label }}
+        {{ form.wood5_distance }}
+    </div>
+
+    <hr>
+
+    <!-- 유틸 -->
+
+    {{ form.utility4_selected }}
+    {{ form.utility4_selected.label }}
+
+    <div id="utility-box">
+        {{ form.utility4_distance.label }}
+        {{ form.utility4_distance }}
+    </div>
+
+    <hr>
+
+    <!-- 아이언 -->
+
+    {{ form.iron7_selected }}
+    {{ form.iron7_selected.label }}
+
+    <div id="iron-box">
+        {{ form.iron7_distance.label }}
+        {{ form.iron7_distance }}
+    </div>
+
+    <br>
+
+    {{ form.submit }}
+
+</form>
+
+{% if result %}
+
+<h2>추천 결과</h2>
+
+{% if result.driver %}
+<p>드라이버 : {{ result.driver }}g / {{ flex }}</p>
+{% endif %}
+
+{% if result.wood5 %}
+<p>5번 우드 : {{ result.wood5 }}g / {{ flex }}</p>
+{% endif %}
+
+{% if result.utility4 %}
+<p>4번 유틸 : {{ result.utility4 }}g / {{ flex }}</p>
+{% endif %}
+
+{% if result.iron7 %}
+<p>7번 아이언 : {{ result.iron7 }}g / {{ flex }}</p>
+{% endif %}
+
+{% endif %}
+{% endblock %}

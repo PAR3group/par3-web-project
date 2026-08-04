@@ -1,10 +1,7 @@
 # app.py
-from flask import Flask
-app = Flask(__name__)
+from par3 import create_app
 
-@app.route('/')
-def home():
-    return "Hello, Flask Team Project!"
+app = create_app()
 
 if __name__ == '__main__':
     app.run(debug=True)
