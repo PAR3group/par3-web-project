@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAR3 - TALK</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { color: #333; font-family: 'Pretendard', sans-serif; display: flex; justify-content: center; padding: 0; }
+
+         /* 1. 전체 컨테이너 (흰색/검은색 네모 라인) */
+        .container { width: 1440px; background-color: #fff; border: 2px solid #fff; }
+
+        /* GNB (상단 헤더) */
+        header { background-color: #0d170f; color: #fff; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; }
+        .logo { font-size: 28px; font-weight: bold; color: #6ee7b7; }
+        .nav-btns { display: flex; gap: 10px; }
+        .nav-btn { background: #1a231c; color: #fff; padding: 6px 12px; cursor: pointer; font-size: 13px; }
+
+         /* 메인 레이아웃 (좌측 콘텐츠 + 우측 사이드바) */
+        .main-wrapper { display: flex; padding: 20px; gap: 20px; }
+        .left-content { flex: 1; }
+        .right-sidebar { width: 280px; display: flex; flex-direction: column; gap: 15px; }
+
+         /* 2. TALK 라인 & 검색어 라인 */
+        .talk-header { padding: 15px; border-radius: 4px; margin-bottom: 15px; }
+        .talk-header h2 { font-size: 20px; margin-bottom: 4px; }
+        .talk-header p { font-size: 13px; color: #666; }
+
+        .search-bar { padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px;}
+        .search-bar input { border: none; background: transparent; width: 80%; outline: none; font-size: 15px; }
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 상단 헤더 -->
+    <header>
+        <div class="logo">PAR3</div>
+        <div class="nav-btns">
+            <button class="nav-btn">🏠 HOME</button>
+            <button class="nav-btn">⛳ JOIN</button>
+            <button class="nav-btn">🛒 DROP</button>
+            <button class="nav-btn">🏌️ MY</button>
+        </div>
+    </header>
+
+    <div class="main-wrapper">
+        <!-- 좌측 콘텐츠 영역 -->
+        <main class="left-content">
+            <!-- TALK 회색 라인 -->
+            <div class="talk-header">
+                <h2>💬 TALK</h2>
+                <p>자유로운 노하우와 이야기를 나누는 공간</p>
+            </div>
+
+            <!-- 검색어 회색 라인 -->
+            <div class="search-bar">
+                <input type="text" placeholder="PAR3 TALK SEARCH" name="keyword">
+                <button type="submit" class="search_btn">
+                    <img src="#" alt="검색">
+                </button>
+            </div>
+
+            <!-- 카테고리 & 글쓰기 (노란/아이보리 라인) -->
+            <div class="category-container">
+                <div class="tabs">
+                    <div class="tab-item active">전체</div>
+                    <div class="tab-item">필드후기</div>
+                    <div class="tab-item">장비추천</div>
+                    <div class="tab-item">Q & A</div>
+                    <div class="tab-item">골프팁</div>
+                    <div class="tab-item">자유톡</div>
+                </div>
+                <button class="btn-write">글쓰기</button>
+            </div>
+
+            <!-- 게시글 아이템 예시 -->
+            <div class="post-card">
+                <div class="badge">필드후기</div>
+                <div class="post-box">
+                    <div class="post-img"></div>
+                    <div class="post-info">
+                        <div class="post-title">신상 드라이버 후기 (내돈내산)</div>
+                        <div class="post-desc">그립감이 ....</div>
+                        <div class="post-meta">골프치는 명훈이 | 5시간전</div>
+                    </div>
+                </div>
+                <div class="post-stats">
+                    <span class="stat-badge">🔎 999</span>
+                    <span class="stat-badge">💬 999</span>
+                    <span class="stat-badge">👍 999</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- 우측 사이드바 영역 -->
+        <aside class="right-sidebar">
+            <div class="sidebar-card"><h4>NEW</h4></div>
+            <div class="sidebar-card"><h4>대회</h4></div>
+            <div class="sidebar-card"><h4>랭킹</h4></div>
+        </aside>
+    </div>
+</div>
+
+</body>
+</html>
