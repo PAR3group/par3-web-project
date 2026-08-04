@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - JOIN CREATE
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/join_create.css') }}">
+
+<div class="p_join_create">
+
+  <!-- jc_head -->
+  <div class="jc_head">
+    <h1 class="jc_title">⛳ JOIN CREATE FORM</h1>
+  </div>
+
+  <!-- g_form : 공통 폼 wrapper -->
+  <form class="g_form" action="/join/create" method="POST">
+
+    <!-- ===== 섹션 1. 기본 라운드 정보 영역 ===== -->
+    <div class="g_form_section">
+      <div class="g_form_section_title">1. 기본 라운드 정보 영역</div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">골프장 선택</label>
+        <div class="g_form_input">
+          <input type="text" class="g_form_input--text" name="course_name" placeholder="입력 창 또는 검색 버튼">
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">라운드 날짜</label>
+        <div class="g_form_input">
+          <input type="date" class="g_form_input--date" name="round_date">
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">티오프 시간</label>
+        <div class="g_form_input">
+          <input type="time" class="g_form_input--time" name="tee_time">
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">코스 정보</label>
+        <div class="g_form_input">
+          <input type="text" class="g_form_input--text" name="course_info" placeholder="코스 이름이나 메모 입력">
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 섹션 2. 비용 및 인원 조건 영역 ===== -->
+    <div class="g_form_section">
+      <div class="g_form_section_title">2. 비용 및 인원 조건 영역</div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">그린피/캐디피</label>
+        <div class="g_form_input">
+          <input type="text" class="g_form_input--text" name="cost" placeholder="1인 기준 비용">
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">모집 인원</label>
+        <div class="g_form_input g_form_input--radio">
+          <label><input type="radio" name="recruit_count" value="4"> 4인 필수</label>
+          <label><input type="radio" name="recruit_count" value="3"> 3인 1팀</label>
+          <label><input type="radio" name="recruit_count" value="direct"> 직접 입력</label>
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">성별 조건</label>
+        <div class="g_form_input g_form_input--radio">
+          <label><input type="radio" name="gender_condition" value="any" checked> 무관</label>
+          <label><input type="radio" name="gender_condition" value="male"> 남성만</label>
+          <label><input type="radio" name="gender_condition" value="female"> 여성만</label>
+          <label><input type="radio" name="gender_condition" value="couple"> 부부</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 섹션 3. 상세 내용 및 소통 영역 ===== -->
+    <div class="g_form_section">
+      <div class="g_form_section_title">3. 상세 내용 및 소통 영역</div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">제목</label>
+        <div class="g_form_input">
+          <input type="text" class="g_form_input--text" name="title" placeholder="예: 8월 30일 마이다스CC 실크코스 조인 하실 분 구합니다">
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">상세 내용</label>
+        <div class="g_form_input">
+          <textarea class="g_form_input--textarea" name="content" placeholder="매너 좋은 동반자 환영합니다. 실력은 크게 상관없으니 편하게 신청 주세요! (플레이 성향, 카트비/캐디피 분할방식 등 추가 안내 사항 작성 공간)"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <button type="submit" class="jc_submit_bt">CREATE</button>
+
+  </form>
+
+</div>
+{% endblock %}

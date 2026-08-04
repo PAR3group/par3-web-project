@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - JOIN
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/join.css') }}">
+
+<div class="p_join">
+
+  <!-- j_head -->
+  <div class="j_head">
+    <h1 class="j_title">⛳ JOIN</h1>
+  </div>
+
+  <!-- j_filter -->
+  <div class="j_filter">
+    <div class="j_filter_select">
+      <span class="j_filter_select_text">지역별</span>
+      <span class="j_filter_select_icon"></span>
+    </div>
+    <input type="text" class="j_filter_search" placeholder="검색어" />
+  </div>
+
+  <!-- j_tabs -->
+  <div class="j_tabs">
+    <div class="j_tab j_tab--active">전체</div>
+    <div class="j_tab">날짜순</div>
+    <div class="j_tab">가격순</div>
+  </div>
+
+  <!-- j_table -->
+  <table class="j_table">
+    <thead class="jt_head">
+      <tr>
+        <th class="jt_th">라운드 일정</th>
+        <th class="jt_th">골프장</th>
+        <th class="jt_th">코스<br>티오프 시간</th>
+        <th class="jt_th">내용</th>
+        <th class="jt_th">조건<br>인원</th>
+        <th class="jt_th">참가자 현황</th>
+        <th class="jt_th">작성자</th>
+        <th class="jt_th">참여버튼</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="jt_row">
+        <td class="jt_date">2026.08.30</td>
+        <td class="jt_course">
+          <div class="jt_course_name">마이다스CC</div>
+          <div class="jt_course_sub">실크코스<br>11:30</div>
+        </td>
+        <td class="jt_content">[4인필수] 80,000원</td>
+        <td class="jt_condition">무관<br>4인1팀</td>
+        <td>
+          <div class="jt_participants">
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+          </div>
+        </td>
+        <td class="jt_writer">파쓰리</td>
+        <td><a href="/join/1" class="jt_join_bt">참여하기</a></td>
+      </tr>
+      <tr class="jt_row">
+        <td class="jt_date">2026.08.30</td>
+        <td class="jt_course">
+          <div class="jt_course_name">마이다스CC</div>
+          <div class="jt_course_sub">실크코스<br>11:30</div>
+        </td>
+        <td class="jt_content">[4인필수] 80,000원</td>
+        <td class="jt_condition">무관<br>4인1팀</td>
+        <td>
+          <div class="jt_participants">
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+          </div>
+        </td>
+        <td class="jt_writer">파쓰리</td>
+        <td><a href="/join/2" class="jt_join_bt">참여하기</a></td>
+      </tr>
+      <tr class="jt_row">
+        <td class="jt_date">2026.08.30</td>
+        <td class="jt_course">
+          <div class="jt_course_name">마이다스CC</div>
+          <div class="jt_course_sub">실크코스<br>11:30</div>
+        </td>
+        <td class="jt_content">[4인필수] 80,000원</td>
+        <td class="jt_condition">무관<br>4인1팀</td>
+        <td>
+          <div class="jt_participants">
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+          </div>
+        </td>
+        <td class="jt_writer">파쓰리</td>
+        <td><a href="/join/3" class="jt_join_bt">참여하기</a></td>
+      </tr>
+      <tr class="jt_row">
+        <td class="jt_date">2026.08.30</td>
+        <td class="jt_course">
+          <div class="jt_course_name">마이다스CC</div>
+          <div class="jt_course_sub">실크코스<br>11:30</div>
+        </td>
+        <td class="jt_content">[4인필수] 80,000원</td>
+        <td class="jt_condition">무관<br>4인1팀</td>
+        <td>
+          <div class="jt_participants">
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+          </div>
+        </td>
+        <td class="jt_writer">파쓰리</td>
+        <td><a href="/join/4" class="jt_join_bt">참여하기</a></td>
+      </tr>
+      <tr class="jt_row">
+        <td class="jt_date">2026.08.30</td>
+        <td class="jt_course">
+          <div class="jt_course_name">마이다스CC</div>
+          <div class="jt_course_sub">실크코스<br>11:30</div>
+        </td>
+        <td class="jt_content">[4인필수] 80,000원</td>
+        <td class="jt_condition">무관<br>4인1팀</td>
+        <td>
+          <div class="jt_participants">
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+          </div>
+        </td>
+        <td class="jt_writer">파쓰리</td>
+        <td><a href="/join/5" class="jt_join_bt">참여하기</a></td>
+      </tr>
+      <tr class="jt_row">
+        <td class="jt_date">2026.08.30</td>
+        <td class="jt_course">
+          <div class="jt_course_name">마이다스CC</div>
+          <div class="jt_course_sub">실크코스<br>11:30</div>
+        </td>
+        <td class="jt_content">[4인필수] 80,000원</td>
+        <td class="jt_condition">무관<br>4인1팀</td>
+        <td>
+          <div class="jt_participants">
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+          </div>
+        </td>
+        <td class="jt_writer">파쓰리</td>
+        <td><a href="/join/6" class="jt_join_bt">참여하기</a></td>
+      </tr>
+      <tr class="jt_row">
+        <td class="jt_date">2026.08.30</td>
+        <td class="jt_course">
+          <div class="jt_course_name">마이다스CC</div>
+          <div class="jt_course_sub">실크코스<br>11:30</div>
+        </td>
+        <td class="jt_content">[4인필수] 80,000원</td>
+        <td class="jt_condition">무관<br>4인1팀</td>
+        <td>
+          <div class="jt_participants">
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+            <span class="jt_avatar"></span>
+          </div>
+        </td>
+        <td class="jt_writer">파쓰리</td>
+        <td><a href="/join/7" class="jt_join_bt">참여하기</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+{% endblock %}
