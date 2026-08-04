@@ -1,6 +1,48 @@
 /* 뉴스카드 부분 */
-.m_news_container{
+.m_news_container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    grid-template-rows: ;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px; /* 카드 사이 간격, 원하는 값으로 조정 */
 }
+
+.m_news_card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.m_news_c_title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.m_news_c_rank {
+    font-size: 14px;
+    color: #333;
+    margin: 4px 0;
+}
+
+.m_news_c_value {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 4px 0;
+}
+
+.m_news_c_place {
+    font-size: 13px;
+    color: #777;
+    margin: 4px 0;
+}
+
+.more_view_bt {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: #0066cc;
+    text-decoration: none;
+}
+
+/* 커뮤니티 부분 카드 */
