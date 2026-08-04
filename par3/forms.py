@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, EmailField, PasswordField, SelectField, BooleanField, RadioField
-from wtforms.validators import DataRequired, Length, EqualTo, Email, Regexp
+from wtforms import FloatField, StringField, EmailField, PasswordField, SelectField, BooleanField, RadioField, IntegerField, SubmitField
+from wtforms.validators import DataRequired, Length, EqualTo, Email, NumberRange, Optional, Regexp
 
 
 class UserCreateForm(FlaskForm):
@@ -53,3 +53,85 @@ class UserCreateForm(FlaskForm):
         ('2', '2년 ~ 5년'),
         ('3', '5년 이상')
     ], validators=[DataRequired('구력을 선택해주세요.')])
+
+class RecommendForm(FlaskForm):
+
+    # 기본 정보
+    gender = SelectField(
+        "성별",
+        choices=[
+            ("male", "남성"),
+            ("female", "여성")
+        ],
+        validators=[DataRequired()]
+    )
+
+    user_height = IntegerField(
+        "키(cm)",
+        validators=[
+            DataRequired(),
+            NumberRange(min=100, max=250)
+        ]
+    )
+
+    user_weight = IntegerField(
+        "몸무게(kg)",
+        validators=[
+            DataRequired(),
+            NumberRange(min=30, max=200)
+        ]
+    )
+
+    # 단위
+    distance_unit = SelectField(
+        "비거리 단위",
+        choices=[
+            ("m", "미터(m)"),
+            ("yd", "야드(yd)")
+        ],
+        validators=[DataRequired()]
+    )
+
+    speed_unit = SelectField(
+        "스윙스피드 단위",
+        choices=[
+            ("ms", "m/s"),
+            ("mph", "mph")
+        ],
+        validators=[Optional()]
+    )
+
+    # 스윙스피드(선택)
+    swing_speed = FloatField(
+        "드라이버 스윙스피드",
+        validators=[Optional()]
+    )
+
+    # 추천받을 클럽 선택
+    driver_selected = BooleanField("드라이버")
+    wood5_selected = BooleanField("5번 우드")
+    utility4_selected = BooleanField("4번 유틸")
+    iron7_selected = BooleanField("7번 아이언")
+
+    # 목표 비거리
+    driver_distance = IntegerField(
+        "드라이버 목표 비거리",
+        validators=[Optional()]
+    )
+
+    wood5_distance = IntegerField(
+        "5번 우드 목표 비거리",
+        validators=[Optional()]
+    )
+
+    utility4_distance = IntegerField(
+        "4번 유틸 목표 비거리",
+        validators=[Optional()]
+    )
+
+    iron7_distance = IntegerField(
+        "7번 아이언 목표 비거리",
+        validators=[Optional()]
+    )
+
+    submit = SubmitField("추천받기")    
