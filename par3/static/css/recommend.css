@@ -1,0 +1,337 @@
+.rc_wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 860px) {
+    .rc_wrap {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ===== 공통 패널 ===== */
+.rc_form_panel,
+.rc_result_panel {
+    background: #f7f7f7;
+    border-radius: 12px;
+    padding: 28px;
+}
+
+.rc_form_title,
+.rc_result_title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.rc_form_sub,
+.rc_result_sub {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+/* ===== 좌측 폼: 섹션 ===== */
+.rc_section {
+    margin-bottom: 20px;
+}
+
+.rc_section_title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.rc_section_hint {
+    font-size: 12px;
+    font-weight: 400;
+    color: #888;
+}
+
+.rc_divider {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 24px 0;
+}
+
+/* ===== 좌측 폼: 필드 공통 ===== */
+.rc_field {
+    margin-bottom: 16px;
+}
+
+.rc_field--inline {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.rc_label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.rc_input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background: #fff;
+}
+
+.rc_input--small {
+    max-width: 140px;
+}
+
+.rc_radio_group {
+    display: flex;
+    gap: 14px;
+    font-size: 13px;
+}
+
+.rc_speed_row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* 숫자 입력 스핀 버튼(증가/감소 화살표) 제거 */
+.rc_form_panel input[type="number"]::-webkit-outer-spin-button,
+.rc_form_panel input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.rc_form_panel input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+/* 스윙스피드 모르겠어요 체크박스 */
+.rc_speed_unknown {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
+}
+
+.rc_input--small:disabled {
+    background: #eee;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+/* ===== 클럽 선택 체크박스 ===== */
+.rc_club_checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 14px;
+}
+
+.rc_club_check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+/* ===== 목표 비거리 박스 - 기본 숨김, JS로 토글 ===== */
+.rc_distance_grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.rc_distance_box {
+    display: none;
+}
+
+.rc_distance_box.rc_distance_box--active {
+    display: block;
+}
+
+.rc_input--unit {
+    max-width: 160px;
+}
+
+/* ===== 제출 버튼 ===== */
+.rc_submit_bt {
+    width: 100%;
+    padding: 14px;
+    background: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.rc_submit_bt:hover {
+    background: #3d9142;
+}
+
+/* ===== 우측 결과: placeholder ===== */
+.rc_result_placeholder {
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 14px;
+    background: #fff;
+    border: 1px dashed #ddd;
+    border-radius: 8px;
+}
+
+/* ===== 우측 결과: 카드 ===== */
+.rc_result_cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+}
+
+.rc_result_card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+}
+
+.rc_card_label {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.rc_card_img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #e9e9e9;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.rc_card_img img{
+    width: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.rc_card_sub {
+    font-size: 11px;
+    color: #999;
+    margin: 6px 0 2px;
+}
+
+.rc_card_value {
+    font-size: 28px;
+    font-weight: 800;
+    color: #4CAF50;
+}
+
+.rc_card_flex {
+    display: inline-block;
+    margin-top: 6px;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    border-radius: 50%;
+    border: 1.5px solid #4CAF50;
+    color: #4CAF50;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* ===== 계산 근거 / 안내사항 / 클럽구매 박스 ===== */
+.rc_info_box {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 18px;
+    margin-top: 16px;
+}
+
+.rc_info_title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.rc_info_text {
+    font-size: 12px;
+    color: #777;
+    line-height: 1.6;
+}
+
+/* 클럽 구매 카드 - main page shop 카드와 동일한 톤 */
+.rc_shop_cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+}
+
+@media (max-width: 500px) {
+    .rc_shop_cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.rc_shop_card {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rc_shop_card img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.rc_shop_card p:first-of-type {
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.rc_shop_price {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.rc_shop_card a {
+    font-size: 11px;
+    color: #888;
+    text-decoration: none;
+}
+
+.rc_shop_card a:hover {
+    color: #333;
+}
+
+/* ===== 다시하기 버튼 ===== */
+.rc_reset_bt {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #555;
+    text-decoration: none;
+}
