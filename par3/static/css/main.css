@@ -1,0 +1,6 @@
+/* 뉴스카드 부분 */
+.m_news_container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-rows: ;
+}

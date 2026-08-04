@@ -11,3 +11,17 @@ class User(db.Model):
     phonenumber = db.Column(db.String(20), unique=True, nullable=False)
     user_sex = db.Column(db.String(1), nullable=False)
     experience_years = db.Column(db.Integer, nullable=False)
+
+class ShaftRecommend(db.Model):
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
+    driver_weight = db.Column(db.Integer)
+    wood5_weight = db.Column(db.Integer)
+    utility4_weight = db.Column(db.Integer)
+    iron7_weight = db.Column(db.Integer)
+    driver_flex = db.Column(db.String(5))
