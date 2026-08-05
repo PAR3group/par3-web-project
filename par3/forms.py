@@ -53,6 +53,16 @@ class UserCreateForm(FlaskForm):
         ('2', '2년 ~ 5년'),
         ('3', '5년 이상')
     ], validators=[DataRequired('구력을 선택해주세요.')])
+    agree_all = BooleanField('전체 약관 동의하기')  # JS로만 동작 (DB 저장 X)
+    agree_service = BooleanField(
+        '[필수] 서비스 이용약관 동의',
+        validators=[DataRequired(message='서비스 이용약관에 동의해주세요.')]
+    )
+    agree_privacy = BooleanField(
+        '[필수] 개인정보 수집 및 이용 동의',
+        validators=[DataRequired(message='개인정보 수집 및 이용에 동의해주세요.')]
+    )
+    agree_marketing = BooleanField('[선택] 마케팅 정보 수신 동의')
 
 class RecommendForm(FlaskForm):
 
@@ -71,7 +81,8 @@ class RecommendForm(FlaskForm):
         validators=[
             DataRequired(),
             NumberRange(min=100, max=250)
-        ]
+            ],
+            render_kw={"min": 100, "max": 250, "placeholder": "예: 175"}
     )
 
     user_weight = IntegerField(
@@ -79,7 +90,8 @@ class RecommendForm(FlaskForm):
         validators=[
             DataRequired(),
             NumberRange(min=30, max=200)
-        ]
+        ],
+        render_kw={"min": 30, "max": 200, "placeholder": "예: 70"}
     )
 
     # 단위
@@ -104,8 +116,12 @@ class RecommendForm(FlaskForm):
     # 스윙스피드(선택)
     swing_speed = FloatField(
         "드라이버 스윙스피드",
-        validators=[Optional()]
+        validators=[Optional()],
+        render_kw={"type": "number", "placeholder": "숫자만 작성" }
     )
+
+    #  스윙스피드를 모르는 경우
+    swing_speed_unknown = BooleanField("스윙스피드를 모르겠어요")
 
     # 추천받을 클럽 선택
     driver_selected = BooleanField("드라이버")
@@ -135,3 +151,16 @@ class RecommendForm(FlaskForm):
     )
 
     submit = SubmitField("추천받기")    
+
+class UserLoginForm(FlaskForm):
+    user_id=StringField('아이디', validators=[DataRequired("아이디를 입력하세요.")])
+    password=PasswordField('비밀번호', validators=[DataRequired("비밀번호를 입력하세요.")])  
+
+class FindIdForm(FlaskForm):
+    username = StringField('이름', validators=[DataRequired(message='이름을 입력해주세요.')])
+    email = EmailField('이메일', validators=[DataRequired(message='이메일을 입력해주세요.'), Email(message='올바른 이메일 형식을 입력해주세요.')])
+
+
+class FindPasswordForm(FlaskForm):
+    user_id = StringField('아이디', validators=[DataRequired(message='아이디를 입력해주세요.')])
+    email = EmailField('이메일', validators=[DataRequired(message='이메일을 입력해주세요.'), Email(message='올바른 이메일 형식을 입력해주세요.')])

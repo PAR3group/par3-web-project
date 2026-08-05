@@ -22,7 +22,7 @@ def join_list():
     # ⚠️ TODO: DB 연동 시 models.py에서 Join 데이터 조회해서 join.html에 넘겨줄 예정
     # 예시: joins = Join.query.all()
     #      return render_template('join.html', joins=joins)
-    return render_template('join.html')
+    return render_template('join/join.html')
 
 # ------------------------------------------------
 # 조인 개설(모집) 폼 페이지
@@ -30,4 +30,4 @@ def join_list():
 # ------------------------------------------------
 @bp.route('/create')
 def join_create():
-    return render_template('join_create.html')
+    return render_template('join/join_create.html')

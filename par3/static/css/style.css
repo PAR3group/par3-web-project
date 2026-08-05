@@ -4,10 +4,11 @@
     box-sizing: border-box;
 }
 
-/* 2. 링크(a 태그) 밑줄 및 색상 초기화 */
+/* 2. 링크(a 태그) 밑줄 및 색상 초기화, 포인터 커서 */
 a {
     text-decoration: none;
     color: inherit;
+    cursor: pointer;
 }
 
 /* 3. 리스트(ul, ol)의 점(bullet) 제거 */
@@ -26,42 +27,80 @@ body {
     font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
     color: #333;
     line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main{
+    margin-top: 70px;
+    flex: 1;
 }
 
 /* header 부분 */
-header{
+header {
+    width: 100%;
+    height: 70px;
     display: flex;
-    background-color: #333;
     justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    transition: top 0.3s ease-in-out; /* 부드럽게 움직이는 효과 */
+    z-index: 1000;
 }
-.header_container{
+
+/* 헤더를 숨길 때 적용할 클래스 */
+header.hide {
+    top: -70px;
+}
+
+.header_container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 70%;
+    width: 100%;
     height: 70px;
     color: #fff;
     white-space: nowrap;
 }
-.h_logo{
+
+.h_logo {
     margin-right: 25px;
+    margin-left: 40px;
 }
-.h_nav_list{
+
+.h_nav_list {
     display: flex;
     gap: 50px;
+    font-size: 14px;
 }
-.h_auth_bt{
+
+.h_auth_bt {
     display: flex;
     justify-content: center;
     gap: 25px;
-}
-.h_login_bt{
-    margin-left: 25px;
+    margin-right: 40px;
 }
 
+.h_login_bt {
+    margin-left: 25px;
+}
 /* footer 부분 */
 footer{
     background-color: #333;
     height: 100px;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.footer_container p{
+    color: #5e5e5e;
+    font-size: 14px;
+}
+
+/* 모바일: 햄버거메뉴 */
+/* @media (max-width: 860px){ } */

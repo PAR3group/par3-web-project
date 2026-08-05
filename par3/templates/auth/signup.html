@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="{{url_for('static', filename='css/signup.css')}}">
+{% endblock %}
+
+{% block title %}
+PAR3 - 회원가입
+{% endblock %}
+
+{% block content %}
+
+<div class="signup_form_container">
+    <h2 class="signup_title">회원가입</h2>
+
+    <form class="signup_form" method="POST" action="{{ url_for('auth.signup') }}" novalidate>
+        {{ form.csrf_token }}
+
+        <!-- 1. 기본 계정 정보 -->
+        <fieldset class="su_section">
+            <legend class="su_section_title">1. 기본 계정 정보</legend>
+
+            <div class="row mb-3 align-items-center">
+                <label for="user_id" class="col-sm-3 col-form-label">아이디</label>
+                <div class="col-sm-7">
+                    {{ form.user_id(class="form-control", placeholder="영문, 숫자, _, . 4~20자") }}
+                    {% for error in form.user_id.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-success w-100 su_check_bt">중복확인</button>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="email" class="col-sm-3 col-form-label">이메일</label>
+                <div class="col-sm-9">
+                    {{ form.email(class="form-control", placeholder="이메일 주소 입력") }}
+                    {% for error in form.email.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="password1" class="col-sm-3 col-form-label">비밀번호</label>
+                <div class="col-sm-9">
+                    {{ form.password1(class="form-control", placeholder="영문, 숫자, 특수문자 포함 8자 이상") }}
+                    {% for error in form.password1.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="password2" class="col-sm-3 col-form-label">비밀번호 확인</label>
+                <div class="col-sm-9">
+                    {{ form.password2(class="form-control", placeholder="비밀번호 재입력") }}
+                    {% for error in form.password2.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- 2. 기본 프로필 -->
+        <fieldset class="su_section">
+            <legend class="su_section_title">2. 기본 프로필</legend>
+
+            <div class="row mb-3 align-items-center">
+                <label for="nickname" class="col-sm-3 col-form-label">닉네임</label>
+                <div class="col-sm-7">
+                    {{ form.nickname(class="form-control", placeholder="닉네임 입력") }}
+                    {% for error in form.nickname.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-success w-100 su_check_bt">중복확인</button>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="username" class="col-sm-3 col-form-label">이름</label>
+                <div class="col-sm-9">
+                    {{ form.username(class="form-control", placeholder="실명 입력") }}
+                    {% for error in form.username.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">휴대전화 번호</label>
+                <div class="col-sm-9 su_phone_group">
+                    {{ form.phone1(class="form-select su_phone_select") }}
+                    <span class="su_phone_dash">-</span>
+                    {{ form.phone2(class="form-control", maxlength=4) }}
+                    <span class="su_phone_dash">-</span>
+                    {{ form.phone3(class="form-control", maxlength=4) }}
+                    {% set phone_errors = form.phone1.errors + form.phone2.errors + form.phone3.errors %}
+                    {% if phone_errors %}
+                    <div class="invalid-feedback d-block">휴대폰 번호를 올바르게 입력해주세요.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- 3. 골프 성향 정보 -->
+        <fieldset class="su_section">
+            <legend class="su_section_title">3. 골프 성향 정보</legend>
+
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">성별</label>
+                <div class="col-sm-9 su_radio_group">
+                    {% for subfield in form.user_sex %}
+                    <div class="form-check form-check-inline">
+                        {{ subfield(class="form-check-input") }}
+                        {{ subfield.label(class="form-check-label") }}
+                    </div>
+                    {% endfor %}
+                    {% for error in form.user_sex.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="experience_years" class="col-sm-3 col-form-label">구력</label>
+                <div class="col-sm-9">
+                    {{ form.experience_years(class="form-select") }}
+                    {% for error in form.experience_years.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </fieldset>
+
+        <!-- 4. 약관 동의 -->
+        <fieldset class="su_section">
+            <legend class="su_section_title">4. 약관 동의</legend>
+
+            <div class="form-check su_agree_all">
+                {{ form.agree_all(class="form-check-input", id="agree_all") }}
+                <label class="form-check-label" for="agree_all">전체 약관 동의하기</label>
+            </div>
+            <hr class="su_agree_divider">
+            <div class="form-check">
+                {{ form.agree_service(class="form-check-input su_agree_child") }}
+                {{ form.agree_service.label(class="form-check-label") }}
+            </div>
+            <div class="form-check">
+                {{ form.agree_privacy(class="form-check-input su_agree_child") }}
+                {{ form.agree_privacy.label(class="form-check-label") }}
+            </div>
+            <div class="form-check">
+                {{ form.agree_marketing(class="form-check-input su_agree_child") }}
+                {{ form.agree_marketing.label(class="form-check-label") }}
+            </div>
+        </fieldset>
+
+        <button type="submit" class="btn btn-primary w-100 su_submit_bt">회원가입</button>
+    </form>
+
+    <div class="su_login_link">
+        이미 계정이 있으신가요? <a href="{{ url_for('auth.login') }}">로그인</a>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{url_for('static', filename='js/signup.js')}}"></script>
+{% endblock %}

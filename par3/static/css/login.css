@@ -1,0 +1,22 @@
+a {
+    text-decoration: none;
+    color: inherit;
+}
+.login_form_container{
+    width: 800px;
+    height: auto;
+    margin: 30px auto;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 32px 28px 40px;
+}
+.login_title{
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 28px;
+}
+.form_login_btn{
+   width: 100%; 
+   margin-bottom: 20px;
+}
