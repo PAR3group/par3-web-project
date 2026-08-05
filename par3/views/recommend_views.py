@@ -8,7 +8,7 @@ from par3.utils import *
 bp = Blueprint('recommend', __name__, url_prefix='/recommend')
 
 @bp.route("/shaft/", methods=["GET", "POST"])
-# @login_required
+@login_required
 def shaft():
 
     form = RecommendForm()
@@ -93,25 +93,18 @@ def shaft():
         else:
             flex = "-"
 
+        recommend = ShaftRecommend.query.filter_by(user_id=g.user.id).first()
+        if recommend is None:
+            recommend = ShaftRecommend(user_id=g.user.id)
+            db.session.add(recommend)
 
+        recommend.driver_weight = result.get("driver")
+        recommend.wood5_weight = result.get("wood5")
+        recommend.utility4_weight = result.get("utility4")
+        recommend.iron7_weight = result.get("iron7")
+        recommend.driver_flex = flex
 
-        # 개발단계 비활성화
-
-        # recommend = ShaftRecommend.query.filter_by(user_id=g.user.id).first()
-        # if recommend is None:
-        #     recommend = ShaftRecommend(user_id=g.user.id)
-        #     db.session.add(recommend)
-
-        # recommend.driver_weight = result.get("driver")
-        # recommend.wood5_weight = result.get("wood5")
-        # recommend.utility4_weight = result.get("utility4")
-        # recommend.iron7_weight = result.get("iron7")
-        # recommend.driver_flex = flex
-
-        # db.session.commit()
-
-
-
+        db.session.commit()
 
         return render_template("recommend/recommend.html", form=form, result=result, flex=flex)
 

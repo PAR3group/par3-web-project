@@ -53,6 +53,16 @@ class UserCreateForm(FlaskForm):
         ('2', '2년 ~ 5년'),
         ('3', '5년 이상')
     ], validators=[DataRequired('구력을 선택해주세요.')])
+    agree_all = BooleanField('전체 약관 동의하기')  # JS로만 동작 (DB 저장 X)
+    agree_service = BooleanField(
+        '[필수] 서비스 이용약관 동의',
+        validators=[DataRequired(message='서비스 이용약관에 동의해주세요.')]
+    )
+    agree_privacy = BooleanField(
+        '[필수] 개인정보 수집 및 이용 동의',
+        validators=[DataRequired(message='개인정보 수집 및 이용에 동의해주세요.')]
+    )
+    agree_marketing = BooleanField('[선택] 마케팅 정보 수신 동의')
 
 class RecommendForm(FlaskForm):
 
@@ -141,3 +151,7 @@ class RecommendForm(FlaskForm):
     )
 
     submit = SubmitField("추천받기")    
+
+class UserLoginForm(FlaskForm):
+    user_id=StringField('아이디', validators=[DataRequired()])
+    password=PasswordField('비밀번호', validators=[DataRequired()])  
