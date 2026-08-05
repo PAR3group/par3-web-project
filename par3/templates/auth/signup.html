@@ -12,9 +12,10 @@ PAR3 - 회원가입
 {% block content %}
 
 <div class="signup_form_container">
+    {% include 'form_errors.html' %}
     <h2 class="signup_title">회원가입</h2>
 
-    <form class="signup_form" method="POST">
+    <form class="signup_form" method="POST" action="{{ url_for('auth.signup') }}">
         {{ form.csrf_token }}
         {% include "form_errors.html" %}
 
@@ -23,12 +24,19 @@ PAR3 - 회원가입
             <legend class="su_section_title">1. 기본 계정 정보</legend>
 
             <div class="row mb-3 align-items-center">
-                <label for="user_id" class="col-sm-3 col-form-label">아이디(이메일)</label>
+                <label for="user_id" class="col-sm-3 col-form-label">아이디</label>
                 <div class="col-sm-7">
-                    {{ form.user_id(class="form-control", placeholder="이메일 주소 입력") }}
+                    {{ form.user_id(class="form-control", placeholder="영문, 숫자, _, . 4~20자") }}
                 </div>
                 <div class="col-sm-2">
                     <button type="button" class="btn btn-success w-100 su_check_bt">중복확인</button>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label for="email" class="col-sm-3 col-form-label">이메일</label>
+                <div class="col-sm-9">
+                    {{ form.email(class="form-control", placeholder="이메일 주소 입력") }}
                 </div>
             </div>
 

@@ -12,6 +12,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/signup', methods=('GET', 'POST'))
 def signup():
     form = UserCreateForm()
+
     if form.validate_on_submit():
         phonenumber = f"{form.phone1.data}-{form.phone2.data}-{form.phone3.data}"
 

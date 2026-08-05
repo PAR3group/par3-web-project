@@ -1,4 +1,4 @@
-from flask import g, render_template, flash, Blueprint
+from flask import g, jsonify, render_template, flash, Blueprint, request
 from par3.views.auth_views import login_required
 from par3.forms import RecommendForm
 from par3.models import ShaftRecommend
@@ -93,19 +93,30 @@ def shaft():
         else:
             flex = "-"
 
-        recommend = ShaftRecommend.query.filter_by(user_id=g.user.id).first()
-        if recommend is None:
-            recommend = ShaftRecommend(user_id=g.user.id)
-            db.session.add(recommend)
-
-        recommend.driver_weight = result.get("driver")
-        recommend.wood5_weight = result.get("wood5")
-        recommend.utility4_weight = result.get("utility4")
-        recommend.iron7_weight = result.get("iron7")
-        recommend.driver_flex = flex
-
-        db.session.commit()
 
         return render_template("recommend/recommend.html", form=form, result=result, flex=flex)
 
     return render_template("recommend/recommend.html", form=form)
+
+@bp.route('/api/save-recommend', methods=['POST'])
+def save_recommend():
+
+    data = request.get_json()
+    result = data.get("result")
+    flex = data.get("flex")
+
+    # 기존에 저장된 데이터가 있는지 확인 후 생성 또는 수정 (Upsert 패턴)
+    recommend = ShaftRecommend.query.filter_by(user_id=g.user.id).first()
+    if recommend is None:
+        recommend = ShaftRecommend(user_id=g.user.id)
+        db.session.add(recommend)
+
+    recommend.driver_weight = result.get("driver")
+    recommend.wood5_weight = result.get("wood5")
+    recommend.utility4_weight = result.get("utility4")
+    recommend.iron7_weight = result.get("iron7")
+    recommend.driver_flex = flex
+
+    db.session.commit()
+
+    return jsonify({"status": "success", "message": "저장되었습니다!"})
