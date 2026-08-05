@@ -28,12 +28,29 @@ body {
     line-height: 1.5;
 }
 
-/* header 부분 */
-header{
-    display: flex;
-    background-color: #333;
-    justify-content: center;
+main{
+    margin-top: 70px;
 }
+
+/* header 부분 */
+header {
+    width: 100%;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #333;
+    transition: top 0.3s ease-in-out; /* 부드럽게 움직이는 효과 */
+    z-index: 1000;
+}
+
+/* 헤더를 숨길 때 적용할 클래스 */
+header.hide {
+    top: -70px; /* 헤더 높이만큼 위로 올려서 화면 밖으로 숨김 */
+}
+
 .header_container{
     display: flex;
     justify-content: space-between;
@@ -64,4 +81,15 @@ footer{
     background-color: #333;
     height: 100px;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+.footer_container p{
+    color: #5e5e5e;
+    font-size: 14px;
+}
+
+/* 모바일: 햄버거메뉴 */
+/* @media (max-width: 860px){ } */

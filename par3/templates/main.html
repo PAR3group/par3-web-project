@@ -17,8 +17,8 @@ PAR3
     </section>
 
     <section class="m_news_section">
-        <h3>- GOLF NEWS</h3>
         <div class="m_news_container">
+            <h3 class="m_golf_news">- GOLF NEWS</h3>
             <article class="m_news_card">
                 <div class="m_news_rank">
                     <h4 class="m_news_c_title">LPGA 상금순위</h4>
@@ -57,59 +57,111 @@ PAR3
                 <h3 class="m_content_title">커뮤니티</h3>
                 <a href="#" class="more_view_bt">더보기-></a>
 
-
                 <div class="m_community_list">
-                    <img src="" alt="">
+                    <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
                     <h4>신상후기</h4>
                     <p>완전좋아</p>
                     <p>현준이 <span>작성시간</span></p>
                     <p>
-                        <img src="" alt="">999 <img src="" alt="">999
+                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
+                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
                     </p>
                 </div>
 
+                <div class="m_community_list">
+                    <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
+                    <h4>신상후기</h4>
+                    <p>완전좋아</p>
+                    <p>현준이 <span>작성시간</span></p>
+                    <p>
+                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
+                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
+                    </p>
+                </div>
+
+                <div class="m_community_list">
+                    <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
+                    <h4>신상후기</h4>
+                    <p>완전좋아</p>
+                    <p>현준이 <span>작성시간</span></p>
+                    <p>
+                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
+                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
+                    </p>
+                </div>
 
             </article>
 
             <article class="fitting_card">
                 <p>어떤클럽?</p>
                 <h3 class="m_fitting_title">PAR3 FITTING ZONE</h3>
-                <button>추천받으러가기</button>
+                <a href="{{url_for('recommend.shaft')}}">추천받으러가기</a>
             </article>
 
             <article class="join_card">
                 <h3 class="m_content_title">실시간 골프 조인</h3>
-                <a href="#" class="more_view_bt">더보기-></a>
+                <a href="{{url_for('join.join_list')}}" class="more_view_bt">더보기-></a>
 
 
                 <div class="m_join_list">
-                    <img src="" alt="">
+                    <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
                     <p>남서울CC</p>
                     <p>07.09(금)</p>
-                    <p>3/4명</p>
-                    <p>남성, 1인</p>
+                    <p>3/4명 <span class="jl_condition">남성, 1인</span></p>
                     <button>참여하기</button>
                 </div>
 
-
-            </article>
-
-            <article class="m_shop_card">
-                <h3 class="m_content_title">par3 shop</h3>
-                <a href="#" class="more_view_bt">더보기-></a>
-                <div class="shop_product_container">
-
-
-                    <div class="shop_product_card">
-                        <img src="" alt="">
-                        <p>QI-10 드라이버</p>
-                        <p>800,000원</p>
-                        <a href="#">바로 구매하기</a>
-                    </div>
-
-
+                <div class="m_join_list">
+                    <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
+                    <p>남서울CC</p>
+                    <p>07.09(금)</p>
+                    <p>3/4명 <span class="jl_condition">남성, 1인</span></p>
+                    <button>참여하기</button>
                 </div>
+
+                <div class="m_join_list">
+                    <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
+                    <p>남서울CC</p>
+                    <p>07.09(금)</p>
+                    <p>3/4명 <span class="jl_condition">남성, 1인</span></p>
+                    <button>참여하기</button>
+                </div>
+
             </article>
+
+           <article class="m_shop_card">
+    <h3 class="m_content_title">par3 shop</h3>
+    <a href="#" class="more_view_bt">더보기-></a>
+
+    <div class="shop_product_viewport">
+        <div class="shop_product_container">
+            <div class="shop_product_card">
+                <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
+                <p>QI-10 드라이버</p>
+                <p>800,000원</p>
+                <a href="#">바로 구매하기</a>
+            </div>
+            <div class="shop_product_card">
+                <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
+                <p>스텔스2 드라이버</p>
+                <p>750,000원</p>
+                <a href="#">바로 구매하기</a>
+            </div>
+            <div class="shop_product_card">
+                <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
+                <p>P790 아이언세트</p>
+                <p>1,200,000원</p>
+                <a href="#">바로 구매하기</a>
+            </div>
+            <div class="shop_product_card">
+                <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
+                <p>오디세이 퍼터</p>
+                <p>350,000원</p>
+                <a href="#">바로 구매하기</a>
+            </div>
+        </div>
+    </div>
+</article>
 
         </div>
     </section>
@@ -119,4 +171,6 @@ PAR3
 {% block js %}
 <script src="https://cdn.jsdelivr.net/npm/swiper@14.0.1/swiper-bundle.min.js"></script>
 <script src="{{url_for('static', filename='js/swiper.js')}}"></script>
+<script src="{{url_for('static', filename='js/shop_slider.js')}}"></script>
+
 {% endblock %}

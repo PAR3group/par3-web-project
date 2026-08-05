@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAR3</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/intro.css') }}">
+</head>
+<body>
+    <div class="intro_wrap">
+        <video
+            class="intro_video"
+            src="{{ url_for('static', filename='video/intro.mp4') }}"
+            autoplay
+            muted
+            playsinline
+        ></video>
+
+        <div class="intro_overlay">
+            <a href="{{ url_for('main.inter_par3') }}" class="intro_enter_bt">PAR3로 이동하기</a>
+        </div>
+    </div>
+</body>
+</html>
