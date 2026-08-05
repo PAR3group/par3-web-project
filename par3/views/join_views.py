@@ -31,3 +31,11 @@ def join_list():
 @bp.route('/create')
 def join_create():
     return render_template('join/join_create.html')
+
+# ------------------------------------------------
+# 조인 참가 신청 폼 페이지
+# 접속 주소: /join/apply
+# ------------------------------------------------
+@bp.route('/apply')
+def join_apply():
+    return render_template('join/join_apply.html')

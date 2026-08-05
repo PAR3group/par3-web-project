@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - JOIN APPLY
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/join_apply.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="p_join_apply">
+
+  <!-- ja_head : 페이지 타이틀 영역 -->
+  <div class="ja_head">
+    <h1 class="ja_title">⛳ JOIN APPLY FORM</h1>
+  </div>
+
+  <!-- g_form : join_create.html과 동일한 공통 폼 컴포넌트 재사용 -->
+  <form class="g_form" action="/join/apply" method="POST">
+
+    <!-- ===== 섹션 1. 라운드 요약 정보 영역 ===== -->
+    <!-- ⚠️ TODO: DB 연동 시, 신청하려는 조인 글의 정보(골프장/날짜/시간 등)를
+         join.html 리스트에서 넘겨받아 여기 자동으로 채워질 예정 (현재는 정적 예시값) -->
+    <div class="g_form_section">
+      <div class="g_form_section_title">1. 라운드 요약 정보 영역</div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">골프장 | 날짜/시간</label>
+        <div class="g_form_input">
+          <input type="text" class="g_form_input--text" name="course_summary" value="마이다스CC | 2026.08.30 (금) 11:30" readonly>
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">비용 | 조건</label>
+        <div class="g_form_input">
+          <input type="text" class="g_form_input--text" name="cost_condition" value="[4인필수] 80,000원 / 무관, 4인1팀" readonly>

@@ -9,180 +9,211 @@ PAR3 - JOIN
 {% endblock %}
 
 {% block content %}
-
 <div class="p_join">
 
-  <!-- j_head -->
   <div class="j_head">
-    <h1 class="j_title">⛳ JOIN</h1>
-  </div>
-
-  <!-- j_filter -->
-  <div class="j_filter">
-    <div class="j_filter_select">
-      <span class="j_filter_select_text">지역별</span>
-      <span class="j_filter_select_icon"></span>
+    <div class="j_head_left">
+      <h1 class="j_title">Join ⛳</h1>
+      <p class="j_subtitle">함께 라운딩할 멤버를 찾아보세요.</p>
     </div>
-    <input type="text" class="j_filter_search" placeholder="검색어" />
+    <span class="j_live_status"><span class="j_live_dot"></span>실시간 골프 조인 현황</span>
   </div>
 
-  <!-- j_tabs -->
+  <div class="j_filter_bar">
+
+    <div class="j_dropdown" id="j_dropdown_region">
+      <button type="button" class="j_dropdown_bt">
+        지역별<span class="j_filter_select_icon"></span>
+      </button>
+      <div class="j_dropdown_panel">
+        <label class="j_dropdown_option"><input type="checkbox" value="서울"> 서울</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="경기"> 경기</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="부산"> 부산</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="대전"> 대전</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="강원도"> 강원도</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="전라남도"> 전라남도</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="전라북도"> 전라북도</label>
+      </div>
+    </div>
+
+    <div class="j_dropdown" id="j_dropdown_condition">
+      <button type="button" class="j_dropdown_bt">
+        조건별<span class="j_filter_select_icon"></span>
+      </button>
+      <div class="j_dropdown_panel">
+        <label class="j_dropdown_option"><input type="checkbox" value="무관"> 무관</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="남성만"> 남성만</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="여성만"> 여성만</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="부부"> 부부</label>
+      </div>
+    </div>
+
+    <div class="j_dropdown" id="j_dropdown_time">
+      <button type="button" class="j_dropdown_bt">
+        시간대별<span class="j_filter_select_icon"></span>
+      </button>
+      <div class="j_dropdown_panel">
+        <label class="j_dropdown_option"><input type="checkbox" value="오전"> 오전 (~11:59)</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="오후"> 오후 (12:00~17:59)</label>
+        <label class="j_dropdown_option"><input type="checkbox" value="야간"> 야간 (18:00~)</label>
+      </div>
+    </div>
+
+    <span class="j_filter_bar_divider"></span>
+
+    <div class="j_filter_search_wrap">
+      <span class="j_filter_search_icon"></span>
+      <input type="text" class="j_filter_search" placeholder="검색어를 입력하세요" />
+    </div>
+
+    <a href="/join/create" class="jt_write_bt">+ 글쓰기</a>
+
+  </div>
+
+  <div class="j_selected_tags_row" id="j_selected_tags_row">
+    <div class="j_selected_tags" id="j_selected_tags"></div>
+    <span class="j_reset_bt" id="j_reset_bt"><span class="j_reset_icon">↺</span>필터 초기화</span>
+  </div>
+
   <div class="j_tabs">
-    <div class="j_tab j_tab--active">전체</div>
-    <div class="j_tab">날짜순</div>
-    <div class="j_tab">가격순</div>
+    <div class="j_tab j_tab--active" id="j_tab_all">전체</div>
+    <div class="j_tab" id="j_tab_date">날짜순</div>
+    <div class="j_tab" id="j_tab_price" data-order="asc">가격순</div>
+    <div class="j_tab" id="j_tab_urgent">마감임박순</div>
+
+    <label class="j_exclude_full">
+      <span class="j_toggle">
+        <input type="checkbox" id="j_exclude_full_checkbox">
+        <span class="j_toggle_track"><span class="j_toggle_thumb"></span></span>
+      </span>
+      완료팀 제외
+    </label>
   </div>
 
-  <!-- j_table -->
-  <table class="j_table">
-    <thead class="jt_head">
-      <tr>
-        <th class="jt_th">라운드 일정</th>
-        <th class="jt_th">골프장</th>
-        <th class="jt_th">코스<br>티오프 시간</th>
-        <th class="jt_th">내용</th>
-        <th class="jt_th">조건<br>인원</th>
-        <th class="jt_th">참가자 현황</th>
-        <th class="jt_th">작성자</th>
-        <th class="jt_th">참여버튼</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="jt_row">
-        <td class="jt_date">2026.08.30</td>
-        <td class="jt_course">
-          <div class="jt_course_name">마이다스CC</div>
-          <div class="jt_course_sub">실크코스<br>11:30</div>
-        </td>
-        <td class="jt_content">[4인필수] 80,000원</td>
-        <td class="jt_condition">무관<br>4인1팀</td>
-        <td>
-          <div class="jt_participants">
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-          </div>
-        </td>
-        <td class="jt_writer">파쓰리</td>
-        <td><a href="/join/1" class="jt_join_bt">참여하기</a></td>
-      </tr>
-      <tr class="jt_row">
-        <td class="jt_date">2026.08.30</td>
-        <td class="jt_course">
-          <div class="jt_course_name">마이다스CC</div>
-          <div class="jt_course_sub">실크코스<br>11:30</div>
-        </td>
-        <td class="jt_content">[4인필수] 80,000원</td>
-        <td class="jt_condition">무관<br>4인1팀</td>
-        <td>
-          <div class="jt_participants">
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-          </div>
-        </td>
-        <td class="jt_writer">파쓰리</td>
-        <td><a href="/join/2" class="jt_join_bt">참여하기</a></td>
-      </tr>
-      <tr class="jt_row">
-        <td class="jt_date">2026.08.30</td>
-        <td class="jt_course">
-          <div class="jt_course_name">마이다스CC</div>
-          <div class="jt_course_sub">실크코스<br>11:30</div>
-        </td>
-        <td class="jt_content">[4인필수] 80,000원</td>
-        <td class="jt_condition">무관<br>4인1팀</td>
-        <td>
-          <div class="jt_participants">
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-          </div>
-        </td>
-        <td class="jt_writer">파쓰리</td>
-        <td><a href="/join/3" class="jt_join_bt">참여하기</a></td>
-      </tr>
-      <tr class="jt_row">
-        <td class="jt_date">2026.08.30</td>
-        <td class="jt_course">
-          <div class="jt_course_name">마이다스CC</div>
-          <div class="jt_course_sub">실크코스<br>11:30</div>
-        </td>
-        <td class="jt_content">[4인필수] 80,000원</td>
-        <td class="jt_condition">무관<br>4인1팀</td>
-        <td>
-          <div class="jt_participants">
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-          </div>
-        </td>
-        <td class="jt_writer">파쓰리</td>
-        <td><a href="/join/4" class="jt_join_bt">참여하기</a></td>
-      </tr>
-      <tr class="jt_row">
-        <td class="jt_date">2026.08.30</td>
-        <td class="jt_course">
-          <div class="jt_course_name">마이다스CC</div>
-          <div class="jt_course_sub">실크코스<br>11:30</div>
-        </td>
-        <td class="jt_content">[4인필수] 80,000원</td>
-        <td class="jt_condition">무관<br>4인1팀</td>
-        <td>
-          <div class="jt_participants">
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-          </div>
-        </td>
-        <td class="jt_writer">파쓰리</td>
-        <td><a href="/join/5" class="jt_join_bt">참여하기</a></td>
-      </tr>
-      <tr class="jt_row">
-        <td class="jt_date">2026.08.30</td>
-        <td class="jt_course">
-          <div class="jt_course_name">마이다스CC</div>
-          <div class="jt_course_sub">실크코스<br>11:30</div>
-        </td>
-        <td class="jt_content">[4인필수] 80,000원</td>
-        <td class="jt_condition">무관<br>4인1팀</td>
-        <td>
-          <div class="jt_participants">
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-          </div>
-        </td>
-        <td class="jt_writer">파쓰리</td>
-        <td><a href="/join/6" class="jt_join_bt">참여하기</a></td>
-      </tr>
-      <tr class="jt_row">
-        <td class="jt_date">2026.08.30</td>
-        <td class="jt_course">
-          <div class="jt_course_name">마이다스CC</div>
-          <div class="jt_course_sub">실크코스<br>11:30</div>
-        </td>
-        <td class="jt_content">[4인필수] 80,000원</td>
-        <td class="jt_condition">무관<br>4인1팀</td>
-        <td>
-          <div class="jt_participants">
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-            <span class="jt_avatar"></span>
-          </div>
-        </td>
-        <td class="jt_writer">파쓰리</td>
-        <td><a href="/join/7" class="jt_join_bt">참여하기</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="j_table_body" id="j_table_body">
+
+    <div class="jt_row"
+         data-date="2026-08-30" data-price="80000" data-filled="4" data-total="4"
+         data-region="부산" data-condition="무관" data-timeslot="오전"
+         data-keyword="마이다스CC 실크코스 파쓰리 4인필수" data-liked="true">
+
+      <div class="jt_date">
+        <div class="jt_date_num">08.30</div>
+        <div class="jt_date_day">(금)</div>
+        <div class="jt_dday">D-5</div>
+      </div>
+
+      <img class="jt_thumb" src="{{ url_for('static', filename='img/course_1.jpg') }}" alt="마이다스CC">
+
+      <div class="jt_info">
+        <div class="jt_info_top">
+          <span class="jt_course_name">마이다스CC</span>
+          <span class="jt_course_badge">실크코스</span>
+        </div>
+        <div class="jt_info_sub">
+          <span>11:30 티업</span>
+          <span>부산</span>
+        </div>
+      </div>
+
+      <span class="jt_row_divider"></span>
+
+      <div class="jt_price_wrap">
+        <div class="jt_price_label">가격/조건</div>
+        <div class="jt_price_num">80,000원</div>
+        <div class="jt_price_condition">여성만 · 4인</div>
+      </div>
+
+      <div class="jt_participants_wrap">
+        <div class="jt_participants_label">참가자</div>
+        <div class="jt_participants">
+          <span class="jt_avatar" style="background:#f0b95c;">JI</span>
+          <span class="jt_avatar" style="background:#3b5fc0;">N</span>
+          <span class="jt_avatar" style="background:#c25f8a;"></span>
+          <span class="jt_avatar jt_avatar--empty">+</span>
+        </div>
+      </div>
+
+      <div class="jt_writer_wrap">
+        <div class="jt_writer_label">작성자</div>
+        <div class="jt_writer_info">
+          <span class="jt_writer_avatar" style="background:#6c8ff0;"></span>
+          <span class="jt_writer_name">파쓰리</span>
+        </div>
+      </div>
+
+      <div class="jt_actions">
+        <span class="jt_heart_bt"></span>
+        <a href="/join/apply" class="jt_join_bt">참여하기 <span class="jt_join_bt_arrow">›</span></a>
+      </div>
+    </div>
+
+    <div class="jt_row"
+         data-date="2026-09-05" data-price="65000" data-filled="2" data-total="4"
+         data-region="서울" data-condition="여성만" data-timeslot="오후"
+         data-keyword="남서울CC 그린코스 골프왕 4인필수" data-liked="false">
+
+      <div class="jt_date">
+        <div class="jt_date_num">09.05</div>
+        <div class="jt_date_day">(토)</div>
+        <div class="jt_dday">D-11</div>
+      </div>
+
+      <img class="jt_thumb" src="{{ url_for('static', filename='img/course_2.jpg') }}" alt="남서울CC">
+
+      <div class="jt_info">
+        <div class="jt_info_top">
+          <span class="jt_course_name">남서울CC</span>
+          <span class="jt_course_badge">그린코스</span>
+        </div>
+        <div class="jt_info_sub">
+          <span>13:00 티업</span>
+          <span>경기</span>
+        </div>
+      </div>
+
+      <span class="jt_row_divider"></span>
+
+      <div class="jt_price_wrap">
+        <div class="jt_price_label">가격/조건</div>
+        <div class="jt_price_num">65,000원</div>
+        <div class="jt_price_condition">여성만 · 4인</div>
+      </div>
+
+      <div class="jt_participants_wrap">
+        <div class="jt_participants_label">참가자</div>
+        <div class="jt_participants">
+          <span class="jt_avatar" style="background:#3f9a92;">C</span>
+          <span class="jt_avatar" style="background:#e59bb8;"></span>
+          <span class="jt_avatar" style="background:#e4e6ea;"></span>
+          <span class="jt_avatar jt_avatar--empty">+</span>
+        </div>
+      </div>
+
+      <div class="jt_writer_wrap">
+        <div class="jt_writer_label">작성자</div>
+        <div class="jt_writer_info">
+          <span class="jt_writer_avatar" style="background:#6c8ff0;"></span>
+          <span class="jt_writer_name">골프왕</span>
+        </div>
+      </div>
+
+      <div class="jt_actions">
+       <span class="jt_heart_bt"></span>
+       <a href="/join/apply" class="jt_join_bt">참여하기 <span class="jt_join_bt_arrow">›</span></a>
+      </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="j_load_more">
+    <span>더 많은 조인 글 보기 <span class="j_load_more_icon"></span></span>
+  </div>
 
 </div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/join.js') }}"></script>
 {% endblock %}
