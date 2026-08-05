@@ -120,7 +120,7 @@
             /* 1. 모든 박스 크기를 image1(474x316 = 3:2 비율)과 똑같이 고정 */
             aspect-ratio: 474 / 316; 
             
-            /* 2. PXG 같은 이미지도 테일러메이드처럼 프레임에 꽉 차게 확대/잘라냄 */
+            /* 2. 프레임에 꽉 차게 확대/잘라냄 */
             object-fit: cover; 
             
             border: 1px solid #eaeaea;
@@ -173,7 +173,7 @@
 
         .category-section .category-item:nth-child(2) .category-img {
         object-fit: cover;
-        object-position: center -12px /* 0%로 만들면 내부 이미지가 최상단으로 붙습니다 */
+        object-position: center -12px /* 0%로 만들면 내부 이미지가 최상단으로 붙음 */
         }
 
         .category-name {
@@ -314,7 +314,6 @@
         <!-- 1. 브랜드 상단 영역 -->
         <section class="brand-section">
             <a href="#" class="brand-item">
-                <!-- 이미지 경로를 내 파일 경로로 지정하세요 (예: ./images/titleist.png) -->
                 <img class="brand-img" src="image1.png">
                 <span class="brand-name">Titleist</span>
             </a>
