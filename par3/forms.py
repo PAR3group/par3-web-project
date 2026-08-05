@@ -153,5 +153,14 @@ class RecommendForm(FlaskForm):
     submit = SubmitField("추천받기")    
 
 class UserLoginForm(FlaskForm):
-    user_id=StringField('아이디', validators=[DataRequired()])
-    password=PasswordField('비밀번호', validators=[DataRequired()])  
+    user_id=StringField('아이디', validators=[DataRequired("아이디를 입력하세요.")])
+    password=PasswordField('비밀번호', validators=[DataRequired("비밀번호를 입력하세요.")])  
+
+class FindIdForm(FlaskForm):
+    username = StringField('이름', validators=[DataRequired(message='이름을 입력해주세요.')])
+    email = EmailField('이메일', validators=[DataRequired(message='이메일을 입력해주세요.'), Email(message='올바른 이메일 형식을 입력해주세요.')])
+
+
+class FindPasswordForm(FlaskForm):
+    user_id = StringField('아이디', validators=[DataRequired(message='아이디를 입력해주세요.')])
+    email = EmailField('이메일', validators=[DataRequired(message='이메일을 입력해주세요.'), Email(message='올바른 이메일 형식을 입력해주세요.')])
