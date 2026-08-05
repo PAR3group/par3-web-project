@@ -47,4 +47,7 @@ def create_app():
         else:
             g.user = User.query.get(user_id)
 
+
+    app.config['WTF_CSRF_ENABLED'] = False  # 개발 단계 동안 CSRF 기능 잠시 끄기
+    
     return app

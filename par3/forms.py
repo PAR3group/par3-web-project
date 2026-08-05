@@ -71,7 +71,8 @@ class RecommendForm(FlaskForm):
         validators=[
             DataRequired(),
             NumberRange(min=100, max=250)
-        ]
+            ],
+            render_kw={"min": 100, "max": 250, "placeholder": "예: 175"}
     )
 
     user_weight = IntegerField(
@@ -79,7 +80,8 @@ class RecommendForm(FlaskForm):
         validators=[
             DataRequired(),
             NumberRange(min=30, max=200)
-        ]
+        ],
+        render_kw={"min": 30, "max": 200, "placeholder": "예: 70"}
     )
 
     # 단위
@@ -104,8 +106,12 @@ class RecommendForm(FlaskForm):
     # 스윙스피드(선택)
     swing_speed = FloatField(
         "드라이버 스윙스피드",
-        validators=[Optional()]
+        validators=[Optional()],
+        render_kw={"type": "number", "placeholder": "숫자만 작성" }
     )
+
+    #  스윙스피드를 모르는 경우
+    swing_speed_unknown = BooleanField("스윙스피드를 모르겠어요")
 
     # 추천받을 클럽 선택
     driver_selected = BooleanField("드라이버")

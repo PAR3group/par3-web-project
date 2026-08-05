@@ -2,7 +2,7 @@ SHAFT_MULTIPLIER = {
     "driver": 1.5,
     "wood5": 1.8,
     "utility4": 2.2,
-    "iron7": 3.1
+    "iron7": 3.2
 }
 
 
@@ -64,19 +64,35 @@ def recommend_flex(speed):
         return "X"
 
 
-def recommend_flex_by_distance(distance):
+def recommend_flex_by_distance(gender, distance):
 
-    if distance <= 170:
-        return "L"
+    if gender == "male":
 
-    elif distance <= 190:
-        return "A"
+        if distance <= 170:
+            return "L"
 
-    elif distance <= 220:
-        return "R"
+        elif distance <= 190:
+            return "A"
 
-    elif distance <= 260:
-        return "S"
+        elif distance <= 220:
+            return "R"
+
+        elif distance <= 260:
+            return "S"
+
+        else:
+            return "X"
 
     else:
-        return "X"
+
+        if distance <= 180:
+            return "L"
+
+        elif distance <= 200:
+            return "A"
+
+        elif distance <= 220:
+            return "R"
+
+        else:
+            return "S"
