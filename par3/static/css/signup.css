@@ -1,0 +1,85 @@
+a {
+    text-decoration: none;
+    color: inherit;
+}
+.signup_form_container {
+    width: 800px;
+    height: auto;
+    margin: 30px auto;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 32px 28px 40px;
+}
+
+.signup_title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 28px;
+}
+
+.su_section {
+    border: none;
+    margin-bottom: 28px;
+    padding: 0;
+}
+
+.su_section_title {
+    display: block;
+    background: #4a6b57;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    width: 100%;
+}
+
+
+.su_check_bt {
+    white-space: nowrap;
+}
+
+.su_phone_group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.su_phone_select {
+    max-width: 110px;
+}
+
+.su_phone_dash {
+    color: #999;
+}
+
+.su_radio_group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.su_agree_divider {
+    margin: 12px 0;
+}
+
+.su_submit_bt {
+    margin-top: 8px;
+    padding: 12px;
+    font-weight: 600;
+}
+
+.su_login_link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+}
+
+.su_login_link a {
+    color: #1a2e22;
+    font-weight: 600;
+}

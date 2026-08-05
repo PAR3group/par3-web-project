@@ -119,10 +119,12 @@
 
 /* 모바일: 1열로 쌓기 */
 @media (max-width: 860px) {
-    .m_content_container {
+    .m_content_container,
+    .m_news_container {
         grid-template-columns: 1fr;
         grid-template-rows: none;
     }
+    .m_news_container > .m_news_card,
     .m_content_container > .m_community_card,
     .m_content_container > .fitting_card,
     .m_content_container > .join_card,
