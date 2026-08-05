@@ -218,8 +218,7 @@ PAR3 - FITTING ZONE
                 </div>
             </div>
         </div>
-
-        <a href="{{ url_for('recommend.shaft') }}" class="rc_reset_bt">다시하기</a>
+        <button type="button" onclick="saveRecommend()" class="rc_reset_bt">결과 저장하기</button>
         {% else %}
         <div class="rc_result_placeholder">
             이곳에 결과를 표시합니다
@@ -228,6 +227,38 @@ PAR3 - FITTING ZONE
     </div>
 
 </div>
+
+<script>
+  function saveRecommend() {
+    const requestData = {
+      result: {
+        driver: "{{ result.driver }}",
+        wood5: "{{ result.wood5 }}",
+        utility4: "{{ result.utility4 }}",
+        iron7: "{{ result.iron7 }}"
+      },
+      flex: "{{ flex }}" // <-- HTML 안에서는 이 문법이 정상적으로 실제 값으로 변환됩니다!
+    };
+
+    fetch("/recommend/api/save-recommend", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            alert(data.message);
+        }
+    })
+    .catch(error => {
+        console.error("에러:", error);
+        alert("저장에 실패했습니다.");
+    });
+  }
+</script>
 {% endblock %}
 
 {% block js %}

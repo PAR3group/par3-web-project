@@ -323,9 +323,10 @@
     color: #333;
 }
 
-/* ===== 다시하기 버튼 ===== */
+/* ===== 결과 저장하기 버튼 ===== */
 .rc_reset_bt {
     display: block;
+    width: 100%;
     text-align: center;
     margin-top: 20px;
     padding: 10px;
@@ -334,4 +335,14 @@
     font-size: 13px;
     color: #555;
     text-decoration: none;
+    background-color: #fff;
+    cursor: pointer;
+    box-sizing: border-box; 
+    /* 패딩 때문에 크기가 깨지는 것 방지 */
+}
+
+.rc_reset_bt:hover {
+    background-color: #f2f2f2; 
+    color: #111;   
+    border-color: #b7b7b7; 
 }
