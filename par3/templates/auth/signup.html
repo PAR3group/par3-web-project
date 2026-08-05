@@ -12,12 +12,10 @@ PAR3 - 회원가입
 {% block content %}
 
 <div class="signup_form_container">
-    {% include 'form_errors.html' %}
     <h2 class="signup_title">회원가입</h2>
 
-    <form class="signup_form" method="POST" action="{{ url_for('auth.signup') }}">
+    <form class="signup_form" method="POST" action="{{ url_for('auth.signup') }}" novalidate>
         {{ form.csrf_token }}
-        {% include "form_errors.html" %}
 
         <!-- 1. 기본 계정 정보 -->
         <fieldset class="su_section">
@@ -27,6 +25,9 @@ PAR3 - 회원가입
                 <label for="user_id" class="col-sm-3 col-form-label">아이디</label>
                 <div class="col-sm-7">
                     {{ form.user_id(class="form-control", placeholder="영문, 숫자, _, . 4~20자") }}
+                    {% for error in form.user_id.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
                 </div>
                 <div class="col-sm-2">
                     <button type="button" class="btn btn-success w-100 su_check_bt">중복확인</button>
@@ -37,6 +38,9 @@ PAR3 - 회원가입
                 <label for="email" class="col-sm-3 col-form-label">이메일</label>
                 <div class="col-sm-9">
                     {{ form.email(class="form-control", placeholder="이메일 주소 입력") }}
+                    {% for error in form.email.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -44,6 +48,9 @@ PAR3 - 회원가입
                 <label for="password1" class="col-sm-3 col-form-label">비밀번호</label>
                 <div class="col-sm-9">
                     {{ form.password1(class="form-control", placeholder="영문, 숫자, 특수문자 포함 8자 이상") }}
+                    {% for error in form.password1.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -51,6 +58,9 @@ PAR3 - 회원가입
                 <label for="password2" class="col-sm-3 col-form-label">비밀번호 확인</label>
                 <div class="col-sm-9">
                     {{ form.password2(class="form-control", placeholder="비밀번호 재입력") }}
+                    {% for error in form.password2.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
                 </div>
             </div>
         </fieldset>
@@ -63,6 +73,9 @@ PAR3 - 회원가입
                 <label for="nickname" class="col-sm-3 col-form-label">닉네임</label>
                 <div class="col-sm-7">
                     {{ form.nickname(class="form-control", placeholder="닉네임 입력") }}
+                    {% for error in form.nickname.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
                 </div>
                 <div class="col-sm-2">
                     <button type="button" class="btn btn-success w-100 su_check_bt">중복확인</button>
@@ -73,6 +86,9 @@ PAR3 - 회원가입
                 <label for="username" class="col-sm-3 col-form-label">이름</label>
                 <div class="col-sm-9">
                     {{ form.username(class="form-control", placeholder="실명 입력") }}
+                    {% for error in form.username.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -84,6 +100,10 @@ PAR3 - 회원가입
                     {{ form.phone2(class="form-control", maxlength=4) }}
                     <span class="su_phone_dash">-</span>
                     {{ form.phone3(class="form-control", maxlength=4) }}
+                    {% set phone_errors = form.phone1.errors + form.phone2.errors + form.phone3.errors %}
+                    {% if phone_errors %}
+                    <div class="invalid-feedback d-block">휴대폰 번호를 올바르게 입력해주세요.</div>
+                    {% endif %}
                 </div>
             </div>
         </fieldset>
@@ -101,6 +121,9 @@ PAR3 - 회원가입
                         {{ subfield.label(class="form-check-label") }}
                     </div>
                     {% endfor %}
+                    {% for error in form.user_sex.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
                 </div>
             </div>
 
@@ -108,6 +131,9 @@ PAR3 - 회원가입
                 <label for="experience_years" class="col-sm-3 col-form-label">구력</label>
                 <div class="col-sm-9">
                     {{ form.experience_years(class="form-select") }}
+                    {% for error in form.experience_years.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
                 </div>
             </div>
 
