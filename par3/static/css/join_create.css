@@ -1,69 +1,97 @@
 /* ============================================
    join_create.css
    PAR3 - JOIN CREATE (조인 개설/모집폼) 페이지 전용 스타일
-   연결 파일: templates/join_create.html
+   연결 파일: templates/join/join_create.html
    작성자: 오지 (feature/join-page)
 
-   ⚠️ 참고: g_form 관련 클래스는 p_join_apply(참가 신청폼)와
-   공통으로 쓰는 전역 컴포넌트입니다. 나중에 join_apply.css
-   만들 때 이 부분(g_form ~) 그대로 재사용하시면 돼요.
+   ⚠️ 컬러/톤은 join.css(리스트 페이지)와 통일:
+   네이비(#16233f) + 딥그린(#0f6e56) + 화이트, 카드형 입체감 + hover 효과
+   ⚠️ g_form 관련 클래스는 join_apply.css와 동일한 공통 컴포넌트.
+   나중에 static/css/common/g_form.css로 분리 예정
    ============================================ */
 
-/* ===== p_join_create : 페이지 전체 wrapper ===== */
-.p_join_create { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff; color: #16233f; }
 
-/* ===== jc_head : 페이지 상단 타이틀 영역 ===== */
-.jc_head { margin-bottom: 8px; }
+/* ===== p_join_create : 페이지 전체 wrapper ===== */
+.p_join_create {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  background: #ffffff;
+}
+
+/* ===== jc_head : 페이지 상단 타이틀 영역 (join.html j_head와 동일 톤) ===== */
+.jc_head { margin-bottom: 24px; }
 .jc_title {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 700;
-  margin: 24px 0 16px;
+  color: #16233f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.jc_subtitle {
+  font-size: 13px;
+  color: #8a93a3;
+  margin-top: 6px;
 }
 
 /* ============================================
-   g_form : 공통 폼 컴포넌트 (전역 재사용)
-   p_join_create, p_join_apply 둘 다 여기서 스타일 가져다 씀
+   g_form : 공통 폼 컴포넌트 (join_apply.css와 동일 구조)
+   카드형 배경 + hover 시 형광초록 테두리, join.html의 jt_row와 톤 통일
    ============================================ */
-
-/* 폼 섹션 하나 단위 (기본정보/비용/상세 등) */
 .g_form_section {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  border: 1px solid #eceef1;
+  border-radius: 14px;
+  overflow: visible;
+  box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.g_form_section:hover {
+  border-color: #39e07a;
+  box-shadow: 0 0 0 1px #39e07a, 0 8px 20px rgba(57, 224, 122, 0.18), 0 4px 10px rgba(16, 35, 63, 0.06);
+  transform: translateY(-2px);
 }
 
-/* 섹션 제목 (초록 바) */
+/* 섹션 제목 (join.html의 jt_course_badge 톤과 통일) */
 .g_form_section_title {
-  background: #6b8f76;
+  background: #16233f;
   color: #fff;
-  padding: 8px 12px;
+  padding: 12px 18px;
   font-weight: 600;
   font-size: 14px;
+  border-radius: 14px 14px 0 0;
 }
 
-/* 필드 한 줄 (라벨 + 입력값) */
 .g_form_row {
   display: flex;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #eceef1;
+}
+.g_form_row:last-child {
+  border-bottom: none;
 }
 
-/* 라벨 영역 (예: "골프장 선택") */
 .g_form_label {
   width: 160px;
   flex-shrink: 0;
-  background: #d8e3dc;
-  padding: 12px;
+  background: #f4f6f8;
+  padding: 14px 16px;
   font-size: 13px;
+  color: #16233f;
   display: flex;
   align-items: center;
 }
 
-/* 입력 영역 공통 */
 .g_form_input {
   flex: 1;
-  padding: 12px;
+  padding: 14px 16px;
   font-size: 14px;
+  position: relative;   /* 지역 드롭다운 패널의 기준점 */
 }
 
-/* 텍스트/날짜/시간 인풋 - 테두리 없이 라인 안에 자연스럽게 */
 .g_form_input--text,
 .g_form_input--date,
 .g_form_input--time {
@@ -72,50 +100,168 @@
   width: 100%;
   font-size: 14px;
   font-family: inherit;
+  color: #16233f;
+}
+.g_form_input--text::placeholder {
+  color: #9099a8;
 }
 
-/* 라디오 버튼 그룹 (모집 인원, 성별 조건 등) - 가로 나열 */
 .g_form_input--radio {
   display: flex;
   gap: 16px;
   align-items: center;
+  flex-wrap: wrap;
 }
 .g_form_input--radio label {
   display: flex;
   align-items: center;
   gap: 4px;
   cursor: pointer;
+  font-size: 13px;
+  color: #16233f;
 }
 
-/* 여러 줄 텍스트 (상세 내용) */
 .g_form_input--textarea {
   width: 100%;
-  min-height: 80px;
+  min-height: 90px;
   border: none;
   outline: none;
   resize: vertical;
   font-family: inherit;
   font-size: 14px;
+  color: #16233f;
+}
+.g_form_input--textarea::placeholder {
+  color: #9099a8;
 }
 
-/* 체크박스 그룹 (join_apply에서 쓸 예정) */
 .g_form_input--checkbox {
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
-/* ===== jc_submit_bt : CREATE 버튼 ===== */
-.jc_submit_bt {
-  display: block;
-  margin: 24px auto 0;
-  background: #1a2e22;
-  color: #fff;
-  padding: 10px 32px;
+/* ============================================
+   jc_course_row : 골프장 선택 입력창 + 지역 드롭다운 한 줄 배치
+   ============================================ */
+.jc_course_row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.jc_course_name_input {
+  flex: 1;   /* 골프장 입력창이 남는 공간을 다 채움 */
+}
+
+/* ===== jc_region_select : 지역 선택 드롭다운 (골프장 입력창 옆, 고정폭) ===== */
+.jc_region_select {
+  position: relative;
+  flex-shrink: 0;
+  width: 120px;
+}
+.jc_region_bt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: 1px solid #e4e6ea;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: #16233f;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.jc_region_bt:hover { background: #f4f6f8; }
+.jc_region_select--open .jc_region_bt { border-color: #0f6e56; }
+
+.jc_region_icon {
+  width: 8px;
+  height: 8px;
+  border: solid #9099a8;
+  border-width: 0 1.5px 1.5px 0;
+  display: inline-block;
+  padding: 2px;
+  transform: rotate(45deg);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.jc_region_select--open .jc_region_icon { transform: rotate(225deg); }
+
+.jc_region_panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 140px;
+  background: #fff;
+  border: 1px solid #e4e6ea;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 8px 20px rgba(16, 24, 40, 0.1);
+  z-index: 20;
+}
+.jc_region_select--open .jc_region_panel { display: block; }
+
+.jc_region_option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 6px;
+  font-size: 14px;
+  color: #16233f;
+  cursor: pointer;
   border-radius: 4px;
+  white-space: nowrap;
+}
+.jc_region_option:hover { background: #f4f6f8; }
+
+/* ===== jc_submit_bt : CREATE 버튼 (join.html의 jt_join_bt와 동일 톤, 딥그린 그라데이션) ===== */
+.jc_submit_bt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #3f9a92, #0f6e56);
+  color: #fff;
+  padding: 14px;
+  border-radius: 12px;
   border: none;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 15px;
   cursor: pointer;
+  transition: opacity 0.15s;
 }
-.jc_submit_bt:hover { background: #2b4536; }
+.jc_submit_bt:hover {
+  opacity: 0.9;
+}
+
+/* ============================================
+   반응형 : 태블릿(768px) / 모바일(480px)
+   ============================================ */
+@media (max-width: 768px) {
+  .p_join_create { padding: 20px 16px 60px; }
+  .g_form_row { flex-direction: column; }
+  .g_form_label {
+    width: 100%;
+    border-bottom: 1px solid #eceef1;
+  }
+}
+
+@media (max-width: 480px) {
+  .jc_title { font-size: 22px; }
+  .g_form_section_title { font-size: 13px; padding: 10px 14px; }
+  .g_form_label, .g_form_input { padding: 12px 14px; }
+
+  /* 좁은 화면에서는 골프장+지역 세로로 쌓이게 */
+  .jc_course_row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .jc_region_select {
+    width: 100%;
+  }
+}
