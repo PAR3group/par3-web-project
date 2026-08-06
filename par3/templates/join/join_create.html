@@ -4,27 +4,47 @@
 PAR3 - JOIN CREATE
 {% endblock %}
 
-{% block content %}
+{% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/join_create.css') }}">
+{% endblock %}
 
+{% block content %}
 <div class="p_join_create">
 
-  <!-- jc_head -->
+  <!-- jc_head : 페이지 타이틀 영역 (join.html의 j_head와 동일 톤) -->
   <div class="jc_head">
-    <h1 class="jc_title">⛳ JOIN CREATE FORM</h1>
+    <h1 class="jc_title">⛳Join Create </h1>
+    <p class="jc_subtitle">라운딩 멤버를 모집해보세요.</p>
   </div>
 
-  <!-- g_form : 공통 폼 wrapper -->
+  <!-- g_form : 공통 폼 wrapper, join_apply.html과 동일 컴포넌트 재사용 -->
   <form class="g_form" action="/join/create" method="POST">
 
     <!-- ===== 섹션 1. 기본 라운드 정보 영역 ===== -->
     <div class="g_form_section">
-      <div class="g_form_section_title">1. 기본 라운드 정보 영역</div>
+      <div class="g_form_section_title">1. 기본 라운드 정보</div>
 
       <div class="g_form_row">
         <label class="g_form_label">골프장 선택</label>
-        <div class="g_form_input">
-          <input type="text" class="g_form_input--text" name="course_name" placeholder="입력 창 또는 검색 버튼">
+        <div class="g_form_input jc_course_row">
+          <input type="text" class="g_form_input--text jc_course_name_input" name="course_name" placeholder="골프장 이름을 입력해주세요">
+
+          <!-- 지역 선택 드롭다운 : 골프장 입력창 옆에 나란히 배치 -->
+          <div class="jc_region_select" id="jc_region_select">
+            <button type="button" class="jc_region_bt">
+              <span class="jc_region_bt_text">지역</span>
+              <span class="jc_region_icon"></span>
+            </button>
+            <div class="jc_region_panel">
+              <label class="jc_region_option"><input type="radio" name="region" value="서울"> 서울</label>
+              <label class="jc_region_option"><input type="radio" name="region" value="경기"> 경기</label>
+              <label class="jc_region_option"><input type="radio" name="region" value="부산"> 부산</label>
+              <label class="jc_region_option"><input type="radio" name="region" value="대전"> 대전</label>
+              <label class="jc_region_option"><input type="radio" name="region" value="강원도"> 강원도</label>
+              <label class="jc_region_option"><input type="radio" name="region" value="전라남도"> 전라남도</label>
+              <label class="jc_region_option"><input type="radio" name="region" value="전라북도"> 전라북도</label>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -45,14 +65,15 @@ PAR3 - JOIN CREATE
       <div class="g_form_row">
         <label class="g_form_label">코스 정보</label>
         <div class="g_form_input">
-          <input type="text" class="g_form_input--text" name="course_info" placeholder="코스 이름이나 메모 입력">
+          <input type="text" class="g_form_input--text" name="course_info" placeholder="코스 이름">
         </div>
       </div>
+
     </div>
 
     <!-- ===== 섹션 2. 비용 및 인원 조건 영역 ===== -->
     <div class="g_form_section">
-      <div class="g_form_section_title">2. 비용 및 인원 조건 영역</div>
+      <div class="g_form_section_title">2. 비용 및 인원 조건</div>
 
       <div class="g_form_row">
         <label class="g_form_label">그린피/캐디피</label>
@@ -73,17 +94,17 @@ PAR3 - JOIN CREATE
       <div class="g_form_row">
         <label class="g_form_label">성별 조건</label>
         <div class="g_form_input g_form_input--radio">
-          <label><input type="radio" name="gender_condition" value="any" checked> 무관</label>
-          <label><input type="radio" name="gender_condition" value="male"> 남성만</label>
-          <label><input type="radio" name="gender_condition" value="female"> 여성만</label>
-          <label><input type="radio" name="gender_condition" value="couple"> 부부</label>
+          <label><input type="radio" name="gender_condition" value="무관" checked> 무관</label>
+          <label><input type="radio" name="gender_condition" value="남성만"> 남성만</label>
+          <label><input type="radio" name="gender_condition" value="여성만"> 여성만</label>
+          <label><input type="radio" name="gender_condition" value="부부"> 부부</label>
         </div>
       </div>
     </div>
 
     <!-- ===== 섹션 3. 상세 내용 및 소통 영역 ===== -->
     <div class="g_form_section">
-      <div class="g_form_section_title">3. 상세 내용 및 소통 영역</div>
+      <div class="g_form_section_title">3. 상세 내용 및 소통</div>
 
       <div class="g_form_row">
         <label class="g_form_label">제목</label>
@@ -100,9 +121,14 @@ PAR3 - JOIN CREATE
       </div>
     </div>
 
+    <!-- jc_submit_bt : CREATE 버튼, join.html의 jt_join_bt와 동일 톤 -->
     <button type="submit" class="jc_submit_bt">CREATE</button>
 
   </form>
 
 </div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/join_create.js') }}"></script>
 {% endblock %}
