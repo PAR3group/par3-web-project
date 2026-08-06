@@ -1,6 +1,7 @@
 import json
 from flask import Blueprint, render_template, redirect, url_for
 import os
+from par3.models import Post
 
 bp = Blueprint('main', __name__, url_prefix='/')
 
@@ -30,4 +31,5 @@ def inter_par3():
 
     return render_template('main.html',
                            prize_top3=prize_top3_players,
-                           kpga_top3=kpga_top3)
+                           kpga_top3=kpga_top3,
+                           posts=Post.query.order_by(Post.likes.desc()).limit(3).all())

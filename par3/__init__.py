@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import MetaData
 import config
+from par3.filter import format_datetime, format_markdown
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -27,14 +28,19 @@ def create_app():
     migrate.init_app(app, db)
 
     # 블루프린트 등록
-    from .views import main_views, join_views, auth_views, recommend_views
+    from .views import main_views, join_views, auth_views, recommend_views, shop_views, talk_views
     app.register_blueprint(main_views.bp)
     app.register_blueprint(join_views.bp)
     app.register_blueprint(auth_views.bp)
     app.register_blueprint(recommend_views.bp)
+    app.register_blueprint(shop_views.bp)
+    app.register_blueprint(talk_views.bp)
 
     # 필터 등록
-
+    # datetime_filter
+    app.jinja_env.filters['datetime']=format_datetime
+    # 2. Flask 앱의 Jinja2 템플릿 필터로 등록합니다. (필터 이름: 'markdown')
+    app.jinja_env.filters['markdown']=format_markdown
 
     # 전역 함수 등록
     # g.user 확인 함수

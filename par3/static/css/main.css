@@ -2,17 +2,20 @@
 .m_news_section {
     padding: 40px 24px;
 }
+
 .m_news_container {
-    max-width: 1080px;  
-    margin: 0 auto;        
+    max-width: 1080px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
 }
+
 .m_golf_news {
     grid-column: 1 / -1;
-    margin: 0 0 16px 0; 
+    margin: 0 0 16px 0;
 }
+
 .m_news_card {
     background: #fff;
     border: 1px solid #e5e5e5;
@@ -74,28 +77,50 @@
     text-align: right;
 }
 
-.more_view_bt {
-    display: block;
-    margin-top: 10px;
-    font-size: 12px;
-    color: #777;
-    text-align: right;
+.m_n_t_b {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.m_news_c_A {
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+    text-align: left;
+}
+
+.m_news_c_B {
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+    text-align: left;
+}
+
+.m_news_c_C {
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+    text-align: left;
+}
+
+.m_news_card_sub {
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
 }
 
 .m_news_card .more_view_bt {
     display: inline-block;
-    margin-top: 8px;
+    margin-top: auto;
     font-size: 13px;
-    color: #0066cc;
     text-decoration: none;
-    position: static; /* absolute 무효화 */
+    position: static;
+    /* absolute 무효화 */
 }
 
 /* 공통 more_view_bt */
-.m_community_card .more_view_bt,
-.fitting_card .more_view_bt,
-.join_card .more_view_bt,
-.m_shop_card .more_view_bt {
+.more_view_bt {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -103,12 +128,11 @@
     text-decoration: none;
     opacity: 0.7;
 }
-.m_community_card .more_view_bt:hover,
-.fitting_card .more_view_bt:hover,
-.join_card .more_view_bt:hover,
-.m_shop_card .more_view_bt:hover {
+
+.more_view_bt:hover {
     opacity: 1;
 }
+
 /* 커뮤니티 부분 카드 */
 /* ===================================================
    Par3 홈 콘텐츠 섹션 - Grid Layout
@@ -131,41 +155,43 @@
 }
 
 /* 좌측 상단 - 커뮤니티 */
-.m_content_container > .m_community_card {
+.m_content_container>.m_community_card {
     grid-column: 1;
     grid-row: 1;
 }
 
 /* 우측 상단 - 피팅존 배너 */
-.m_content_container > .fitting_card {
+.m_content_container>.fitting_card {
     grid-column: 2;
     grid-row: 1;
 }
 
 /* 좌측 하단 - 실시간 골프 조인 */
-.m_content_container > .join_card {
+.m_content_container>.join_card {
     grid-column: 1;
     grid-row: 2;
 }
 
 /* 우측 하단 - Par3 샵 */
-.m_content_container > .m_shop_card {
+.m_content_container>.m_shop_card {
     grid-column: 2;
     grid-row: 2;
 }
 
 /* 모바일: 1열로 쌓기 */
 @media (max-width: 860px) {
+
     .m_content_container,
     .m_news_container {
         grid-template-columns: 1fr;
         grid-template-rows: none;
     }
-    .m_news_container > .m_news_card,
-    .m_content_container > .m_community_card,
-    .m_content_container > .fitting_card,
-    .m_content_container > .join_card,
-    .m_content_container > .m_shop_card {
+
+    .m_news_container>.m_news_card,
+    .m_content_container>.m_community_card,
+    .m_content_container>.fitting_card,
+    .m_content_container>.join_card,
+    .m_content_container>.m_shop_card {
         grid-column: 1;
         grid-row: auto;
     }
@@ -195,15 +221,17 @@
    커뮤니티 카드 - 리스트를 세로 그리드로
 =================================================== */
 .m_community_card .m_community_list {
+    /* [수정] 텍스트 줄이 4줄(뱃지+제목 / 본문 / 작성자 / 통계)이라 rows를 4개로 맞춤 */
     margin-top: 16px;
     display: grid;
-    grid-template-columns: 56px 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-columns: 80px 1fr;
+    grid-template-rows: repeat(4, auto);
     column-gap: 12px;
     row-gap: 4px;
     align-items: center;
     padding: 12px 0;
     border-top: 1px solid rgba(0, 0, 0, 0.06);
+    cursor: pointer; /* [수정] 클릭 가능함을 표시 */
 }
 
 .m_community_card .m_community_list:first-of-type {
@@ -211,10 +239,12 @@
     padding-top: 4px;
 }
 
-.m_community_card .m_community_list img {
-    grid-row: 1 / span 3;
-    width: 56px;
-    height: 56px;
+/* [수정] 텍스트 줄 수가 4줄로 늘어난 만큼 이미지도 4줄 전체를 span 하도록 변경 */
+.m_community_card .m_community_list img,
+.m_community_card .m_community_list video {
+    grid-row: 1 / span 4;
+    width: 80px;
+    height: 80px;
     border-radius: 10px;
     object-fit: cover;
 }
@@ -224,6 +254,24 @@
     margin: 0;
     font-size: 14px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* [추가] 카테고리 뱃지 - community 페이지의 .badge 스타일을 축소해서 재사용 */
+.m_community_card .m_badge {
+    flex-shrink: 0;
+    display: inline-block;
+    background-color: #16a34a;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 10px;
 }
 
 .m_community_card .m_community_list p {
@@ -233,19 +281,23 @@
     opacity: 0.75;
 }
 
-.m_community_card .m_community_list p:last-child {
+/* [추가] 본문 미리보기 한 줄 말줄임 처리 */
+.m_community_card .m_list_content {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.m_community_card .m_list_meta span {
+    margin-left: 4px;
+}
+
+.m_community_card .m_list_stats {
     display: flex;
     gap: 12px;
     align-items: center;
     font-size: 12px;
     opacity: 0.6;
-}
-
-.m_community_card .m_community_list p:last-child img {
-    width: 14px;
-    height: 14px;
-    grid-row: auto;
-    border-radius: 0;
 }
 
 /* ===================================================
@@ -371,7 +423,8 @@
 }
 
 .m_shop_card .shop_product_card {
-    flex: 0 0 calc(50% - 8px); /* 한 화면에 2개씩 보임 */
+    flex: 0 0 calc(50% - 8px);
+    /* 한 화면에 2개씩 보임 */
     display: flex;
     flex-direction: column;
     gap: 6px;

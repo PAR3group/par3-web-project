@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, url_for, session, g, request
+from flask import Blueprint, abort, flash, redirect, render_template, url_for, session, g, request
 from par3 import db
 from par3.models import User
 from par3.forms import FindIdForm, FindPasswordForm, UserCreateForm, UserLoginForm
@@ -118,6 +118,17 @@ def login_required(view):
     def wrapped_view(*args, **kwargs):
         if g.user is None:
             return redirect(url_for('auth.login', next=request.path))
+        return view(*args, **kwargs)
+    return wrapped_view
+
+# 관리자 전용 데코레이터
+def admin_required(view):
+    @functools.wraps(view)
+    def wrapped_view(*args, **kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login', next=request.path))
+        if not g.user.is_admin:
+            abort(403)  # 로그인은 했지만 관리자가 아니면 접근 금지
         return view(*args, **kwargs)
     return wrapped_view
 
