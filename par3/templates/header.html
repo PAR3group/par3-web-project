@@ -1,27 +1,31 @@
-
-
 <header>
     <div class="header_container">
-        <h1 class="h_logo">
-            par3
-        </h1>
+        <h1 class="h_logo">par3</h1>
+
         <nav class="h_nav">
             <ul class="h_nav_list">
-                <li class="h_nav_lists h_nav_info">정보</li>
-                <li class="h_nav_lists h_nav_community">게시판</li>
-                <li class="h_nav_lists h_nav_join">골프조인</li>
-                <li class="h_nav_lists h_nav_shop">구매</li>
-                <li class="h_nav_lists h_nav_membership">멤버십</li>
+                <li class="h_nav_lists">
+                    <a href="#" class="h_nav_info">정보</a>
+                </li>
+                <li class="h_nav_lists">
+                    <a href="#" class="h_nav_community">게시판</a>
+                </li>
+                <li class="h_nav_lists">
+                    <a href="#" class="h_nav_join">골프조인</a>
+                </li>
+                <li class="h_nav_lists">
+                    <a href="#" class="h_nav_shop">구매</a>
+                </li>
+                <li class="h_nav_lists">
+                    <a href="#" class="h_nav_membership">멤버십</a>
+                </li>
             </ul>
         </nav>
+
         <div class="h_auth_bt">
             {% if g.user %}
-            <a href="#" class="h_my_page">
-            mypage
-            </a>
-            <a href="{{url_for('auth.logout')}}" class="h_logout_bt">
-            logout
-            </a>
+            <a href="#" class="h_my_page">mypage</a>
+            <a href="{{url_for('auth.logout')}}" class="h_logout_bt">logout</a>
             {% else %}
             <a href="{{url_for('auth.login')}}" class="h_login_bt">LOGIN</a>
             {% endif %}

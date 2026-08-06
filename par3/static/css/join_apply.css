@@ -1,0 +1,120 @@
+/* ============================================
+   join_apply.css
+   PAR3 - JOIN APPLY (조인 참가 신청폼) 페이지 전용 스타일
+   연결 파일: templates/join/join_apply.html
+   작성자: 오지 (feature/join-page)
+
+   ⚠️ 참고: g_form 관련 클래스는 join_create.css와 동일한
+   전역 공통 컴포넌트입니다. 두 파일에 중복 작성되어 있는데,
+   나중에 static/css/common/g_form.css로 분리해서
+   base.html에서 공통으로 불러오는 구조로 리팩토링 예정
+   ============================================ */
+
+/* ===== p_join_apply : 페이지 전체 wrapper ===== */
+.p_join_apply { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* ===== ja_head : 페이지 상단 타이틀 영역 ===== */
+.ja_head { margin-bottom: 8px; }
+.ja_title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 24px 0 16px;
+}
+
+/* ============================================
+   g_form : 공통 폼 컴포넌트 (join_create.css와 동일)
+   ============================================ */
+
+.g_form_section {
+  margin-bottom: 24px;
+}
+
+.g_form_section_title {
+  background: #6b8f76;
+  color: #fff;
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.g_form_row {
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+
+.g_form_label {
+  width: 160px;
+  flex-shrink: 0;
+  background: #d8e3dc;
+  padding: 12px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+}
+
+.g_form_input {
+  flex: 1;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.g_form_input--text,
+.g_form_input--date,
+.g_form_input--time {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+/* readonly 처리된 요약 정보 필드 - 배경 살짝 어둡게 해서 "수정 불가" 느낌 표시 */
+.g_form_input--text[readonly] {
+  background: #f7f7f7;
+  color: #666;
+}
+
+.g_form_input--radio {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.g_form_input--radio label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.g_form_input--textarea {
+  width: 100%;
+  min-height: 80px;
+  border: none;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.g_form_input--checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.g_form_input--checkbox label {
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* ===== ja_actions : cancel + APPLY 버튼 가로 배치 wrapper ===== */
+.ja_actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.ja_cancel_bt {
+  background: #eee;
+  color: #333;
+  padding: 10px

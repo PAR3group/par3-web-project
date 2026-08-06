@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, redirect, render_template, url_for, session, g, request
 from par3 import db
 from par3.models import User
-from par3.forms import UserCreateForm, UserLoginForm
+from par3.forms import FindIdForm, FindPasswordForm, UserCreateForm, UserLoginForm
 from werkzeug.security import generate_password_hash, check_password_hash
 import functools
 
@@ -12,6 +12,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 @bp.route('/signup', methods=('GET', 'POST'))
 def signup():
     form = UserCreateForm()
+
     if form.validate_on_submit():
         phonenumber = f"{form.phone1.data}-{form.phone2.data}-{form.phone3.data}"
 
@@ -57,9 +58,11 @@ def login():
         error = None
         user = User.query.filter_by(user_id=form.user_id.data).first()
         if not user:
-            error = "존재하지 않는 사용자입니다."
+            form.user_id.errors.append("아이디를 확인해주세요.")
+            return render_template('auth/login.html', form=form)
         elif not check_password_hash(user.password, form.password.data):
-            error = "비밀번호가 올바르지 않습니다."
+            form.password.errors.append("비밀번호가 올바르지 않습니다.")
+            return render_template('auth/login.html', form=form)
         if error is None:
             session.clear()
             session['user_id'] = user.id  # 수정: PK(id)를 저장해야 g.user 조회가 정상 동작함
@@ -70,8 +73,6 @@ def login():
             if next_page:
                 return redirect(next_page)
             return redirect(url_for('main.inter_par3'))
-
-        flash(error)
     return render_template('auth/login.html', form=form)
 
 
@@ -81,6 +82,37 @@ def logout():
     return redirect(url_for('main.inter_par3'))
 
 
+# 아이디가 3글자 이상이라고 가정할 때 앞 3글자만 보여주고 나머지 마스킹
+def mask_user_id(user_id):
+    visible = min(3, len(user_id) - 1)
+    return user_id[:visible] + '*' * (len(user_id) - visible)
+
+
+@bp.route('/find-id/', methods=('GET', 'POST'))
+def find_id():
+    form = FindIdForm()
+    found_id = None
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data, email=form.email.data).first()
+        if user:
+            found_id = mask_user_id(user.user_id)
+        else:
+            flash('입력하신 정보와 일치하는 회원을 찾을 수 없습니다.')
+    return render_template('auth/find_id.html', form=form, found_id=found_id)
+
+
+@bp.route('/find-password/', methods=('GET', 'POST'))
+def find_password():
+    form = FindPasswordForm()
+    sent_email = None
+    if form.validate_on_submit():
+        user = User.query.filter_by(user_id=form.user_id.data, email=form.email.data).first()
+        if user:
+            sent_email = user.email
+        else:
+            flash('입력하신 정보와 일치하는 회원을 찾을 수 없습니다.')
+    return render_template('auth/find_password.html', form=form, sent_email=sent_email)
+
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(*args, **kwargs):
@@ -88,3 +120,4 @@ def login_required(view):
             return redirect(url_for('auth.login', next=request.path))
         return view(*args, **kwargs)
     return wrapped_view
+

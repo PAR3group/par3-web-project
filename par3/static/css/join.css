@@ -1,166 +1,494 @@
-/* ============================================
-   join.css
-   PAR3 - JOIN (실시간 골프 조인 리스트) 페이지 전용 스타일
-   연결 파일: templates/join.html
-   작성자: 오지 (feature/join-page)
-   ============================================ */
-
-/* ===== 공통 리셋 ===== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Pretendard', -apple-system, sans-serif; background: #fff; color: #333; }
+body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff; color: #16233f; }
 
-/* ===== p_join : 페이지 전체 wrapper =====
-   join.html의 최상단 <div class="p_join"> 에 적용됨 */
-.p_join { max-width: 1160px; margin: 0 auto; padding: 32px 24px 80px; }
+.p_join {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  background: #ffffff;
+}
 
-/* ===== j_head : 페이지 상단 타이틀 영역 =====
-   "⛳ JOIN" 제목이 들어가는 부분 */
-.j_head { margin-bottom: 20px; }
+.j_head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
 .j_title {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 700;
+  color: #16233f;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.j_subtitle {
+  font-size: 13px;
+  color: #8a93a3;
+  margin-top: 6px;
+}
+.j_live_status {
   display: flex;
   align-items: center;
   gap: 6px;
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 6px;
+}
+.j_live_dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0f6e56;
 }
 
-/* ===== j_filter : 지역별 선택 + 검색창 영역 =====
-   드롭다운(j_filter_select) + 검색 인풋(j_filter_search) */
-.j_filter {
-  display: flex;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 16px;
-}
-.j_filter_select {
+.j_filter_bar {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 12px 20px;
-  border-right: 1px solid #ddd;
-  background: #fafafa;
+  gap: 2px;
+  background: #ffffff;
+  border: 1px solid #e4e6ea;
+  border-radius: 14px;
+  padding: 6px 10px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.06);
+}
+
+.j_dropdown { position: relative; }
+.j_dropdown_bt {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #16233f;
+  font-weight: 500;
+  border-radius: 8px;
   cursor: pointer;
   white-space: nowrap;
 }
-.j_filter_select_text { font-size: 14px; color: #333; }
+.j_dropdown_bt:hover { background: #f4f6f8; }
+.j_dropdown--open .j_dropdown_bt { background: #f4f6f8; }
 
-/* 드롭다운 화살표 아이콘 (CSS로 그린 화살표, 이미지 아님) */
 .j_filter_select_icon {
-  width: 10px;
-  height: 10px;
-  border: solid #888;
+  width: 8px;
+  height: 8px;
+  border: solid #9099a8;
   border-width: 0 1.5px 1.5px 0;
   display: inline-block;
   padding: 2px;
   transform: rotate(45deg);
   transition: transform 0.2s;
 }
+.j_dropdown--open .j_filter_select_icon { transform: rotate(225deg); }
+
+.j_dropdown_panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: #ffffff;
+  border: 1px solid #e4e6ea;
+  border-radius: 10px;
+  padding: 12px;
+  min-width: 180px;
+  box-shadow: 0 8px 20px rgba(16, 24, 40, 0.1);
+  z-index: 20;
+}
+.j_dropdown--open .j_dropdown_panel { display: block; }
+.j_dropdown_option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+  font-size: 14px;
+  color: #16233f;
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: 4px;
+}
+.j_dropdown_option:hover { background: #f4f6f8; }
+
+.j_filter_bar_divider {
+  width: 1px;
+  height: 20px;
+  background: #e4e6ea;
+  margin: 0 8px;
+  flex-shrink: 0;
+}
+
+.j_filter_search_wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.j_filter_search_icon {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid #9099a8;
+  border-radius: 50%;
+  position: relative;
+  flex-shrink: 0;
+}
+.j_filter_search_icon::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 1.5px;
+  background: #9099a8;
+  transform: rotate(45deg);
+  bottom: -4px;
+  right: -4px;
+}
 .j_filter_search {
   flex: 1;
+  min-width: 0;
+  background: transparent;
   border: none;
   outline: none;
-  padding: 12px 16px;
-  font-size: 14px;
+  padding: 8px 0;
+  font-size: 13px;
+  color: #16233f;
 }
+.j_filter_search::placeholder { color: #9099a8; }
 
-/* ===== j_tabs : 전체 / 날짜순 / 가격순 정렬 탭 =====
-   .j_tab--active 로 현재 선택된 탭 표시
-   ⚠️ 나중에 JS 연결 시: 클릭한 탭에 active 클래스 토글하는 로직 필요 */
+.jt_write_bt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: #16233f;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 9px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.jt_write_bt:hover { background: #223258; }
+
+.j_selected_tags_row {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.j_selected_tags_row--visible { display: flex; }
+.j_selected_tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.j_tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px 6px 14px;
+  background: #eaf2ee;
+  color: #0f6e56;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+}
+.j_tag_remove { cursor: pointer; font-weight: 700; }
+.j_tag_remove:hover { color: #0b5744; }
+
+.j_reset_bt {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #9099a8;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.j_reset_bt:hover { color: #16233f; }
+.j_reset_icon { font-size: 13px; display: inline-block; }
+
 .j_tabs {
   display: flex;
-  gap: 8px;
-  background: #fafafa;
-  border: 1px solid #eee;
-  border-radius: 4px;
-  padding: 8px;
-  margin-bottom: 24px;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid #e4e6ea;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
 }
 .j_tab {
-  padding: 8px 20px;
-  border-radius: 4px;
   font-size: 14px;
-  color: #888;
+  color: #9099a8;
   cursor: pointer;
-  background: transparent;
+  position: relative;
+  padding-bottom: 13px;
+  margin-bottom: -13px;
 }
-.j_tab--active {
-  background: #4CAF50;
-  color: #fff;
-  font-weight: 600;
+.j_tab--active { color: #16233f; font-weight: 700; }
+.j_tab--active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 2px;
+  background: #0f6e56;
+  border-radius: 2px;
+}
+.j_tab:hover { color: #16233f; }
+
+.j_exclude_full {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  cursor: pointer;
+  margin-left: auto;
+  white-space: nowrap;
+}
+.j_toggle { position: relative; display: inline-block; width: 32px; height: 18px; }
+.j_toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+.j_toggle_track {
+  position: absolute; inset: 0;
+  background: #d8dce4;
+  border-radius: 10px;
+  transition: background 0.2s;
+}
+.j_toggle_thumb {
+  position: absolute;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  top: 2px; left: 2px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+.j_toggle input:checked ~ .j_toggle_track { background: #0f6e56; }
+.j_toggle input:checked ~ .j_toggle_track .j_toggle_thumb { transform: translateX(14px); }
+
+.j_table_body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-/* ===== j_table : 조인 리스트 테이블 =====
-   join.html의 {% for %} 반복문으로 jt_row 가 여러 개 생성됨
-   ⚠️ DB 연동 시: jt_row 안 값들을 {{ join.xxx }} 형태로 교체 예정 */
-.j_table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-/* 테이블 헤더 (라운드 일정 / 골프장 / 코스 / 내용 등) */
-.jt_head {
-  border-bottom: 2px solid #1a2e22;
-}
-.jt_th {
-  text-align: center;
-  padding: 12px 8px;
-  font-size: 13px;
-  color: #666;
-  font-weight: 600;
-}
-
-/* 테이블 한 줄(row) 공통 스타일 */
 .jt_row {
-  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid #eceef1;
+  border-radius: 14px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
-.jt_row td {
-  text-align: center;
-  padding: 16px 8px;
-  font-size: 13px;
-  vertical-align: middle;
+.jt_row:hover {
+  border-color: #39e07a;
+  box-shadow: 0 0 0 1px #39e07a, 0 8px 20px rgba(57, 224, 122, 0.18), 0 4px 10px rgba(16, 35, 63, 0.06);
+  transform: translateY(-2px);
 }
 
-/* 라운드 일정 날짜 */
-.jt_date { color: #333; }
+.jt_date { text-align: center; min-width: 44px; flex-shrink: 0; }
+.jt_date_num { font-size: 15px; font-weight: 700; color: #16233f; }
+.jt_date_day { font-size: 11px; color: #9099a8; }
+.jt_dday {
+  margin-top: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #0f6e56;
+  background: #eaf2ee;
+  border-radius: 5px;
+  padding: 2px 0;
+}
 
-/* 골프장명 + 코스/시간 서브텍스트 */
-.jt_course_name { font-weight: 600; font-size: 13px; }
-.jt_course_sub { font-size: 12px; color: #888; margin-top: 2px; }
+.jt_thumb {
+  width: 76px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #eceef1;
+}
 
-/* 내용 (가격, 인원 조건 텍스트) */
-.jt_content { color: #333; }
+.jt_info { flex: 1 1 160px; min-width: 0; }
+.jt_info_top { display: flex; align-items: center; gap: 6px; }
+.jt_course_name { font-size: 15px; font-weight: 700; color: #16233f; }
+.jt_course_badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: #0f6e56;
+  background: #eaf2ee;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+.jt_info_sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #9099a8;
+  margin-top: 5px;
+}
+.jt_info_sub span:not(:last-child)::after {
+  content: '·';
+  margin-left: 8px;
+  color: #d8dce4;
+}
 
-/* 참여 조건 (무관/성별/인원수 등) */
-.jt_condition { color: #555; }
+.jt_row_divider {
+  width: 1px;
+  align-self: stretch;
+  background: #eceef1;
+  flex-shrink: 0;
+}
 
-/* 참가자 아바타 목록 - 겹쳐서 표시되는 원형 아이콘들
-   ⚠️ 지금은 빈 원(더미)이고, 실제 프로필 이미지 연동은 추후 작업 */
+.jt_price_wrap { min-width: 76px; text-align: center; flex-shrink: 0; }
+.jt_price_label { font-size: 11px; color: #9099a8; margin-bottom: 6px; }
+.jt_price_num { font-size: 14px; font-weight: 700; color: #16233f; }
+.jt_price_condition {
+  font-size: 11px;
+  font-weight: 500;
+  color: #b98a3d;
+  margin-top: 3px;
+}
+
+.jt_participants_wrap { min-width: 76px; text-align: center; flex-shrink: 0; }
+.jt_participants_label { font-size: 11px; color: #9099a8; margin-bottom: 6px; }
 .jt_participants { display: flex; justify-content: center; }
 .jt_avatar {
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: #222;
-  margin-left: -8px;
-  border: 1.5px solid #fff;
+  margin-left: -7px;
+  border: 2px solid #fff;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .jt_avatar:first-child { margin-left: 0; }
+.jt_avatar--empty { background: #e4e6ea; color: #9099a8; font-weight: 400; }
 
-/* 작성자명 */
-.jt_writer { color: #333; }
-
-/* 참여하기 버튼 - <a> 태그로 구현 (/join/{id} 링크 연결)
-   ⚠️ views에서 /join/<id> 라우트 만들어야 정상 작동 */
-.jt_join_bt {
-  background: #1a2e22;
-  color: #fff;
-  padding: 6px 14px;
-  border-radius: 4px;
-  border: none;
-  font-size: 12px;
-  cursor: pointer;
-  text-decoration: none;
-  display: inline-block;
+.jt_writer_wrap { min-width: 60px; text-align: center; flex-shrink: 0; }
+.jt_writer_label { font-size: 11px; color: #9099a8; margin-bottom: 6px; }
+.jt_writer_info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
-.jt_join_bt:hover { background: #2b4536; }
+.jt_writer_avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.jt_writer_name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #16233f;
+}
+.jt_actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.jt_join_bt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #3f9a92, #0f6e56);
+  color: #fff;
+  padding: 9px 16px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.jt_join_bt:hover { opacity: 0.9; }
+.jt_join_bt_arrow { font-size: 14px; }
+
+/* 하트 - 참여하기 버튼 오른쪽에 단독으로 표시 */
+.jt_heart_bt {
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: #d8dce4;
+  flex-shrink: 0;
+}
+.jt_heart_bt::before {
+  content: '♡';
+}
+.jt_row[data-liked="true"] .jt_heart_bt::before {
+  content: '♥';
+  color: #ef4444;
+}
+
+.jt_join_bt {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #3f9a92, #0f6e56);
+  color: #fff;
+  padding: 9px 16px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.jt_join_bt:hover { opacity: 0.9; }
+.jt_join_bt_arrow { font-size: 14px; }
+
+.j_load_more { text-align: center; margin-top: 20px; }
+.j_load_more span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  background: #f4f6f8;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.j_load_more_icon {
+  width: 8px; height: 8px;
+  border: solid #9099a8;
+  border-width: 0 1.5px 1.5px 0;
+  display: inline-block;
+  padding: 2px;
+  transform: rotate(45deg);
+}
+
+@media (max-width: 1024px) {
+  .j_filter_bar { flex-wrap: wrap; }
+  .j_filter_bar_divider { display: none; }
+  .j_filter_search_wrap { flex-basis: 100%; order: 1; margin-top: 6px; }
+  .jt_write_bt { margin-left: auto; }
+}
+
+@media (max-width: 768px) {
+  .p_join { padding: 20px 16px 60px; }
+  .j_head { flex-direction: column; gap: 8px; }
+  .j_tabs { gap: 14px; flex-wrap: wrap; }
+  .jt_row { flex-wrap: wrap; }
+  .jt_thumb { width: 72px; height: 72px; }
+  .jt_row_divider { display: none; }
+  .jt_writer_wrap { margin-left: auto; }
+  .jt_actions { flex-basis: 100%; flex-direction: row; justify-content: flex-end; margin-top: 8px; }
+}
+
+@media (max-width: 480px) {
+  .j_title { font-size: 22px; }
+  .jt_row { padding: 12px; }
+  .jt_join_bt { padding: 8px 14px; font-size: 12px; }
+}
