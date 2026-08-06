@@ -1,26 +1,26 @@
 {% extends 'base.html' %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='talk-post.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='talk-detail.css') }}">
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="main-wrapper">
-        
+
         <!-- 1. 상세페이지 상단 헤더 -->
         <div class="detail-header">
             <!-- <span class="badge">{{ post.category }}</span> -->
             <h2 class="detail-title">{{ post.title }}</h2>
             <div class="detail-meta" style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <span>작성자: <strong>{{ post.author }}</strong></span> | 
-                    <span>작성일: {{ post.created_at }}</span> | 
+                    <span>작성자: <strong>{{ post.author }}</strong></span> |
+                    <span>작성일: {{ post.created_at }}</span> |
                     <span>조회수 🔎 {{ post.views }}</span>
                 </div>
-                
-                <!-- 작성자 본인일 때만 삭제 버튼 표시 -->
-                {% if current_user and current_user == post.author %}
+
+                <!-- [수정] current_user -> g.user 기준으로 통일 (로그인 처리 로직이 g.user를 사용하므로) -->
+                {% if g.user and g.user.nickname == post.author %}
                 <div>
                     <button type="button" onclick="deletePost('{{ post.id }}')" style="background-color: #264c22; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px;">
                         🗑️ 삭제하기
@@ -36,7 +36,6 @@
         <div class="detail-content">
             {% if post.image_url %}
                 <div class="detail-img-box" style="margin-bottom: 25px;">
-                    <!-- 🎥 동영상 확장자 체크 (.mp4, .webm, .ogg, .mov, .m4v, .avi) -->
                     {% if post.image_url.lower().endswith(('.mp4', '.webm', '.ogg', '.mov', '.m4v', '.avi')) %}
                         <video controls style="max-width: 100%; max-height: 500px; width: auto; border-radius: 8px;">
                             <source src="{{ post.image_url }}">
@@ -47,7 +46,7 @@
                     {% endif %}
                 </div>
             {% endif %}
-            
+
             <div class="content-text" style="white-space: pre-wrap; line-height: 1.7; font-size: 16px; color: #333;">
                 {{ post.content }}
             </div>
@@ -92,7 +91,8 @@
 
         <!-- 하단 목록 버튼 -->
         <div style="margin-top: 40px; text-align: right;">
-            <a href="{{ url_for('talk_list') }}" style="text-decoration: none; display: inline-block; padding: 10px 20px; background: #f8f9fa; color: #333; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">목록으로 돌아가기</a>
+            <!-- [수정] url_for('talk_list') -> url_for('talk.list') -->
+            <a href="{{ url_for('talk.list') }}" style="text-decoration: none; display: inline-block; padding: 10px 20px; background: #f8f9fa; color: #333; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">목록으로 돌아가기</a>
         </div>
 
     </div>
@@ -104,6 +104,7 @@
 function deletePost(postId) {
     if (!confirm('정말 이 게시글을 삭제하시겠습니까?')) return;
 
+    // [유지] /talk/<id>/delete 경로는 블루프린트 라우트와 일치
     fetch(`/talk/${postId}/delete`, {
         method: 'POST'
     })
@@ -111,7 +112,7 @@ function deletePost(postId) {
     .then(data => {
         if (data.success) {
             alert('게시글이 삭제되었습니다.');
-            location.href = "{{ url_for('talk_list') }}";
+            location.href = "{{ url_for('talk.list') }}";
         } else {
             alert(data.message || '삭제에 실패했습니다.');
         }
@@ -123,7 +124,8 @@ function deletePost(postId) {
 
 // 좋아요 클릭 함수 (로그인 여부 반영)
 function likePost(postId) {
-    fetch(`/api/talk/${postId}/like`, { method: 'POST' })
+    // [수정] /api/talk/... -> /talk/... 로 경로 수정 (블루프린트 라우트와 일치시킴)
+    fetch(`/talk/${postId}/like`, { method: 'POST' })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
@@ -143,13 +145,14 @@ function likePost(postId) {
 function addComment(postId) {
     const input = document.getElementById('comment-input');
     const content = input.value.trim();
-    
+
     if(!content) {
         alert('댓글 내용을 입력해 주세요.');
         return;
     }
 
-    fetch(`/api/talk/${postId}/comment`, {
+    // [수정] /api/talk/... -> /talk/...
+    fetch(`/talk/${postId}/comment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: content })
@@ -158,8 +161,11 @@ function addComment(postId) {
     .then(data => {
         if(data.success) {
             location.reload();
+        } else if (data.need_login) {
+            // [추가] 비로그인 상태로 댓글 시도 시 안내
+            alert('댓글은 로그인 후 이용 가능합니다.');
         } else {
-            alert('댓글 등록 실패');
+            alert(data.message || '댓글 등록 실패');
         }
     });
 }

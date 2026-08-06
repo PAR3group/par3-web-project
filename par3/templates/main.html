@@ -20,7 +20,7 @@ PAR3
         <div class="m_news_container">
             <h3 class="m_golf_news">- GOLF NEWS</h3>
             <article class="m_news_card">
-                <div class="m_news_rank">
+                <div class="m_news_card_sub">
                     <h4 class="m_news_c_title">KLPGA 상금순위 <span>(원)</span></h4>
 
                     {% for player in prize_top3 %}
@@ -37,7 +37,7 @@ PAR3
             </article>
 
             <article class="m_news_card">
-                <div class="m_news_rank">
+                <div class="m_news_card_sub">
                     <h4 class="m_news_c_title">KPGA 평균 드라이브 거리 <span>(yds)</span></h4>
 
                     {% for p in kpga_top3 %}
@@ -54,11 +54,13 @@ PAR3
             </article>
 
             <article class="m_news_card">
-                <div class="m_news_tournament">
+                <div class="m_news_card_sub">
                     <h4 class="m_news_c_title">KLPGA 대회 정보</h4>
-                    <p class="m_news_c_rank">제13회 제주삼다수 마스터스</p>
-                    <p class="m_news_c_value">08.06 ~ 08.09</p>
-                    <p class="m_news_c_place">테디밸리 골프앤리조트</p>
+                    <div class="m_n_t_b">
+                        <p class="m_news_c_A">메디힐 · 한국일보 챔피언십</p>
+                        <p class="m_news_c_B">08.13(목) ~ 08.16(일)</p>
+                        <p class="m_news_c_C">몽베르</p>
+                    </div>
                     <a href="https://sports.daum.net/schedule/klpga" target="_blank" rel="noopener noreferrer"
                         class="more_view_bt">더보기-></a>
                 </div>
@@ -72,40 +74,45 @@ PAR3
 
             <article class="m_community_card">
                 <h3 class="m_content_title">커뮤니티</h3>
-                <a href="#" class="more_view_bt">더보기-></a>
+                <a href="{{url_for('talk.list')}}" class="more_view_bt">더보기-></a>
 
-                <div class="m_community_list">
+                {% for post in posts[:3] %}
+                <!-- [수정] 클릭 시 상세페이지 이동 (post-box와 동일한 방식) -->
+                <div class="m_community_list" onclick="goDetail('{{ post.id }}')">
+
+                    <!-- [수정] 실제 첨부 이미지/동영상 여부 분기 처리 (community 페이지 로직과 동일하게) -->
+                    {% if post.image_url %}
+                    {% if post.is_video %}
+                    <video src="{{ post.image_url }}" muted autoplay loop playsinline></video>
+                    {% else %}
+                    <img src="{{ post.image_url }}" alt="첨부 이미지">
+                    {% endif %}
+                    {% else %}
                     <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
-                    <h4>신상후기</h4>
-                    <p>완전좋아</p>
-                    <p>현준이 <span>작성시간</span></p>
-                    <p>
-                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
-                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
+                    {% endif %}
+
+                    <h4><span class="m_badge">{{ post.category }}</span>{{ post.title }}</h4>
+
+                    <!-- [수정] 본문 미리보기, community 페이지와 동일하게 35자 컷 -->
+                    <p class="m_list_content">
+                        {% if post.content|length > 20 %}
+                        {{ post.content[:20] }}...
+                        {% else %}
+                        {{ post.content }}
+                        {% endif %}
+                    </p>
+
+                    <p class="m_list_meta">{{ post.author }} <span>{{ post.created_at }}</span></p>
+
+                    <p class="m_list_stats">
+                        <span>🔎 {{ post.views }}</span>
+                        <span>💬 {{ post.comments_count }}</span>
+                        <span>👍 {{ post.likes }}</span>
                     </p>
                 </div>
-
-                <div class="m_community_list">
-                    <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
-                    <h4>신상후기</h4>
-                    <p>완전좋아</p>
-                    <p>현준이 <span>작성시간</span></p>
-                    <p>
-                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
-                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
-                    </p>
-                </div>
-
-                <div class="m_community_list">
-                    <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">
-                    <h4>신상후기</h4>
-                    <p>완전좋아</p>
-                    <p>현준이 <span>작성시간</span></p>
-                    <p>
-                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
-                        <img src="{{ url_for('static', filename='img/no_image.png') }}" alt="no image">999
-                    </p>
-                </div>
+                {% else %}
+                <p class="no-post">등록된 게시글이 없습니다.</p>
+                {% endfor %}
 
             </article>
 
@@ -148,7 +155,7 @@ PAR3
 
             <article class="m_shop_card">
                 <h3 class="m_content_title">par3 shop</h3>
-                <a href="#" class="more_view_bt">더보기-></a>
+                <a href="{{url_for('shop.main')}}" class="more_view_bt">더보기-></a>
 
                 <div class="shop_product_viewport">
                     <div class="shop_product_container">

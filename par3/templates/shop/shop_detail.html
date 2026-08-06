@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/shop_detail.css')}}">
+{% endblock %}
+
+{% block title %}
+PAR3 shop - {{ product.title }}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- 메인 상품 정보 -->
+  <div class="product">
+    <div class="left">
+      <!-- [수정] JS로 채우던 부분 -> Jinja로 서버에서 바로 렌더링 -->
+      <img id="mainImg" src="{{ url_for('static', filename='img/shop_imgs/' + product.main_img) }}" alt="{{ product.title }}">
+    </div>
+
+    <div class="right">
+      <div>
+        <!-- [수정] id로 빈 값 잡아두던 부분 -> product 값 바로 출력 -->
+        <div class="brand">{{ product.brand }}</div>
+        <div class="title">{{ product.title }}</div>
+        <div class="star">
+          <span>{{ product.rating }}</span>
+          <span class="count">({{ product.review_count }})</span>
+        </div>
+
+        <!-- [수정] 총 가격은 수량에 따라 JS가 바꿔야 하니 id는 유지, 초기값만 서버에서 렌더 -->
+        <div class="price" id="totalPrice">{{ "{:,}".format(product.price) }}원</div>
+
+        <div class="info">
+          <!-- [수정] features 반복문으로 출력 (JSON 리스트) -->
+          <ul id="featuresList">
+            {% for feat in product.features %}
+              <li>{{ feat }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div>
+        <div class="count-box">
+          <button type="button" id="btnMinus">-</button>
+          <input type="text" id="quantity" value="1" readonly>
+          <button type="button" id="btnPlus">+</button>
+        </div>
+
+        <div class="btn">
+          <!-- [수정] 장바구니/구매 버튼에 상품 id 데이터 속성 추가 (JS에서 활용) -->
+          <button class="cart" data-id="{{ product.id }}">장바구니</button>
+          <button class="buy" data-id="{{ product.id }}">바로구매</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 리뷰 영역 -->
+  <h2 class="review-title">상품후기</h2>
+  <div id="reviewContainer">
+    <!-- [수정] reviews 반복문으로 출력 (ProductReview 테이블, relationship으로 연결됨) -->
+    {% for rev in product.reviews %}
+      <div class="review-box">
+        <span class="review-stars">
+          {% if rev.rating %}{{ rev.rating }}{% else %}{{ product.rating }}{% endif %}
+        </span>
+        <div>{{ rev.content }}</div>
+      </div>
+    {% else %}
+      <p class="no-review">아직 등록된 후기가 없습니다.</p>
+    {% endfor %}
+  </div>
+
+  <!-- 상세 이미지 및 배송 정보 -->
+  <div class="detail" id="detailImgBox">
+    <!-- [수정] detail_img가 단일 필드라 일단 하나만 출력. 여러 장 필요하면 아래 참고 -->
+    {% if product.detail_img %}
+      <img src="{{ url_for('static', filename='img/shop_imgs/' + product.detail_img) }}" alt="상세 이미지">
+    {% endif %}
+  </div>
+
+  <div class="table">
+    <div><span>배송</span><span>{{ product.shipping }}</span></div>
+    <div><span>제조국</span><span>{{ product.origin }}</span></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<!-- [수정] JS 파일에 필요한 값들을 서버 데이터로 넘겨줌 -->
+<script src="{{ url_for('static', filename='js/shop_detail.js') }}"></script>
+<script>
+  // JS 파일에서 쓸 수 있도록 전역 변수로 넘김
+  const productId = {{ product.id }};
+  const basePrice = {{ product.price }};
+</script>
+{% endblock %}
+
+
+

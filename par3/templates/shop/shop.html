@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/shop_main.css')}}">
+{% endblock %}
+
+{% block title %}
+PAR3 - 골프 쇼핑몰
+{% endblock %}
+
+{% block content %}
+<!-- 검색창 -->
+<div class="search-bar-container">
+    <div class="search-bar">
+        <input type="text" placeholder="상품검색">
+        <button type="button">검색</button>
+    </div>
+
+    <!-- [추가] 관리자만 보이는 상품 등록 버튼 -->
+    {% if g.user and g.user.is_admin %}
+    <a href="{{ url_for('shop.add_product_form') }}" class="btn-admin-add">+ 상품 등록</a>
+    {% endif %}
+</div>
+
+<!-- 1. 브랜드 상단 영역 -->
+<section class="brand-section">
+    <a href="#" class="brand-item">
+        <img class="brand-img" src="{{ url_for('static', filename='img/shop_imgs/image1.png') }}">
+        <span class="brand-name">Titleist</span>
+    </a>
+    <a href="#" class="brand-item">
+        <img class="brand-img" src="{{ url_for('static', filename='img/shop_imgs/image2.png') }}" alt="TaylorMade">
+        <span class="brand-name">TaylorMade</span>
+    </a>
+    <a href="#" class="brand-item">
+        <img class="brand-img" src="{{ url_for('static', filename='img/shop_imgs/image3.png') }}" alt="Callaway">
+        <span class="brand-name">Callaway</span>
+    </a>
+    <a href="#" class="brand-item">
+        <img class="brand-img" src="{{ url_for('static', filename='img/shop_imgs/image4.png') }}" alt="PING">
+        <span class="brand-name">PING</span>
+    </a>
+    <a href="#" class="brand-item">
+        <img class="brand-img" src="{{ url_for('static', filename='img/shop_imgs/image5.png') }}" alt="PXG">
+        <span class="brand-name">PXG</span>
+    </a>
+</section>
+
+<!-- 2. 카테고리 아이콘 영역 -->
+<section class="category-section">
+    <a href="#" class="category-item">
+        <img class="category-img" src="{{ url_for('static', filename='img/shop_imgs/driver.png') }}" alt="골프채">
+        <span class="category-name">골프채</span>
+    </a>
+    <a href="#" class="category-item">
+        <img class="category-img" src="{{ url_for('static', filename='img/shop_imgs/driver15.png') }}" alt="골프백">
+        <span class="category-name">골프백</span>
+    </a>
+    <a href="#" class="category-item">
+        <img class="category-img" src="{{ url_for('static', filename='img/shop_imgs/driver20.png') }}" alt="골프웨어">
+        <span class="category-name">골프 웨어</span>
+    </a>
+    <a href="#" class="category-item">
+        <img class="category-img" src="{{ url_for('static', filename='img/shop_imgs/driver21.png') }}" alt="골프화">
+        <span class="category-name">골프화</span>
+    </a>
+    <a href="#" class="category-item">
+        <img class="category-img" src="{{ url_for('static', filename='img/shop_imgs/driver22.png') }}" alt="기타용품">
+        <span class="category-name">기타용품</span>
+    </a>
+</section>
+
+<!-- 3. 정렬 옵션 -->
+<div class="sort-options">
+    <select>
+        <option>최신순</option>
+        <option>인기순</option>
+        <option>낮은 가격순</option>
+        <option>높은 가격순</option>
+    </select>
+</div>
+
+<!-- 4. 상품 그리드 영역 (DB에서 가져온 상품 반복 출력) -->
+<main class="product-grid">
+    {% for product in products %}
+    <div class="product-card" onclick="location.href='{{ url_for('shop.detail', id=product.id) }}'"
+        style="cursor: pointer;">
+        <div class="product-img-wrapper">
+            <img src="{{ url_for('static', filename='img/shop_imgs/' + product.main_img) }}" alt="{{ product.title }}">
+        </div>
+        <div class="product-info">
+            <div class="product-brand">{{ product.brand }}</div>
+            <div class="product-title">{{ product.title }}</div>
+            <div class="product-price">{{ "{:,}".format(product.price) }} 원</div>
+            <div class="product-actions">
+                <button class="btn-action" onclick="event.stopPropagation();">찜</button>
+                <button class="btn-action" onclick="event.stopPropagation();">장바구니</button>
+                <button class="btn-action" onclick="event.stopPropagation();">구매하기</button>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <p class="no-product">등록된 상품이 없습니다.</p>
+    {% endfor %}
+</main>
+</div>
+{% endblock %}

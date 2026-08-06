@@ -128,7 +128,7 @@ PAR3 - FITTING ZONE
             <div class="rc_result_card">
                 <p class="rc_card_label">드라이버</p>
                 <div class="rc_card_img">
-                    <img src="{{url_for('static', filename='img/rec_D.jpg')}}" alt="젝시오14 드라이버">
+                    <img src="{{ url_for('static', filename='img/rec_D.jpg') }}" alt="젝시오14 드라이버">
                 </div>
                 <p class="rc_card_sub">추천 샤프트 무게</p>
                 <p class="rc_card_value">{{ result.driver }}g</p>
@@ -141,7 +141,7 @@ PAR3 - FITTING ZONE
             <div class="rc_result_card">
                 <p class="rc_card_label">5번 우드</p>
                 <div class="rc_card_img">
-                    <img src="{{url_for('static', filename='img/rec_W.jpg')}}" alt="젝시오14 우드">
+                    <img src="{{ url_for('static', filename='img/rec_W.jpg') }}" alt="젝시오14 우드">
                 </div>
                 <p class="rc_card_sub">추천 샤프트 무게</p>
                 <p class="rc_card_value">{{ result.wood5 }}g</p>
@@ -154,7 +154,7 @@ PAR3 - FITTING ZONE
             <div class="rc_result_card">
                 <p class="rc_card_label">4번 유틸</p>
                 <div class="rc_card_img">
-                    <img src="{{url_for('static', filename='img/rec_U.jpg')}}" alt="젝시오14 하이브리드">
+                    <img src="{{ url_for('static', filename='img/rec_U.jpg') }}" alt="젝시오14 하이브리드">
                 </div>
                 <p class="rc_card_sub">추천 샤프트 무게</p>
                 <p class="rc_card_value">{{ result.utility4 }}g</p>
@@ -167,7 +167,7 @@ PAR3 - FITTING ZONE
             <div class="rc_result_card">
                 <p class="rc_card_label">7번 아이언</p>
                 <div class="rc_card_img">
-                    <img src="{{url_for('static', filename='img/rec_I.jpg')}}" alt="젝시오14 아이언">
+                    <img src="{{ url_for('static', filename='img/rec_I.jpg') }}" alt="젝시오14 아이언">
                 </div>
                 <p class="rc_card_sub">추천 샤프트 무게</p>
                 <p class="rc_card_value">{{ result.iron7 }}g</p>
@@ -229,35 +229,11 @@ PAR3 - FITTING ZONE
 </div>
 
 <script>
-  function saveRecommend() {
-    const requestData = {
-      result: {
-        driver: "{{ result.driver }}",
-        wood5: "{{ result.wood5 }}",
-        utility4: "{{ result.utility4 }}",
-        iron7: "{{ result.iron7 }}"
-      },
-      flex: "{{ flex }}" // <-- HTML 안에서는 이 문법이 정상적으로 실제 값으로 변환됩니다!
+window.RECOMMEND_DATA = {
+    isLoggedIn: {{ 'true' if g.user else 'false' }},
+    result: {{ result | tojson if result else 'null' }},
+    flex: {{ flex | tojson if flex else 'null' }}
     };
-
-    fetch("/recommend/api/save-recommend", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === "success") {
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        console.error("에러:", error);
-        alert("저장에 실패했습니다.");
-    });
-  }
 </script>
 {% endblock %}
 

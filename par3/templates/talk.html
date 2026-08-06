@@ -14,19 +14,23 @@
 
         <div class="action-bar">
             <div class="tabs">
-                <a href="?sort=latest" class="tab-item {% if not current_category or current_category == '전체' %}active{% endif %}">최신순</a>
-                <a href="?sort=popular" class="tab-item {% if current_sort == 'popular' %}active{% endif %}">인기순</a>
-                <a href="?category=필드후기" class="tab-item {% if current_category == '필드후기' %}active{% endif %}">필드후기</a>
-                <a href="?category=장비추천" class="tab-item {% if current_category == '장비추천' %}active{% endif %}">장비추천</a>
-                <a href="?category=골프팁" class="tab-item {% if current_category == '골프팁' %}active{% endif %}">골프팁</a>
-                <a href="?category=자유톡" class="tab-item {% if current_category == '자유톡' %}active{% endif %}">자유톡</a>
+                <!-- [수정] url_for('talk_list') -> url_for('talk.list') -->
+                <a href="{{ url_for('talk.list', sort='latest') }}" class="tab-item {% if not current_category or current_category == '전체' %}active{% endif %}">최신순</a>
+                <a href="{{ url_for('talk.list', sort='popular') }}" class="tab-item {% if current_sort == 'popular' %}active{% endif %}">인기순</a>
+                <a href="{{ url_for('talk.list', category='필드후기') }}" class="tab-item {% if current_category == '필드후기' %}active{% endif %}">필드후기</a>
+                <a href="{{ url_for('talk.list', category='장비추천') }}" class="tab-item {% if current_category == '장비추천' %}active{% endif %}">장비추천</a>
+                <a href="{{ url_for('talk.list', category='골프팁') }}" class="tab-item {% if current_category == '골프팁' %}active{% endif %}">골프팁</a>
+                <a href="{{ url_for('talk.list', category='자유톡') }}" class="tab-item {% if current_category == '자유톡' %}active{% endif %}">자유톡</a>
             </div>
 
-            <form action="{{ url_for('talk_list') }}" method="GET" class="search-bar" onsubmit="return checkSearch(this)">
+            <!-- [수정] url_for('talk_list') -> url_for('talk.list') -->
+            <form action="{{ url_for('talk.list') }}" method="GET" class="search-bar" onsubmit="return checkSearch(this)">
                 <input type="text" placeholder="PAR3 TALK SEARCH" name="keyword" value="{{ request.args.get('keyword', '') }}" autocomplete="off">
                 <button type="submit" class="search_btn">🔍</button>
             </form>
-            <a href="{{ url_for('talk_write') }}" class="btn-write-link">
+
+            <!-- [수정] url_for('talk_write') -> url_for('talk.write') -->
+            <a href="{{ url_for('talk.write') }}" class="btn-write-link">
                 <button type="button" class="btn-write">글쓰기</button>
             </a>
         </div>
@@ -34,16 +38,13 @@
         <div class="content-body-wrapper">
             <main class="left-content">
                 {% for post in posts %}
-                    <!-- [수정 1] post-card 클릭 시 상세페이지로 바로 이동하도록 onclick 및 커서 추가 -->
-                    <div class="post-box" onclick="goDetail('{{ post.id }}')" style="cursor: pointer;">                       
+                    <div class="post-box" onclick="goDetail('{{ post.id }}')" style="cursor: pointer;">
                         <!-- 1. 사진 (왼쪽 float 고정) -->
                         <div class="post-img">
                             {% if post.image_url %}
                                 {% if post.is_video %}
-                                    <!-- 동영상일 경우 video 태그로 재생 -->
                                     <video src="{{ post.image_url }}" muted autoplay loop playsinline></video>
                                 {% else %}
-                                    <!-- 이미지일 경우 img 태그 사용 -->
                                     <img src="{{ post.image_url }}" alt="첨부 이미지">
                                 {% endif %}
                             {% else %}
@@ -71,14 +72,14 @@
                             <div class="author-info">
                                 {{ post.author }} | {{ post.created_at }}
                             </div>
-                            
+
                             <div class="post-stats">
                                 <span class="stat-badge">🔎 {{ post.views }}</span>
-                                <!-- [수정 2] 댓글 리스트 길이를 출력하여 댓글 수 실시간 연동 -->
-                                <span class="stat-badge">💬 {{ post.comments_count }}</span>
+                                <!-- [수정] comments_count -> comments_list|length (댓글 테이블 relationship 기준) -->
+                                <span class="stat-badge">💬 {{ post.comments_list|length }}</span>
                                 <span class="stat-badge">👍 {{ post.likes }}</span>
                             </div>
-                        </div>                        
+                        </div>
                     </div>
                 {% else %}
                     <div class="no-post">
@@ -95,22 +96,22 @@
         </div>
     </div>
 </div>
-    <script>
-        function goDetail(id) {
-            location.href = '/talk/' + id;
-        }
-    </script>
-    <script src="{{ url_for('static', filename='js/talk.js') }}"></script>
-    <script>
-        function checkSearch(form) {
-            // 공백만 입력했거나 아무것도 입력 안 했을 때 검사
-            if (!form.keyword.value.trim()) {
-                alert('검색어를 입력해 주세요');
-                form.keyword.focus();
-                return false; // 폼 제출 중단
-            }
-            return true; // 정상 제출
-        }
-        </script>
-{% endblock %}
 
+<script>
+    function goDetail(id) {
+        // [유지] /talk/ 경로는 블루프린트 url_prefix와 일치하므로 그대로 사용
+        location.href = '/talk/' + id;
+    }
+</script>
+<script src="{{ url_for('static', filename='js/talk.js') }}"></script>
+<script>
+    function checkSearch(form) {
+        if (!form.keyword.value.trim()) {
+            alert('검색어를 입력해 주세요');
+            form.keyword.focus();
+            return false;
+        }
+        return true;
+    }
+</script>
+{% endblock %}
