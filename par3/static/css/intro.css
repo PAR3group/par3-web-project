@@ -1,499 +1,55 @@
-/* ============================================
-   join.css
-   PAR3 - JOIN (실시간 골프 조인 리스트) 페이지 전용 스타일
-   연결 파일: templates/join/join.html
-   작성자: 오지 (feature/join-page)
-   ============================================ */
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff; color: #16233f; }
-
-.p_join {
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 32px 24px 80px;
-  background: #ffffff;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ===== j_head ===== */
-.j_head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 24px;
-}
-.j_title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #16233f;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.j_subtitle {
-  font-size: 13px;
-  color: #8a93a3;
-  margin-top: 6px;
-}
-.j_live_status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #6b7280;
-  margin-top: 6px;
-}
-.j_live_dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #0f6e56;
+.intro_wrap {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
 }
 
-/* ===== j_filter_bar ===== */
-.j_filter_bar {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-  background: #ffffff;
-  border: 1px solid #e4e6ea;
-  border-radius: 14px;
-  padding: 6px 10px;
-  margin-bottom: 14px;
-  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.06);
+.intro_video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.6);
 }
 
-.j_dropdown { position: relative; }
-.j_dropdown_bt {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  background: none;
-  border: none;
-  padding: 8px 12px;
-  font-size: 14px;
-  color: #16233f;
-  font-weight: 500;
-  border-radius: 8px;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.j_dropdown_bt:hover { background: #f4f6f8; }
-.j_dropdown--open .j_dropdown_bt { background: #f4f6f8; }
-
-.j_filter_select_icon {
-  width: 8px;
-  height: 8px;
-  border: solid #9099a8;
-  border-width: 0 1.5px 1.5px 0;
-  display: inline-block;
-  padding: 2px;
-  transform: rotate(45deg);
-  transition: transform 0.2s;
-}
-.j_dropdown--open .j_filter_select_icon { transform: rotate(225deg); }
-
-.j_dropdown_panel {
-  display: none;
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  background: #ffffff;
-  border: 1px solid #e4e6ea;
-  border-radius: 10px;
-  padding: 12px;
-  min-width: 180px;
-  box-shadow: 0 8px 20px rgba(16, 24, 40, 0.1);
-  z-index: 20;
-}
-.j_dropdown--open .j_dropdown_panel { display: block; }
-.j_dropdown_option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 4px;
-  font-size: 14px;
-  color: #16233f;
-  cursor: pointer;
-  white-space: nowrap;
-  border-radius: 4px;
-}
-.j_dropdown_option:hover { background: #f4f6f8; }
-
-.j_filter_bar_divider {
-  width: 1px;
-  height: 20px;
-  background: #e4e6ea;
-  margin: 0 8px;
-  flex-shrink: 0;
+.intro_overlay {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    color: #fff;
+    text-align: center;
 }
 
-.j_filter_search_wrap {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-.j_filter_search_icon {
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid #9099a8;
-  border-radius: 50%;
-  position: relative;
-  flex-shrink: 0;
-}
-.j_filter_search_icon::after {
-  content: '';
-  position: absolute;
-  width: 6px;
-  height: 1.5px;
-  background: #9099a8;
-  transform: rotate(45deg);
-  bottom: -4px;
-  right: -4px;
-}
-.j_filter_search {
-  flex: 1;
-  min-width: 0;
-  background: transparent;
-  border: none;
-  outline: none;
-  padding: 8px 0;
-  font-size: 13px;
-  color: #16233f;
-}
-.j_filter_search::placeholder { color: #9099a8; }
 
-.jt_write_bt {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 9px 18px;
-  background: #16233f;
-  color: #ffffff;
-  font-size: 13px;
-  font-weight: 600;
-  border-radius: 9px;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background 0.15s;
-}
-.jt_write_bt:hover { background: #223258; }
-
-/* ===== j_selected_tags_row : 필터 선택 전엔 숨김 (JS로 display 토글) ===== */
-.j_selected_tags_row {
-  display: none;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 18px;
-}
-.j_selected_tags_row--visible {
-  display: flex;
-}
-.j_selected_tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.j_tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 8px 6px 14px;
-  background: #eaf2ee;
-  color: #0f6e56;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-}
-.j_tag_remove { cursor: pointer; font-weight: 700; }
-.j_tag_remove:hover { color: #0b5744; }
-
-.j_reset_bt {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: #9099a8;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.j_reset_bt:hover { color: #16233f; }
-.j_reset_icon {
-  font-size: 13px;
-  display: inline-block;
+.intro_enter_bt {
+    display: inline-block;
+    padding: 14px 36px;
+    border: 1px solid #fff;
+    border-radius: 30px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+    margin-top: 200px;
 }
 
-/* ===== j_tabs ===== */
-.j_tabs {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  border-bottom: 1px solid #e4e6ea;
-  padding-bottom: 12px;
-  margin-bottom: 20px;
-}
-.j_tab {
-  font-size: 14px;
-  color: #9099a8;
-  cursor: pointer;
-  position: relative;
-  padding-bottom: 13px;
-  margin-bottom: -13px;
-}
-.j_tab--active { color: #16233f; font-weight: 700; }
-.j_tab--active::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 2px;
-  background: #0f6e56;
-  border-radius: 2px;
-}
-.j_tab:hover { color: #16233f; }
-
-.j_exclude_full {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  color: #6b7280;
-  cursor: pointer;
-  margin-left: auto;
-  white-space: nowrap;
-}
-.j_toggle { position: relative; display: inline-block; width: 32px; height: 18px; }
-.j_toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
-.j_toggle_track {
-  position: absolute; inset: 0;
-  background: #d8dce4;
-  border-radius: 10px;
-  transition: background 0.2s;
-}
-.j_toggle_thumb {
-  position: absolute;
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  background: #fff;
-  top: 2px; left: 2px;
-  transition: transform 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-}
-.j_toggle input:checked ~ .j_toggle_track { background: #0f6e56; }
-.j_toggle input:checked ~ .j_toggle_track .j_toggle_thumb { transform: translateX(14px); }
-
-/* ============================================
-   j_table_body : 카드형 리스트 (공백 줄이고 밀도 있게 배치)
-   ============================================ */
-.j_table_body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.jt_row {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  background: #ffffff;
-  border: 1px solid #eceef1;
-  border-radius: 14px;
-  padding: 14px 16px;
-  box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
-}
-
-.jt_date {
-  text-align: center;
-  min-width: 52px;
-  flex-shrink: 0;
-}
-.jt_date_num { font-size: 15px; font-weight: 700; color: #16233f; }
-.jt_date_day { font-size: 11px; color: #9099a8; }
-.jt_dday {
-  margin-top: 5px;
-  font-size: 10px;
-  font-weight: 700;
-  color: #0f6e56;
-  background: #eaf2ee;
-  border-radius: 5px;
-  padding: 2px 0;
-}
-
-.jt_thumb {
-  width: 88px;
-  height: 64px;
-  border-radius: 10px;
-  object-fit: cover;
-  flex-shrink: 0;
-  background: #eceef1;
-}
-
-/* 정보 블록 - 한 줄에 이름/뱃지/가격/조건을 나란히 붙여서 공백 최소화 */
-.jt_info {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.jt_info_top {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.jt_course_name { font-size: 15px; font-weight: 700; color: #16233f; }
-.jt_course_badge {
-  font-size: 11px;
-  font-weight: 500;
-  color: #0f6e56;
-  background: #eaf2ee;
-  padding: 2px 8px;
-  border-radius: 6px;
-}
-.jt_price_num {
-  font-size: 14px;
-  font-weight: 700;
-  color: #16233f;
-  margin-left: 4px;
-}
-.jt_price_condition {
-  font-size: 11px;
-  font-weight: 500;
-  color: #b98a3d;
-  background: #fbf1e0;
-  padding: 2px 8px;
-  border-radius: 6px;
-}
-.jt_info_sub {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 12px;
-  color: #9099a8;
-  margin-top: 5px;
-}
-.jt_info_sub span:not(:last-child)::after {
-  content: '·';
-  margin-left: 10px;
-  color: #d8dce4;
-}
-
-/* 참가자 - 크게, 정보 블록 바로 옆 붙여서 배치 */
-.jt_participants_wrap {
-  min-width: 100px;
-  text-align: center;
-  flex-shrink: 0;
-}
-.jt_participants_label { font-size: 11px; color: #9099a8; margin-bottom: 6px; }
-.jt_participants { display: flex; justify-content: center; }
-.jt_avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  margin-left: -8px;
-  border: 2px solid #fff;
-  font-size: 11px;
-  font-weight: 700;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.jt_avatar:first-child { margin-left: 0; }
-.jt_avatar--empty { background: #e4e6ea; color: #9099a8; font-weight: 400; }
-
-/* 하트(빨간색, 버튼 밖 왼쪽) + 참여하기 버튼 */
-.jt_actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-.jt_heart_bt {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1px solid #e4e6ea;
-  background: #ffffff;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  position: relative;
-}
-.jt_heart_bt::before {
-  content: '♡';
-  font-size: 15px;
-  color: #9099a8;
-  line-height: 1;
-}
-.jt_row[data-liked="true"] .jt_heart_bt::before {
-  content: '♥';
-  color: #ef4444;
-}
-.jt_heart_bt:hover { border-color: #ef4444; }
-
-.jt_join_bt {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: linear-gradient(135deg, #3f9a92, #0f6e56);
-  color: #fff;
-  padding: 9px 16px;
-  border-radius: 9px;
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: opacity 0.15s;
-}
-.jt_join_bt:hover { opacity: 0.9; }
-.jt_join_bt_arrow { font-size: 14px; }
-
-/* ===== 더 많은 조인 글 보기 ===== */
-.j_load_more { text-align: center; margin-top: 20px; }
-.j_load_more span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: #6b7280;
-  background: #f4f6f8;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-}
-.j_load_more_icon {
-  width: 8px; height: 8px;
-  border: solid #9099a8;
-  border-width: 0 1.5px 1.5px 0;
-  display: inline-block;
-  padding: 2px;
-  transform: rotate(45deg);
-}
-
-/* ============================================
-   반응형
-   ============================================ */
-@media (max-width: 1024px) {
-  .j_filter_bar { flex-wrap: wrap; }
-  .j_filter_bar_divider { display: none; }
-  .j_filter_search_wrap { flex-basis: 100%; order: 1; margin-top: 6px; }
-  .jt_write_bt { margin-left: auto; }
-}
-
-@media (max-width: 768px) {
-  .p_join { padding: 20px 16px 60px; }
-  .j_head { flex-direction: column; gap: 8px; }
-  .j_tabs { gap: 14px; flex-wrap: wrap; }
-  .jt_row { flex-wrap: wrap; }
-  .jt_thumb { width: 72px; height: 72px; }
-  .jt_participants_wrap { margin-left: auto; }
-  .jt_actions { flex-basis: 100%; justify-content: flex-end; margin-top: 8px; }
-}
-
-@media (max-width: 480px) {
-  .j_title { font-size: 22px; }
-  .jt_row { padding: 12px; }
-  .jt_join_bt { padding: 8px 14px; font-size: 12px; }
+.intro_enter_bt:hover {
+    background: #fff;
+    color: #1a2e22;
 }
