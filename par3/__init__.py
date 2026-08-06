@@ -3,9 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import MetaData
 import config
-from par3.filter import format_datetime, format_markdown
+from par3.filter import format_datetime, format_markdown, format_timeago
 
-db = SQLAlchemy()
+
 migrate = Migrate()
 
 # 네이밍 컨벤션(포린키 네임 오류 방지를 위해 작성)
@@ -41,6 +41,7 @@ def create_app():
     app.jinja_env.filters['datetime']=format_datetime
     # 2. Flask 앱의 Jinja2 템플릿 필터로 등록합니다. (필터 이름: 'markdown')
     app.jinja_env.filters['markdown']=format_markdown
+    app.jinja_env.filters['timeago']=format_timeago
 
     # 전역 함수 등록
     # g.user 확인 함수

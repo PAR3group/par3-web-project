@@ -1,4 +1,3 @@
-/* 뉴스카드 부분 */
 .m_news_section {
     padding: 40px 24px;
 }
@@ -17,23 +16,45 @@
 }
 
 .m_news_card {
-    background: #fff;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
     border: 1px solid #e5e5e5;
     border-radius: 8px;
     padding: 16px;
     box-sizing: border-box;
+    overflow: hidden;
+}
+
+/* 카드 안 텍스트가 배경 위에서 잘 보이도록 어두운 오버레이 */
+.m_news_card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.m_news_card_sub {
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+    position: relative;
+    z-index: 2;
 }
 
 .m_news_c_title {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 700;
     margin-bottom: 8px;
+    color: #fff;
 }
 
 .m_news_c_title span {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 400;
-    color: #999;
+    color: #ddd;
 }
 
 .m_news_c_row {
@@ -54,60 +75,70 @@
     right: 8%;
     bottom: 0;
     height: 1px;
-    background: #eee;
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .m_news_c_rank {
     flex: 0 0 32px;
     font-size: 13px;
     font-weight: 700;
-    color: #999;
+    color: #eee;
 }
 
 .m_news_c_name {
     flex: 1;
     font-size: 14px;
-    color: #333;
+    color: #fff;
 }
 
 .m_news_c_value {
     font-size: 14px;
     font-weight: 600;
-    color: #222;
+    color: #fff;
     text-align: right;
 }
 
+/* [수정] 대회 정보 카드 - 여백과 크기 위계를 나눠서 편안하게 */
 .m_n_t_b {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 6px;
+    margin-top: 4px;
 }
 
 .m_news_c_A {
-    font-size: 14px;
-    font-weight: 600;
-    color: #222;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
     text-align: left;
+    line-height: 1.4;
 }
 
 .m_news_c_B {
-    font-size: 14px;
-    font-weight: 600;
-    color: #222;
+    font-size: 13px;
+    font-weight: 500;
+    color: #eee;
     text-align: left;
 }
 
 .m_news_c_C {
-    font-size: 14px;
-    font-weight: 600;
-    color: #222;
+    font-size: 13px;
+    font-weight: 500;
+    color: #ccc;
     text-align: left;
+    margin-bottom: 8px;
 }
 
-.m_news_card_sub {
-    display: flex;
-    flex-direction: column;
-    min-height: 180px;
+.m_news_card_prize {
+    background-image: url('/static/img/news_img1.png');
+}
+
+.m_news_card_drive {
+    background-image: url('/static/img/news_img2.png');
+}
+
+.m_news_card_event {
+    background-image: url('/static/img/news_img3.png');
 }
 
 .m_news_card .more_view_bt {
@@ -116,21 +147,7 @@
     font-size: 13px;
     text-decoration: none;
     position: static;
-    /* absolute 무효화 */
-}
-
-/* 공통 more_view_bt */
-.more_view_bt {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 13px;
-    text-decoration: none;
-    opacity: 0.7;
-}
-
-.more_view_bt:hover {
-    opacity: 1;
+    color: #fff;
 }
 
 /* 커뮤니티 부분 카드 */
@@ -217,32 +234,45 @@
     display: inline-block;
 }
 
+.m_community_card .more_view_bt ,
+.join_card .more_view_bt ,
+.m_shop_card .more_view_bt {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 12px;
+    text-decoration: none;
+}
+
 /* ===================================================
    커뮤니티 카드 - 리스트를 세로 그리드로
 =================================================== */
 .m_community_card .m_community_list {
     /* [수정] 텍스트 줄이 4줄(뱃지+제목 / 본문 / 작성자 / 통계)이라 rows를 4개로 맞춤 */
-    margin-top: 16px;
+    position: relative;
     display: grid;
     grid-template-columns: 80px 1fr;
-    grid-template-rows: repeat(4, auto);
+    grid-template-rows: repeat(3, auto);
     column-gap: 12px;
     row-gap: 4px;
     align-items: center;
-    padding: 12px 0;
+    padding: 16px 8px 32px;
     border-top: 1px solid rgba(0, 0, 0, 0.06);
-    cursor: pointer; /* [수정] 클릭 가능함을 표시 */
+    cursor: pointer;
+    /* [수정] 클릭 가능함을 표시 */
 }
 
 .m_community_card .m_community_list:first-of-type {
     border-top: none;
-    padding-top: 4px;
 }
 
-/* [수정] 텍스트 줄 수가 4줄로 늘어난 만큼 이미지도 4줄 전체를 span 하도록 변경 */
+.m_community_card .m_community_list:hover {
+    background-color: rgba(0, 0, 0, 0.03);  /* [추가] 아주 약한 회색 */
+}
+
 .m_community_card .m_community_list img,
 .m_community_card .m_community_list video {
-    grid-row: 1 / span 4;
+    grid-row: 1 / -1;
     width: 80px;
     height: 80px;
     border-radius: 10px;
@@ -293,6 +323,9 @@
 }
 
 .m_community_card .m_list_stats {
+    position: absolute;
+    bottom: 12px;
+    right: 0;
     display: flex;
     gap: 12px;
     align-items: center;
@@ -334,6 +367,19 @@
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    background-color: #fff;
+    color: #222;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transition: all 0.2s ease;
+}
+
+.fitting_card a:hover {
+    background-color: #ffd700;
+    color: #1a1a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
 /* ===================================================

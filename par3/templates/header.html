@@ -1,23 +1,23 @@
 <header>
     <div class="header_container">
-        <h1 class="h_logo">par3</h1>
+        <a class="h_logo" href="{{url_for('main.inter_par3')}}">par3</a>
 
         <nav class="h_nav">
             <ul class="h_nav_list">
                 <li class="h_nav_lists">
-                    <a href="#" class="h_nav_info">정보</a>
+                    <a href="{{url_for('main.index')}}" class="h_nav_info">intro</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="#" class="h_nav_community">커뮤니티</a>
+                    <a href="{{url_for('talk.list')}}" class="h_nav_community">talk</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="#" class="h_nav_join">골프조인</a>
+                    <a href="{{url_for('join.join_list')}}" class="h_nav_join">golf join</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="#" class="h_nav_shop">구매</a>
+                    <a href="{{url_for('shop.main')}}" class="h_nav_shop">par3 shop</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="#" class="h_nav_membership">멤버십</a>
+                    <a href="{{url_for('recommend.shaft')}}" class="h_nav_membership">recommend shaft</a>
                 </li>
             </ul>
         </nav>
