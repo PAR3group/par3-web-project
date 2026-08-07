@@ -1,101 +1,371 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="ko">
 
-{% block css %}
-<link rel="stylesheet" href="{{url_for('static', filename='css/shop_detail.css')}}">
-{% endblock %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상품상세</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Pretendard', sans-serif;
+    }
 
-{% block title %}
-PAR3 shop - {{ product.title }}
-{% endblock %}
+    body {
+      background: #f5f5f5;
+    }
 
-{% block content %}
-<div class="container">
-  <!-- 메인 상품 정보 -->
-  <div class="product">
-    <div class="left">
-      <!-- [수정] JS로 채우던 부분 -> Jinja로 서버에서 바로 렌더링 -->
-      <img id="mainImg" src="{{ url_for('static', filename='img/shop_imgs/' + product.main_img) }}" alt="{{ product.title }}">
+    .container {
+      width: 1200px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 15px;
+      padding: 40px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+    }
+
+    /* 상품 영역 */
+    .product {
+      display: flex;
+      gap: 60px;
+    }
+
+    .left {
+      flex: 1;
+    }
+
+    .left img {
+      width: 100%;
+      border-radius: 15px;
+      background: #fafafa;
+      object-fit: cover;
+    }
+
+    .right {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+
+    .brand {
+      color: #888;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    .title {
+      font-size: 34px;
+      font-weight: bold;
+      margin-top: 10px;
+      line-height: 1.3;
+    }
+
+    .star {
+      color: #ffc107;
+      font-size: 18px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .star .count {
+      color: #a0a0a0;
+      font-weight: normal;
+      font-size: 16px;
+    }
+
+    .price {
+      font-size: 42px;
+      font-weight: 800;
+      color: #111;
+      margin: 20px 0;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .info {
+      line-height: 2.2;
+      font-size: 18px;
+      color: #444;
+      background: #fdfdfd;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #f0f0f0;
+    }
+
+    .info ul {
+      list-style: none;
+    }
+
+    .info li::before {
+      content: "• ";
+      color: #888;
+      font-weight: bold;
+    }
+
+    /* 수량 선택 및 버튼 */
+    .count-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .count-box button {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: #f0f0f0;
+      font-size: 20px;
+      font-weight: 300;
+      color: #222;
+      cursor: pointer;
+      border-radius: 3px;
+      user-select: none;
+    }
+
+    .count-box button:active {
+      background: #e0e0e0;
+    }
+
+    .count-box input {
+      width: 50px;
+      height: 40px;
+      border: 1px solid #ccc;
+      text-align: center;
+      font-size: 17px;
+      color: #111;
+      border-radius: 2px;
+      outline: none;
+      font-family: 'Times New Roman', Times, serif;
+    }
+
+    .btn {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+
+    .btn button {
+      flex: 1;
+      height: 65px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: 0.2s;
+    }
+
+    .cart {
+      background: white;
+      border: 2px solid black;
+    }
+
+    .cart:hover {
+      background: #f5f5f5;
+    }
+
+    .buy {
+      border: none;
+      background: black;
+      color: white;
+    }
+
+    .buy:hover {
+      background: #333;
+    }
+
+    /* 상품후기 영역 */
+    .review-title {
+      margin-top: 70px;
+      margin-bottom: 20px;
+    }
+
+    .review-box {
+      padding: 20px;
+      background: #fafafa;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    .review-stars {
+      color: #ffc107;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    /* 상세페이지 및 정보 테이블 */
+    .detail {
+      margin-top: 30px;
+    }
+
+    .detail img {
+      width: 100%;
+      display: block;
+    }
+
+    .table {
+      margin-top: 50px;
+      border-top: 2px solid black;
+    }
+
+    .table div {
+      display: flex;
+      padding: 20px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .table span:first-child {
+      width: 180px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <!-- 메인 상품 정보 -->
+    <div class="product">
+      <div class="left">
+        <img id="mainImg" src="" alt="대표 이미지">
+      </div>
+
+      <div class="right">
+        <div>
+          <div class="brand" id="brand"></div>
+          <div class="title" id="title"></div>
+          <div class="star"> <span id="rating"></span> <span class="count" id="reviewCount"></span></div>
+
+          <div class="price" id="totalPrice">0원</div>
+
+          <div class="info">
+            <ul id="featuresList"></ul>
+          </div>
+        </div>
+
+        <div>
+          <div class="count-box">
+            <button type="button" id="btnMinus">-</button>
+            <input type="text" id="quantity" value="1" readonly>
+            <button type="button" id="btnPlus">+</button>
+          </div>
+
+          <!-- ★ [수정] id="btnCart"와 id="btnBuy"를 추가하여 클릭 오작동 방지 ★ -->
+          <div class="btn">
+            <button type="button" class="cart" id="btnCart">장바구니</button>
+            <button type="button" class="buy" id="btnBuy">바로구매</button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="right">
-      <div>
-        <!-- [수정] id로 빈 값 잡아두던 부분 -> product 값 바로 출력 -->
-        <div class="brand">{{ product.brand }}</div>
-        <div class="title">{{ product.title }}</div>
-        <div class="star">
-          <span>{{ product.rating }}</span>
-          <span class="count">({{ product.review_count }})</span>
-        </div>
+    <!-- 리뷰 영역 -->
+    <h2 class="review-title">상품후기</h2>
+    <div id="reviewContainer"></div>
 
-        <!-- [수정] 총 가격은 수량에 따라 JS가 바꿔야 하니 id는 유지, 초기값만 서버에서 렌더 -->
-        <div class="price" id="totalPrice">{{ "{:,}".format(product.price) }}원</div>
+    <!-- 상세 이미지 및 배송 정보 -->
+    <div class="detail" id="detailImgBox"></div>
 
-        <div class="info">
-          <!-- [수정] features 반복문으로 출력 (JSON 리스트) -->
-          <ul id="featuresList">
-            {% for feat in product.features %}
-              <li>{{ feat }}</li>
-            {% endfor %}
-          </ul>
-        </div>
-      </div>
-
-      <div>
-        <div class="count-box">
-          <button type="button" id="btnMinus">-</button>
-          <input type="text" id="quantity" value="1" readonly>
-          <button type="button" id="btnPlus">+</button>
-        </div>
-
-        <div class="btn">
-          <!-- [수정] 장바구니/구매 버튼에 상품 id 데이터 속성 추가 (JS에서 활용) -->
-          <button class="cart" data-id="{{ product.id }}">장바구니</button>
-          <button class="buy" data-id="{{ product.id }}">바로구매</button>
-        </div>
-      </div>
+    <div class="table">
+      <div><span>배송</span><span id="shipping"></span></div>
+      <div><span>제조국</span><span id="origin"></span></div>
     </div>
   </div>
 
-  <!-- 리뷰 영역 -->
-  <h2 class="review-title">상품후기</h2>
-  <div id="reviewContainer">
-    <!-- [수정] reviews 반복문으로 출력 (ProductReview 테이블, relationship으로 연결됨) -->
-    {% for rev in product.reviews %}
+  <!-- 1. data.js 파일 불러오기 -->
+  <script>
+    const product = {{ product| tojson }};
+    const productId = product.id;
+
+    if (product) {
+      // 1. 기본 정보 채우기
+      document.getElementById('mainImg').src = product.mainImg;
+      document.getElementById('brand').innerText = product.brand;
+      document.getElementById('title').innerText = product.title;
+      document.getElementById('rating').innerText = product.rating;
+      document.getElementById('reviewCount').innerText = `(${product.reviewCount})`;
+      document.getElementById('shipping').innerText = product.shipping;
+      document.getElementById('origin').innerText = product.origin;
+
+      // 상세 이미지 그려주기 
+      const detailImgBox = document.getElementById('detailImgBox');
+     if (product.detailImg) {
+       detailImgBox.innerHTML = `<img src="${product.detailImg}" alt="상세 이미지" style="width:100%; display:block;">`;
+     }
+
+      // 2. 특징(features) 목록 채우기
+      const featuresList = document.getElementById('featuresList');
+      featuresList.innerHTML = product.features.map(feat => `<li>${feat}</li>`).join('');
+
+      // 3. 리뷰(reviews) 목록 채우기
+      const reviewContainer = document.getElementById('reviewContainer');
+      reviewContainer.innerHTML = product.reviews.map(rev => `
       <div class="review-box">
-        <span class="review-stars">
-          {% if rev.rating %}{{ rev.rating }}{% else %}{{ product.rating }}{% endif %}
-        </span>
-        <div>{{ rev.content }}</div>
+        <span class="review-stars"> ${product.rating}</span>
+        <div>${rev}</div>
       </div>
-    {% else %}
-      <p class="no-review">아직 등록된 후기가 없습니다.</p>
-    {% endfor %}
-  </div>
+    `).join('');
 
-  <!-- 상세 이미지 및 배송 정보 -->
-  <div class="detail" id="detailImgBox">
-    <!-- [수정] detail_img가 단일 필드라 일단 하나만 출력. 여러 장 필요하면 아래 참고 -->
-    {% if product.detail_img %}
-      <img src="{{ url_for('static', filename='img/shop_imgs/' + product.detail_img) }}" alt="상세 이미지">
-    {% endif %}
-  </div>
+      // 4. 수량 변경 및 총 가격 계산 기능
+      const quantityInput = document.getElementById('quantity');
+      const totalPriceEl = document.getElementById('totalPrice');
+      const btnMinus = document.getElementById('btnMinus');
+      const btnPlus = document.getElementById('btnPlus');
 
-  <div class="table">
-    <div><span>배송</span><span>{{ product.shipping }}</span></div>
-    <div><span>제조국</span><span>{{ product.origin }}</span></div>
-  </div>
-</div>
-{% endblock %}
+      let count = 1;
+      const basePrice = product.price;
 
-{% block script %}
-<!-- [수정] JS 파일에 필요한 값들을 서버 데이터로 넘겨줌 -->
-<script src="{{ url_for('static', filename='js/shop_detail.js') }}"></script>
-<script>
-  // JS 파일에서 쓸 수 있도록 전역 변수로 넘김
-  const productId = {{ product.id }};
-  const basePrice = {{ product.price }};
-</script>
-{% endblock %}
+      function updatePrice() {
+        quantityInput.value = count;
+        const total = basePrice * count;
+        totalPriceEl.innerText = total.toLocaleString() + '원';
+      }
 
+      updatePrice();
 
+      // + 버튼 클릭 시 (수량만 1 증가)
+      btnPlus.addEventListener('click', () => {
+        count++;
+        updatePrice();
+      });
 
+      // - 버튼 클릭 시 (수량만 1 감소)
+      btnMinus.addEventListener('click', () => {
+        if (count > 1) {
+          count--;
+          updatePrice();
+        }
+      });
+
+      // ★ 5. 장바구니 및 바로구매 버튼 (id로 정확히 지정) ★
+      const cartBtn = document.getElementById('btnCart');
+      const buyBtn = document.getElementById('btnBuy');
+
+      // 장바구니 버튼 클릭 이벤트
+      if (cartBtn) {
+        cartBtn.addEventListener('click', () => {
+          if (confirm('장바구니에 상품을 담았습니다. 장바구니 페이지로 이동하시겠습니까?')) {
+            window.location.href = `/shop/cart?id=${productId}&qty=${count}`;
+          }
+        });
+      }
+
+      // 바로구매 버튼 클릭 이벤트
+      if (buyBtn) {
+        buyBtn.addEventListener('click', () => {
+          window.location.href = `/shop/buy?id=${productId}&qty=${count}`;
+        });
+      }
+
+    } else {
+      alert('상품 정보를 찾을 수 없습니다.');
+    }
+  </script>
+
+</body>
+
+</html>

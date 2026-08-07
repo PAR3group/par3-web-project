@@ -53,7 +53,7 @@
 <body>
     <div class="container">
         <header>
-    <a href="shop.html" id="logoContainer" style="text-decoration: none; display: inline-block;"></a>
+    <a href="{{ url_for('shop.main') }}" id="logoContainer" style="text-decoration: none; display: inline-block;"></a>
     <div class="page-title">장바구니</div>
         </header>
 
@@ -91,21 +91,15 @@
                     <span id="grandTotal">0 원</span>
                 </div>
                 <button class="btn-checkout" id="btnOrder">주문하기</button>
-                <a href="shop.html" class="btn-continue">쇼핑 계속하기</a>
+                <a href="{{ url_for('shop.main') }}" class="btn-continue">쇼핑 계속하기</a>
             </div>
         </div>
     </div>
 
-    <script src="data.js"></script>
     <script>
+        const product = {{ product|tojson }};
         const urlParams = new URLSearchParams(window.location.search);
-        const productId = parseInt(urlParams.get('id')) || 1;
         const initialQty = parseInt(urlParams.get('qty')) || 1;
-
-        // data.js에서 해당 상품 검색 (없을 경우 기본 데이터)
-        const product = (typeof products !== 'undefined') 
-            ? products.find(p => p.id === productId) 
-            : { id: 1, brand: 'TAYLORMADE', title: '2026 ★특가★ TP5 하프더즌 골프공', price: 138000, mainImg: 'driver.png' };
 
         let currentQty = initialQty;
 
@@ -166,13 +160,13 @@
         }
 
         document.getElementById('btnOrder').addEventListener('click', () => {
-            window.location.href = `buy.html?id=${product.id}&qty=${currentQty}`;
+            window.location.href = `/shop/buy?id=${product.id}&qty=${currentQty}`;
         });
 
         renderCart();
 
         // ★ 로고 파일(main1111.html) 불러와서 삽입 ★
-        fetch('main1111.html')
+        fetch('/static/shop/main1111.html')
             .then(response => response.text())
             .then(data => {
                 const logoContainer = document.getElementById('logoContainer');
