@@ -1,7 +1,7 @@
 import os
 import uuid
 from werkzeug.utils import secure_filename
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, g, abort
+from flask import Blueprint, current_app, render_template, request, redirect, url_for, jsonify, g, abort
 
 from par3.models import Post, Comment          # [수정] 실제 models.py 경로에 맞게 조정
 from par3.views.auth_views import login_required            # [수정] 기존 login_required 재사용
@@ -58,7 +58,7 @@ def list():
 @login_required  # [추가] 글쓰기는 로그인 필요, 페이지 이동 방식이라 리다이렉트형 사용
 def write():
     if request.method == 'GET':
-        return render_template('talk_write.html')
+        return render_template('talk-form.html')
 
     category = request.form.get('category')
     title = request.form.get('title')
@@ -69,18 +69,27 @@ def write():
     image_url = None
     is_video = False
 
-    # [참고] 여러 파일 첨부 가능하지만, 현재 모델 구조상 대표 이미지 1개만 저장
     for file in files:
         if file and file.filename:
             filename = secure_filename(file.filename)
             ext = filename.rsplit('.', 1)[1] if '.' in filename else ''
             filename = f"{uuid.uuid4().hex}.{ext}"
-            save_path = os.path.join('static', 'uploads', filename)
+
+            # 1. uploads 폴더의 절대 경로를 설정합니다.
+            upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
+
+            # 2. [핵심] 폴더가 없으면 자동으로 만듭니다. (exist_ok=True 필수)
+            os.makedirs(upload_folder, exist_ok=True)
+
+            # 3. 실제 파일 저장 경로를 결합합니다.
+            save_path = os.path.join(upload_folder, filename)
+
+            # 4. 저장 (이 시점에 이제 uploads 폴더가 반드시 존재하므로 에러가 나지 않습니다!)
             file.save(save_path)
 
             image_url = url_for('static', filename=f'uploads/{filename}')
             is_video = filename.lower().endswith(VIDEO_EXTENSIONS)
-            break  # 첫 번째 파일만 대표로 저장
+            break
 
     new_post = Post(
         category=category,
@@ -103,7 +112,7 @@ def detail(id):
     post = Post.query.get_or_404(id)
     post.views = (post.views or 0) + 1  # [참고] 상세페이지 진입 시 조회수 증가
     db.session.commit()
-    return render_template('talk_post.html', post=post)
+    return render_template('talk-detail.html', post=post)
 
 
 @bp.route('/<int:id>/delete', methods=['POST'])

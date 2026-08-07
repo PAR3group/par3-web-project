@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
-{% block extra_css %}
+{% block css %}
 <!-- Flask 정적 파일 경로로 수정 -->
-<link rel="stylesheet" href="{{ url_for('static', filename='talk-form.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/talk-form.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -14,7 +14,7 @@
         </div>
 
         <!-- 🌟 Flask 폼 전송 경로 수정 -->
-        <form action="{{ url_for('talk_write') }}" method="POST" enctype="multipart/form-data" class="write-form">
+        <form action="{{ url_for('talk.write') }}" method="POST" enctype="multipart/form-data" class="write-form">
             <!-- 1) 카테고리 -->
             <div class="form-group">
                 <label for="category">카테고리</label>
@@ -54,7 +54,7 @@
             <!-- 5) 버튼 영역 -->
             <div class="form-actions">
                 <!-- 🌟 취소 버튼 경로 수정 -->
-                <a href="{{ url_for('talk_list') }}" class="btn-cancel">취소</a>
+                <a href="{{ url_for('talk.list') }}" class="btn-cancel">취소</a>
                 <button type="submit" class="btn-submit">등록하기</button>
             </div>
         </form>
