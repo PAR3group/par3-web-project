@@ -1,0 +1,121 @@
+<!-- main1111.html -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap');
+
+    :root {
+        --bg-color: #ffffff;       /* 배경색 */
+        --par-color: #000000;      /* 'PAR' 글자 및 하단 텍스트 색상 */
+        --num3-color: #00ce7c;     /* 숫자 '3' 및 하단 라인 색상 */
+    }
+
+    .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 1px;
+        font-family: 'Montserrat', sans-serif;
+        /* 쇼핑몰 헤더 크기에 맞춘 축소 및 여백 정돈 */
+        transform: scale(0.45);
+        transform-origin: left center;
+        margin-right: -230px;
+    }
+
+    .logo-wrap .icon {
+        position: relative;
+        width: 170px;
+        height: 170px;
+        flex-shrink: 0;
+    }
+
+    .logo-wrap .icon svg, 
+    .logo-wrap .par3-svg {
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+    }
+
+    .logo-wrap .text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo-wrap .par3-svg {
+        width: 380px;
+        height: 90px;
+    }
+
+    .logo-wrap .sub-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-top: 10px;
+        gap: 14px;
+    }
+
+    .logo-wrap .sub-line {
+        flex: 1;
+        height: 2px;
+        background-color: var(--num3-color);
+    }
+
+    .logo-wrap .sub-text {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--par-color);
+        letter-spacing: 7.5px;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+</style>
+
+<div class="logo-wrap">
+    <!-- 1. 좌측 아이콘 (main1111 전용 검은색 골프공 디자인) -->
+    <div class="icon">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- 초록색 궤적 라인 -->
+            <path d="M 42 148 A 70 70 0 1 1 142 60" stroke="#00ce7c" stroke-width="6.5" stroke-linecap="round"/>
+            <path d="M 18 158 Q 100 134 182 158" stroke="#00ce7c" stroke-width="5.5" stroke-linecap="round"/>
+
+            <!-- 골프공 -->
+            <g id="golf-ball">
+                <circle cx="78" cy="112" r="23" fill="#000000"/>
+                <g fill="#555555">
+                    <circle cx="68" cy="102" r="1.8"/>
+                    <circle cx="78" cy="100" r="1.8"/>
+                    <circle cx="87" cy="104" r="1.8"/>
+                    <circle cx="64" cy="112" r="1.8"/>
+                    <circle cx="74" cy="110" r="1.8"/>
+                    <circle cx="84" cy="113" r="1.8"/>
+                    <circle cx="70" cy="122" r="1.8"/>
+                    <circle cx="80" cy="121" r="1.8"/>
+                </g>
+            </g>
+
+            <!-- 골프클럽 -->
+            <g id="club">
+                <path d="M 52 144 C 52 144 58 153 72 151 C 86 149 88 138 88 138 L 76 136 Z" fill="#000000"/>
+                <line x1="58" y1="141" x2="80" y2="137" stroke="#ffffff" stroke-width="1.2"/>
+                <line x1="60" y1="144" x2="78" y2="140" stroke="#ffffff" stroke-width="1.2"/>
+                <line x1="74" y1="140" x2="158" y2="18" stroke="#000000" stroke-width="6.5" stroke-linecap="round"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- 2. 우측 PAR3 텍스트 -->
+    <div class="text">
+        <svg class="par3-svg" viewBox="0 0 380 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g fill="var(--par-color)">
+                <path d="M 12 0 H 66 C 86 0 100 12 100 32 C 100 52 86 62 66 62 H 40 V 90 H 12 V 0 Z M 40 22 V 40 H 64 C 72 40 76 36 76 31 C 76 26 72 22 64 22 H 40 Z"/>
+                <path d="M 128 0 L 88 90 H 118 L 125 72 H 155 L 162 90 H 192 L 152 0 H 128 Z M 132 50 L 140 28 L 148 50 H 132 Z"/>
+                <path d="M 198 0 H 248 C 268 0 282 11 282 29 C 282 42 272 53 258 57 L 286 90 H 252 L 230 60 H 226 V 90 H 198 V 0 Z M 226 22 V 40 H 246 C 253 40 258 37 258 31 C 258 25 253 22 246 22 H 226 Z"/>
+            </g>
+            <path d="M 292 0 H 380 V 90 H 292 V 66 H 352 V 54 H 316 V 36 H 352 V 24 H 292 Z" fill="var(--num3-color)"/>
+        </svg>
+
+        <div class="sub-container">
+            <div class="sub-line"></div>
+            <div class="sub-text">GOLF COMMUNITY</div>
+            <div class="sub-line"></div>
+        </div>
+    </div>
+</div>
