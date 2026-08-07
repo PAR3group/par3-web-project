@@ -4,57 +4,86 @@
    연결 파일: templates/join/join_apply.html
    작성자: 오지 (feature/join-page)
 
-   ⚠️ 참고: g_form 관련 클래스는 join_create.css와 동일한
-   전역 공통 컴포넌트입니다. 두 파일에 중복 작성되어 있는데,
-   나중에 static/css/common/g_form.css로 분리해서
-   base.html에서 공통으로 불러오는 구조로 리팩토링 예정
+   ⚠️ join_create.css와 동일한 톤/구조로 통일
+   (네이비+딥그린, 카드형 hover 효과, g_form 공통 컴포넌트)
    ============================================ */
 
-/* ===== p_join_apply : 페이지 전체 wrapper ===== */
-.p_join_apply { max-width: 900px; margin: 0 auto; padding: 32px 24px 80px; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff; color: #16233f; }
 
-/* ===== ja_head : 페이지 상단 타이틀 영역 ===== */
-.ja_head { margin-bottom: 8px; }
+/* ===== p_join_apply : 페이지 전체 wrapper ===== */
+.p_join_apply {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  background: #ffffff;
+}
+
+/* ===== ja_head : 페이지 상단 타이틀 영역 (jc_head와 동일 톤) ===== */
+.ja_head { margin-bottom: 24px; }
 .ja_title {
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 700;
-  margin: 24px 0 16px;
+  color: #030b05;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ja_subtitle {
+  font-size: 13px;
+  color: #8a93a3;
+  margin-top: 6px;
 }
 
 /* ============================================
-   g_form : 공통 폼 컴포넌트 (join_create.css와 동일)
+   g_form : 공통 폼 컴포넌트 (join_create.css와 동일 구조)
    ============================================ */
-
 .g_form_section {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  background: #ffffff;
+  border: 1px solid #eceef1;
+  border-radius: 14px;
+  overflow: visible;
+  box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.g_form_section:hover {
+  border-color: #39e07a;
+  box-shadow: 0 0 0 1px #39e07a, 0 8px 20px rgba(57, 224, 122, 0.18), 0 4px 10px rgba(16, 35, 63, 0.06);
+  transform: translateY(-2px);
 }
 
 .g_form_section_title {
-  background: #6b8f76;
+  background: #024e24;
   color: #fff;
-  padding: 8px 12px;
+  padding: 12px 18px;
   font-weight: 600;
   font-size: 14px;
+  border-radius: 14px 14px 0 0;
 }
 
 .g_form_row {
   display: flex;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #eceef1;
+}
+.g_form_row:last-child {
+  border-bottom: none;
 }
 
 .g_form_label {
   width: 160px;
   flex-shrink: 0;
-  background: #d8e3dc;
-  padding: 12px;
+  background: #f4f6f8;
+  padding: 14px 16px;
   font-size: 13px;
+  color: #16233f;
   display: flex;
   align-items: center;
 }
 
 .g_form_input {
   flex: 1;
-  padding: 12px;
+  padding: 14px 16px;
   font-size: 14px;
 }
 
@@ -66,34 +95,31 @@
   width: 100%;
   font-size: 14px;
   font-family: inherit;
+  color: #16233f;
+}
+.g_form_input--text::placeholder {
+  color: #9099a8;
 }
 
-/* readonly 처리된 요약 정보 필드 - 배경 살짝 어둡게 해서 "수정 불가" 느낌 표시 */
+/* readonly 처리된 필드 - 자동으로 채워진 값이라는 걸 시각적으로 구분 */
 .g_form_input--text[readonly] {
   background: #f7f7f7;
-  color: #666;
+  color: #6b7280;
 }
 
 .g_form_input--radio {
   display: flex;
   gap: 16px;
   align-items: center;
+  flex-wrap: wrap;
 }
 .g_form_input--radio label {
   display: flex;
   align-items: center;
   gap: 4px;
   cursor: pointer;
-}
-
-.g_form_input--textarea {
-  width: 100%;
-  min-height: 80px;
-  border: none;
-  outline: none;
-  resize: vertical;
-  font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
+  color: #16233f;
 }
 
 .g_form_input--checkbox {
@@ -104,17 +130,68 @@
 .g_form_input--checkbox label {
   cursor: pointer;
   font-size: 13px;
+  color: #16233f;
 }
 
-/* ===== ja_actions : cancel + APPLY 버튼 가로 배치 wrapper ===== */
+/* ===== ja_actions : 취소하기 + 신청하기 버튼 가로 배치 ===== */
 .ja_actions {
   display: flex;
   gap: 12px;
-  justify-content: center;
-  margin-top: 24px;
+  margin-top: 8px;
 }
 
 .ja_cancel_bt {
-  background: #eee;
-  color: #333;
-  padding: 10px
+  flex: 1;
+  background: #f4f6f8;
+  color: #6b7280;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #e4e6ea;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: border-color 0.15s, box-shadow 0.15s, color 0.15s, transform 0.15s;
+}
+.ja_cancel_bt:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  box-shadow: 0 0 0 1px #ef4444, 0 6px 14px rgba(239, 68, 68, 0.18);
+  transform: translateY(-2px);
+}
+.ja_cancel_bt:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.15);
+}
+
+.ja_apply_bt {
+  flex: 2;
+  background: linear-gradient(135deg, #14a455, #05ac4f);
+  color: #fff;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.ja_apply_bt:hover { opacity: 0.9; }
+
+/* ============================================
+   반응형
+   ============================================ */
+@media (max-width: 768px) {
+  .p_join_apply { padding: 20px 16px 60px; }
+  .g_form_row { flex-direction: column; }
+  .g_form_label {
+    width: 100%;
+    border-bottom: 1px solid #eceef1;
+  }
+}
+
+@media (max-width: 480px) {
+  .ja_title { font-size: 22px; }
+  .g_form_section_title { font-size: 13px; padding: 10px 14px; }
+  .g_form_label, .g_form_input { padding: 12px 14px; }
+  .ja_actions { flex-direction: column; }
+}

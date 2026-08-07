@@ -116,3 +116,23 @@ class Join(db.Model):
     content = db.Column(db.Text)                                          # 상세 내용
     thumb_img = db.Column(db.String(200), default='no_image.png')         # 썸네일 이미지 파일명
     create_date = db.Column(db.DateTime, default=datetime.now)
+
+
+# 조인페이지 - 조인참여하기 
+class JoinApply(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    join_id = db.Column(
+        db.Integer,
+        db.ForeignKey("join.id"),
+        nullable=False
+    )
+    applicant_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
+    applicant_name = db.Column(db.String(50))
+    applicant_phone = db.Column(db.String(20))
+    golf_experience = db.Column(db.String(20))
+    handicap = db.Column(db.String(20))
+    create_date = db.Column(db.DateTime, default=datetime.now)
