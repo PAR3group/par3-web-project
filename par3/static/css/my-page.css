@@ -78,6 +78,23 @@
     color: #0f172a;
 }
 
+.btn-avatar-reset {
+    display: block;
+    margin: 0 auto 10px;
+    padding: 5px 14px;
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-avatar-reset:hover {
+    background-color: #e2e8f0;
+}
+
 /* 최근 활동 내역 박스 */
 .recent-activities-box {
     background-color: #f0fdf4;
@@ -202,7 +219,8 @@
 .info-value input[type="text"],
 .info-value input[type="email"],
 .info-value input[type="tel"],
-.info-value input[type="password"] {
+.info-value input[type="password"],
+.info-value select {
     width: 100%;
     padding: 11px 16px;
     border: 1px solid #cbd5e1;
@@ -210,6 +228,11 @@
     font-size: 14px;
     color: #0f172a;
     box-sizing: border-box;
+}
+
+.info-value select {
+    background-color: #ffffff;
+    cursor: pointer;
 }
 
 /* 읽기전용 회색 박스 */
@@ -322,24 +345,25 @@
     background-color: #059669;
 }
 
-/* 장비 추천 */
-.equip-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
+/* 장비 추천 (채추천 결과 카드 - recommend.html의 rc_result_card와 동일한 톤) */
+.section-desc {
+    margin: 0 0 16px;
+    font-size: 14px;
+    color: #475569;
 }
 
 .equipment-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 18px;
 }
 
 .equip-card {
     border: 1px solid #e2e8f0;
     border-radius: 12px;
-    overflow: hidden;
     background: #ffffff;
+    padding: 18px;
+    text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -348,39 +372,99 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 
-.equip-category-top {
-    background-color: #f8fafc;
-    border-bottom: 1px solid #f1f5f9;
-    padding: 10px 16px;
+.equip-card-label {
+    margin: 0 0 10px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #0f172a;
 }
 
-.category-title {
-    font-size: 13px;
-    font-weight: 800;
-    color: #059669;
+.equip-img-box {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: #f1f5f9;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 10px;
 }
 
 .equip-img-box img {
     width: 100%;
-    height: 140px;
+    height: 100%;
     object-fit: cover;
 }
 
-.equip-body {
-    padding: 14px 16px;
+.equip-card-sub {
+    margin: 6px 0 2px;
+    font-size: 11px;
+    color: #94a3b8;
 }
 
-.equip-body h4 {
-    margin: 0 0 6px 0;
-    font-size: 15px;
+.equip-card-value {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 800;
+    color: #10b981;
+}
+
+.equip-card-flex {
+    display: inline-block;
+    margin-top: 6px;
+    width: 34px;
+    height: 34px;
+    line-height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid #10b981;
+    color: #10b981;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+/* 채추천 결과가 없을 때 - main.html의 fitting_card(PAR3 FITTING ZONE)와 톤을 맞춘 카드 */
+.equip-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+    padding: 40px 20px;
+    background-color: #f0fdf4;
+    border: 1px dashed #10b981;
+    border-radius: 16px;
+}
+
+.equip-empty-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
     color: #0f172a;
 }
 
-.equip-body p {
-    margin: 0;
+.equip-empty-desc {
+    margin: 0 0 10px;
     font-size: 13px;
     color: #64748b;
-    line-height: 1.4;
+}
+
+.equip-empty-btn {
+    margin-top: 4px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 30px;
+    background-color: #10b981;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+    transition: all 0.2s ease;
+}
+
+.equip-empty-btn:hover {
+    background-color: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.45);
 }
 
 /* 이력관리 */

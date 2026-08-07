@@ -1,11 +1,8 @@
-import os
-import uuid
-from werkzeug.utils import secure_filename
-from flask import Blueprint, current_app, render_template, request, redirect, url_for, jsonify, g, abort
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, g, abort
 
 from par3.models import Post, Comment          # [수정] 실제 models.py 경로에 맞게 조정
 from par3.views.auth_views import login_required            # [수정] 기존 login_required 재사용
-from par3 import db
+from par3 import db, storage
 from par3.utils import get_golf_news_top3
 
 bp = Blueprint('talk', __name__, url_prefix='/talk')
@@ -75,24 +72,8 @@ def write():
 
     for file in files:
         if file and file.filename:
-            filename = secure_filename(file.filename)
-            ext = filename.rsplit('.', 1)[1] if '.' in filename else ''
-            filename = f"{uuid.uuid4().hex}.{ext}"
-
-            # 1. uploads 폴더의 절대 경로를 설정합니다.
-            upload_folder = os.path.join(current_app.root_path, 'static', 'uploads')
-
-            # 2. [핵심] 폴더가 없으면 자동으로 만듭니다. (exist_ok=True 필수)
-            os.makedirs(upload_folder, exist_ok=True)
-
-            # 3. 실제 파일 저장 경로를 결합합니다.
-            save_path = os.path.join(upload_folder, filename)
-
-            # 4. 저장 (이 시점에 이제 uploads 폴더가 반드시 존재하므로 에러가 나지 않습니다!)
-            file.save(save_path)
-
-            image_url = url_for('static', filename=f'uploads/{filename}')
-            is_video = filename.lower().endswith(VIDEO_EXTENSIONS)
+            is_video = file.filename.lower().endswith(VIDEO_EXTENSIONS)
+            image_url = storage.upload_image(file, 'talk')
             break
 
     new_post = Post(

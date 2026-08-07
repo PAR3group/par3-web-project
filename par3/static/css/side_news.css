@@ -1,0 +1,125 @@
+.right-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    /* 스크롤을 즉시 따라붙지 않고 뒤늦게 부드럽게 쫓아오도록 JS(talk.html)에서 transform으로 제어 */
+    position: relative;
+}
+
+.right-sidebar>article:first-of-type {
+    background-image: url('/static/img/news_img1.png');
+}
+
+.right-sidebar>article:nth-of-type(2) {
+    background-image: url('/static/img/news_img2.png');
+}
+
+.right-sidebar>article:nth-of-type(3) {
+    background-image: url('/static/img/news_img3.png');    
+}
+
+.sidebar-card {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+.sidebar-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+}
+
+.sidebar-card h4 {
+    font-size: 12px;
+    border-bottom: 1px solid #fff;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+
+.sidebar-card h4 span {
+    font-size: 11px;
+    font-weight: 400;
+    color: #ddd;
+}
+
+.sidebar-card-row {
+    display: flex;
+    align-items: center;
+    padding: 6px 2px;
+}
+
+.sidebar-card-row:not(:last-of-type) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-rank {
+    flex: 0 0 28px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #eee;
+}
+
+.sidebar-name {
+    flex: 1;
+    font-size: 13px;
+    color: #fff;
+}
+
+.sidebar-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    text-align: right;
+}
+
+.sidebar-event-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+.sidebar-event-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ddd;
+}
+
+.sidebar-event-date {
+    font-size: 12px;
+    color: #eee;
+}
+
+.sidebar-event-place {
+    font-size: 12px;
+    color: #ccc;
+    margin-bottom: 6px;
+}
+
+.sidebar-card .more_view_bt {
+    display: inline-block;
+    margin: 12px 0 8px 4px;
+    font-size: 12px;
+    text-decoration: none;
+    color: #fff;
+}

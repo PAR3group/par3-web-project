@@ -1,13 +1,20 @@
-import os
-import uuid
 import json
-from werkzeug.utils import secure_filename
 from flask import Blueprint, request, redirect, url_for, render_template
 from par3.views.auth_views import login_required, admin_required
 from par3.models import ShopProduct, ProductReview
-from par3 import db
+from par3 import db, storage
 
 bp = Blueprint('shop', __name__, url_prefix='/shop')
+
+
+def resolve_shop_image(value):
+    # Supabase Storage에 올린 상품 이미지는 절대 URL, 시드 데이터로 들어간 기존 이미지는
+    # static/img/shop_imgs/ 안의 파일명이므로 둘을 구분해서 처리한다.
+    if not value:
+        return ''
+    if value.startswith('http://') or value.startswith('https://'):
+        return value
+    return url_for('static', filename=f'img/shop_imgs/{value}')
 
 
 def product_to_dict(product):
@@ -18,8 +25,8 @@ def product_to_dict(product):
         'rating': product.rating,
         'reviewCount': product.review_count,
         'price': product.price,
-        'mainImg': url_for('static', filename=f'img/shop_imgs/{product.main_img}'),
-        'detailImg': url_for('static', filename=f'img/shop_imgs/{product.detail_img}') if product.detail_img else '',
+        'mainImg': resolve_shop_image(product.main_img),
+        'detailImg': resolve_shop_image(product.detail_img),
         'features': product.features or [],
         'reviews': [r.content for r in product.reviews],
         'shipping': product.shipping,
@@ -69,19 +76,15 @@ def add_product():
     file = request.files.get('main_img')
 
     if file and file.filename:
-        filename = secure_filename(file.filename)
-        ext = filename.rsplit('.', 1)[1] if '.' in filename else 'png'
-        filename = f"{uuid.uuid4().hex}.{ext}"
-        save_path = os.path.join('static', 'img', 'shop_imgs', filename)
-        file.save(save_path)
+        main_img = storage.upload_image(file, 'shop')
     else:
-        filename = 'no_image.png'
+        main_img = 'no_image.png'
 
     new_product = ShopProduct(
         brand=brand,
         title=title,
         price=int(price),
-        main_img=filename,
+        main_img=main_img,
     )
     db.session.add(new_product)
     db.session.commit()

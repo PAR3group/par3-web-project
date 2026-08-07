@@ -13,6 +13,9 @@ class User(db.Model):
     experience_years = db.Column(db.Integer, nullable=False)
     # 관리자 여부 추가
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    profile_img = db.Column(db.Text)
+    home_address = db.Column(db.String(255))
+    golf_experience = db.Column(db.String(50))
 
 class ShaftRecommend(db.Model):
 

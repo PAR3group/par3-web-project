@@ -1,5 +1,5 @@
 .m_news_section {
-    padding: 40px 24px;
+    padding: 40px 24px 0 24px;
 }
 
 .m_news_container {
@@ -12,7 +12,6 @@
 
 .m_golf_news {
     grid-column: 1 / -1;
-    margin: 0 0 16px 0;
 }
 
 .m_news_card {
@@ -129,6 +128,12 @@
     margin-bottom: 8px;
 }
 
+.m_news_c_A,
+.m_news_c_B,
+.m_news_c_C {
+    margin-bottom: 8px;
+}
+
 .m_news_card_prize {
     background-image: url('/static/img/news_img1.png');
 }
@@ -143,7 +148,7 @@
 
 .m_news_card .more_view_bt {
     display: inline-block;
-    margin-top: auto;
+    margin: auto 8px 0 auto;
     font-size: 13px;
     text-decoration: none;
     position: static;
