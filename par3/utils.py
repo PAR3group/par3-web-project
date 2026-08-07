@@ -1,3 +1,6 @@
+import os
+import json
+
 SHAFT_MULTIPLIER = {
     "driver": 1.5,
     "wood5": 1.8,
@@ -96,3 +99,18 @@ def recommend_flex_by_distance(gender, distance):
 
         else:
             return "S"
+
+def get_golf_news_top3():
+    prize_top3 = []
+    prize_path = "scraper/klpga_top3_cols.json"
+    if os.path.exists(prize_path):
+        with open(prize_path, "r", encoding="utf-8") as f:
+            prize_top3 = json.load(f)[:3]
+
+    kpga_top3 = []
+    kpga_path = "scraper/kpga_top10_drive.json"
+    if os.path.exists(kpga_path):
+        with open(kpga_path, "r", encoding="utf-8") as f:
+            kpga_top3 = json.load(f)[:3]
+
+    return prize_top3, kpga_top3

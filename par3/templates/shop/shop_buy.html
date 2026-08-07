@@ -58,7 +58,7 @@
 <body>
     <div class="container">
         <header>
-    <a href="shop.html" id="logoContainer" style="text-decoration: none; display: inline-block;"></a>
+    <a href="{{ url_for('shop.main') }}" id="logoContainer" style="text-decoration: none; display: inline-block;"></a>
     <div class="page-title">주문 / 결제</div>
         </header>
 
@@ -128,20 +128,11 @@
         </div>
     </div>
 
-    <script src="data.js"></script>
     <script>
+        const product = {{ product|tojson }};
         const urlParams = new URLSearchParams(window.location.search);
-        const productId = parseInt(urlParams.get('id')) || 1;
         const qty = parseInt(urlParams.get('qty')) || 1;
 
-        // data.js 상품 검색
-        const product = (typeof products !== 'undefined') 
-            ? products.find(p => p.id === productId) 
-            : { id: 1, brand: 'TAYLORMADE', title: '2026 ★특가★ TP5 하프더즌 골프공', price: 138000, mainImg: 'driver.png' };
-
-        const itemTotal = product.price * qty;
-        const shipping = itemTotal >= 200000 ? 0 : 3000;
-        const grandTotal = itemTotal + shipping;
 
         // 상품 표시
         document.getElementById('orderItemBox').innerHTML = `
@@ -168,11 +159,11 @@
         // 결제완료 처리
         document.getElementById('btnSubmitPay').addEventListener('click', () => {
             alert(`${grandTotal.toLocaleString()}원 결제가 완료되었습니다. 주문해 주셔서 감사합니다!`);
-            window.location.href = 'shop.html';
+            window.location.href = "{{ url_for('shop.main') }}";
         });
 
         // ★ 로고 파일(main1111.html) 불러와서 삽입 ★
-        fetch('main1111.html')
+        fetch('/static/shop/main1111.html')
             .then(response => response.text())
             .then(data => {
                 const logoContainer = document.getElementById('logoContainer');

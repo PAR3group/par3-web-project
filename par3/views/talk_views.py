@@ -6,6 +6,7 @@ from flask import Blueprint, current_app, render_template, request, redirect, ur
 from par3.models import Post, Comment          # [수정] 실제 models.py 경로에 맞게 조정
 from par3.views.auth_views import login_required            # [수정] 기존 login_required 재사용
 from par3 import db
+from par3.utils import get_golf_news_top3
 
 bp = Blueprint('talk', __name__, url_prefix='/talk')
 
@@ -45,12 +46,15 @@ def list():
         query = query.order_by(Post.created_at.desc())
 
     posts = query.all()
+    prize_top3, kpga_top3 = get_golf_news_top3()
 
     return render_template(
         'talk.html',
         posts=posts,
         current_sort=sort,
-        current_category=category
+        current_category=category,
+        prize_top3=prize_top3,
+        kpga_top3=kpga_top3
     )
 
 
@@ -110,17 +114,16 @@ def write():
 @bp.route('/<int:id>')
 def detail(id):
     post = Post.query.get_or_404(id)
-    post.views = (post.views or 0) + 1  # [참고] 상세페이지 진입 시 조회수 증가
+    post.views = (post.views or 0) + 1
     db.session.commit()
     return render_template('talk-detail.html', post=post)
 
 
 @bp.route('/<int:id>/delete', methods=['POST'])
-@login_required  # [추가] 삭제는 로그인 필요
+@login_required
 def delete_post(id):
     post = Post.query.get_or_404(id)
 
-    # [추가] 작성자 본인만 삭제 가능
     if post.author != g.user.nickname:
         return jsonify({'success': False, 'message': '삭제 권한이 없습니다.'}), 403
 
@@ -130,7 +133,7 @@ def delete_post(id):
 
 
 @bp.route('/<int:id>/like', methods=['POST'])
-@api_login_required  # [추가] 좋아요는 API라 JSON 응답형 사용
+@api_login_required
 def like_post(id):
     post = Post.query.get_or_404(id)
     post.likes = (post.likes or 0) + 1
@@ -139,7 +142,7 @@ def like_post(id):
 
 
 @bp.route('/<int:id>/comment', methods=['POST'])
-@api_login_required  # [추가] 댓글도 API라 JSON 응답형 사용
+@api_login_required
 def add_comment(id):
     post = Post.query.get_or_404(id)
     data = request.get_json()

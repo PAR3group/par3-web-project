@@ -1,0 +1,38 @@
+<aside class="right-sidebar">
+    <article class="sidebar-card">
+        <h4 class="sidebar-card-title">KLPGA 상금순위 <span>(원)</span></h4>
+        {% for player in prize_top3 %}
+        <div class="sidebar-card-row">
+            <span class="sidebar-rank">{{ player.rank }}위</span>
+            <span class="sidebar-name">{{ player.name }}</span>
+            <span class="sidebar-value">{{ player.prize }}</span>
+        </div>
+        {% endfor %}
+        <a href="https://klpga.co.kr/web/record/publicRecordDetail" target="_blank" rel="noopener noreferrer"
+            class="more_view_bt">더보기-></a>
+    </article>
+
+    <article class="sidebar-card">
+        <h4 class="sidebar-card-title">KPGA 평균 드라이브 거리 <span>(yds)</span></h4>
+        {% for p in kpga_top3 %}
+        <div class="sidebar-card-row">
+            <span class="sidebar-rank">{{ p.rank }}위</span>
+            <span class="sidebar-name">{{ p.name }}</span>
+            <span class="sidebar-value">{{ p.record }}</span>
+        </div>
+        {% endfor %}
+        <a href="https://klpga.co.kr/web/record/publicRecordDetail" target="_blank" rel="noopener noreferrer"
+            class="more_view_bt">더보기-></a>
+    </article>
+
+    <article class="sidebar-card">
+        <h4 class="sidebar-card-title">KLPGA 대회 정보</h4>
+        <div class="sidebar-event-info">
+            <p class="sidebar-event-title">메디힐 · 한국일보 챔피언십</p>
+            <p class="sidebar-event-date">08.13(목) ~ 08.16(일)</p>
+            <p class="sidebar-event-place">몽베르</p>
+        </div>
+        <a href="https://sports.daum.net/schedule/klpga" target="_blank" rel="noopener noreferrer"
+            class="more_view_bt">더보기-></a>
+    </article>
+</aside>

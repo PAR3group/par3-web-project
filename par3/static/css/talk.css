@@ -27,21 +27,6 @@ body {
     padding: 20px;
 }
 
-/* TALK 헤더 */
-.talk-header {
-    padding: 15px 0 5px 0;
-    margin-bottom: 15px;
-}
-
-.talk-header h2 {
-    font-size: 20px;
-    margin-bottom: 4px;
-}
-
-.talk-header p {
-    font-size: 13px;
-    color: #666;
-}
 
 /* [카테고리 탭 - 검색창 - 글쓰기 버튼] 컨트롤 바 */
 .action-bar {
@@ -283,23 +268,14 @@ body {
     white-space: nowrap;
 }
 
-/* 우측 사이드바 */
-.right-sidebar {
-    width: 260px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    position: sticky;
-    top: 20px;
-    flex-shrink: 0;
-}
-
 .sidebar-card {
     background-color: #0d170f;
     color: #fff;
-    height: 180px;
+    min-height: 180px;
     border-radius: 12px;
     padding: 15px;
+    display: flex;
+    flex-direction: column;
 }
 
 .sidebar-card h4 {
@@ -307,6 +283,74 @@ body {
     border-bottom: 1px solid #333;
     padding-bottom: 5px;
     margin-bottom: 10px;
+}
+
+.sidebar-card h4 span {
+    font-size: 11px;
+    font-weight: 400;
+    color: #aaa;
+}
+
+.sidebar-card-row {
+    display: flex;
+    align-items: center;
+    padding: 6px 2px;
+}
+
+.sidebar-card-row:not(:last-of-type) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-rank {
+    flex: 0 0 28px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #eee;
+}
+
+.sidebar-name {
+    flex: 1;
+    font-size: 13px;
+    color: #fff;
+}
+
+.sidebar-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    text-align: right;
+}
+
+.sidebar-event-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 2px;
+}
+
+.sidebar-event-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.sidebar-event-date {
+    font-size: 12px;
+    color: #eee;
+}
+
+.sidebar-event-place {
+    font-size: 12px;
+    color: #ccc;
+    margin-bottom: 6px;
+}
+
+.sidebar-card .more_view_bt {
+    display: inline-block;
+    margin-top: auto;
+    font-size: 12px;
+    text-decoration: none;
+    color: #fff;
 }
 
 /* 반응형 대응 */
