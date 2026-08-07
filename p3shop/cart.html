@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAR3 - 장바구니</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; color: #333; }
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        
+        /* Header */
+        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 2px solid #1b4332; margin-bottom: 30px; }
+        .logo { font-size: 24px; font-weight: 800; color: #1b4332; text-decoration: none; }
+        .page-title { font-size: 22px; font-weight: bold; }
+
+        /* Cart Layout */
+        .cart-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        
+        /* Table */
+        .cart-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+        .cart-table th { background: #fafafa; padding: 15px; font-size: 14px; color: #666; border-bottom: 1px solid #eee; text-align: left; }
+        .cart-table td { padding: 20px 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
+
+        .product-info { display: flex; align-items: center; gap: 15px; }
+        .product-info img { width: 80px; height: 80px; object-fit: contain; border: 1px solid #eee; border-radius: 6px; padding: 5px; }
+        .product-brand { font-size: 12px; color: #888; font-weight: bold; }
+        .product-name { font-size: 15px; font-weight: bold; margin-top: 2px; }
+
+        .qty-box { display: flex; align-items: center; border: 1px solid #ccc; border-radius: 4px; width: fit-content; }
+        .qty-box button { width: 28px; height: 28px; background: #fff; border: none; cursor: pointer; font-size: 14px; }
+        .qty-box input { width: 35px; text-align: center; border: none; font-size: 14px; font-weight: bold; }
+
+        .price { font-weight: bold; font-size: 16px; }
+        .btn-delete { background: none; border: none; color: #999; cursor: pointer; font-size: 18px; }
+        .btn-delete:hover { color: #e63946; }
+
+        /* Order Summary Box */
+        .summary-card { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); height: fit-content; position: sticky; top: 20px; }
+        .summary-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 15px; color: #555; }
+        .summary-row.total { font-size: 18px; font-weight: bold; color: #1b4332; border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px; }
+
+        .btn-checkout { width: 100%; padding: 15px; background-color: #1b4332; color: #fff; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background 0.2s; }
+        .btn-checkout:hover { background-color: #2d6a4f; }
+        .btn-continue { width: 100%; padding: 12px; background: #fff; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; margin-top: 8px; cursor: pointer; text-align: center; text-decoration: none; display: block; color: #333; }
+
+        @media (max-width: 768px) {
+            .cart-layout { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+    <a href="shop.html" id="logoContainer" style="text-decoration: none; display: inline-block;"></a>
+    <div class="page-title">장바구니</div>
+        </header>
+
+        <div class="cart-layout">
+            <!-- Left: Item List -->
+            <div>
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>상품정보</th>
+                            <th>수량</th>
+                            <th>주문금액</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartList">
+                        <!-- Dynamic Cart Item -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Right: Price Summary -->
+            <div class="summary-card">
+                <div class="summary-title">결제 예정 금액</div>
+                <div class="summary-row">
+                    <span>상품금액</span>
+                    <span id="subTotal">0 원</span>
+                </div>
+                <div class="summary-row">
+                    <span>배송비</span>
+                    <span id="shippingFee">3,000 원</span>
+                </div>
+                <div class="summary-row total">
+                    <span>총 결제금액</span>
+                    <span id="grandTotal">0 원</span>
+                </div>
+                <button class="btn-checkout" id="btnOrder">주문하기</button>
+                <a href="shop.html" class="btn-continue">쇼핑 계속하기</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = parseInt(urlParams.get('id')) || 1;
+        const initialQty = parseInt(urlParams.get('qty')) || 1;
+
+        // data.js에서 해당 상품 검색 (없을 경우 기본 데이터)
+        const product = (typeof products !== 'undefined') 
+            ? products.find(p => p.id === productId) 
+            : { id: 1, brand: 'TAYLORMADE', title: '2026 ★특가★ TP5 하프더즌 골프공', price: 138000, mainImg: 'driver.png' };
+
+        let currentQty = initialQty;
+
+        function renderCart() {
+            const cartList = document.getElementById('cartList');
+            const itemTotal = product.price * currentQty;
+            const shipping = itemTotal > 0 ? (itemTotal >= 200000 ? 0 : 3000) : 0;
+            const total = itemTotal + shipping;
+
+            cartList.innerHTML = `
+                <tr>
+                    <td>
+                        <div class="product-info">
+                            <img src="${product.mainImg}" alt="${product.title}">
+                            <div>
+                                <div class="product-brand">${product.brand}</div>
+                                <div class="product-name">${product.title}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="qty-box">
+                            <button onclick="changeQty(-1)">-</button>
+                            <input type="text" value="${currentQty}" readonly>
+                            <button onclick="changeQty(1)">+</button>
+                        </div>
+                    </td>
+                    <td class="price">${itemTotal.toLocaleString()} 원</td>
+                    <td><button class="btn-delete" onclick="removeItem()">✕</button></td>
+                </tr>
+            `;
+
+            document.getElementById('subTotal').innerText = itemTotal.toLocaleString() + ' 원';
+            document.getElementById('shippingFee').innerText = shipping === 0 ? '무료배송' : shipping.toLocaleString() + ' 원';
+            document.getElementById('grandTotal').innerText = total.toLocaleString() + ' 원';
+        }
+
+        function changeQty(delta) {
+            if (currentQty + delta >= 1) {
+                currentQty += delta;
+                renderCart();
+            }
+        }
+
+        function removeItem() {
+            if (confirm('상품을 장바구니에서 삭제하시겠습니까?')) {
+                document.getElementById('cartList').innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align:center; padding: 50px; color:#888;">
+                            장바구니가 비어 있습니다.
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('subTotal').innerText = '0 원';
+                document.getElementById('shippingFee').innerText = '0 원';
+                document.getElementById('grandTotal').innerText = '0 원';
+            }
+        }
+
+        document.getElementById('btnOrder').addEventListener('click', () => {
+            window.location.href = `buy.html?id=${product.id}&qty=${currentQty}`;
+        });
+
+        renderCart();
+
+        // ★ 로고 파일(main1111.html) 불러와서 삽입 ★
+        fetch('main1111.html')
+            .then(response => response.text())
+            .then(data => {
+                const logoContainer = document.getElementById('logoContainer');
+                if (logoContainer) logoContainer.innerHTML = data;
+            })
+            .catch(error => console.error('로고 로드 오류:', error));
+    </script>
+</body>
+</html>
