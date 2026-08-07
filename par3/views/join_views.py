@@ -98,3 +98,16 @@ def join_apply(join_id):
         return redirect(url_for('join.join_list'))
 
     return render_template('join/join_apply.html', join=join, applicant=applicant)
+
+from par3.tour_api import search_golf_courses
+
+# ------------------------------------------------
+# 골프장 검색 API (region, keyword 둘 다 선택적)
+# 접속 주소: /join/api/golf_courses?region=서울&keyword=마이다스
+# ------------------------------------------------
+@bp.route('/api/golf_courses')
+def golf_courses():
+    region = request.args.get('region', '').strip()
+    keyword = request.args.get('keyword', '').strip()
+    results = search_golf_courses(region or None, keyword or None)
+    return {'results': results}

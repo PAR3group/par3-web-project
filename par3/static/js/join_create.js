@@ -6,12 +6,11 @@
 //
 // 담당 기능:
 //   1. 엔터 키 입력 시 폼 제출 대신 다음 입력창으로 포커스 이동
-//      (단, textarea 안에서는 엔터가 원래대로 줄바꿈으로 동작)
-//   2. 지역 선택 드롭다운 열기/닫기 + 선택한 지역명을 버튼 텍스트에 반영
-//   3. 폼 제출 시 "폼이 정상적으로 제출되었습니다" 알림창 표시
-//      ⚠️ 실제 조인 페이지(join.html)로의 이동은 서버(join_views.py)에서
-//         POST 처리 후 redirect(url_for('join.join_list'))로 응답해야 이루어짐.
-//         이 파일은 화면 쪽 알림만 담당함.
+//   2. 지역 선택 + 골프장 검색 (한국관광공사 TourAPI 연동)
+//      - 지역만 선택: 그 지역 전체 골프장 목록
+//      - 검색어만 입력: 전국에서 키워드 검색
+//      - 둘 다: 그 지역 안에서 키워드로 필터링
+//   3. 폼 제출 시 완료 알림창 표시
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -27,9 +26,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   focusableInputs.forEach(function (input, index) {
     input.addEventListener('keydown', function (e) {
-      // textarea 안에서는 엔터가 줄바꿈으로 쓰이도록 그대로 둠
       if (e.key === 'Enter' && input.tagName !== 'TEXTAREA') {
-        e.preventDefault(); // 폼이 바로 제출되는 기본 동작을 막음
+        e.preventDefault();
         const next = focusableInputs[index + 1];
         if (next) next.focus();
       }
@@ -37,32 +35,129 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // ------------------------------------------------
-  // 2. 지역 선택 드롭다운
+  // 2. 지역 선택 + 골프장 검색 (TourAPI 연동)
   // ------------------------------------------------
   const regionSelect = document.getElementById('jc_region_select');
+  const courseSearchInput = document.getElementById('jc_course_search_input');
+  const coursePanel = document.getElementById('jc_course_panel');
+  const courseNameHidden = document.getElementById('jc_course_name_hidden');
+  const regionHidden = document.getElementById('jc_region_hidden');
+  const thumbImgHidden = document.getElementById('jc_thumb_img_hidden');
+
+  let currentRegion = '';
+  let searchTimer = null;
 
   if (regionSelect) {
     const regionBt = regionSelect.querySelector('.jc_region_bt');
     const regionBtText = regionSelect.querySelector('.jc_region_bt_text');
-    const regionOptions = regionSelect.querySelectorAll('input[name="region"]');
+    const regionOptions = regionSelect.querySelectorAll('input[name="region_radio"]');
 
-    // 버튼 클릭 시 드롭다운 패널 열기/닫기
+    // 지역 드롭다운 열기/닫기
     regionBt.addEventListener('click', function (e) {
       e.stopPropagation();
       regionSelect.classList.toggle('jc_region_select--open');
     });
 
-    // 드롭다운 바깥을 클릭하면 닫기
-    document.addEventListener('click', function () {
-      regionSelect.classList.remove('jc_region_select--open');
-    });
-
-    // 지역 선택 시 버튼 텍스트를 선택한 지역명으로 바꾸고 드롭다운 닫기
+    // 지역 선택 시 → 즉시 그 지역 전체 골프장 목록 조회
     regionOptions.forEach(function (option) {
       option.addEventListener('change', function () {
-        regionBtText.textContent = option.value;
+        currentRegion = option.value;
+        regionBtText.textContent = currentRegion;
+        regionHidden.value = currentRegion;
         regionSelect.classList.remove('jc_region_select--open');
+
+        fetchAndShowCourses(currentRegion, courseSearchInput.value.trim());
       });
+    });
+  }
+
+  if (courseSearchInput) {
+    // 검색창 타이핑 → 지역 선택 여부와 무관하게 검색
+    courseSearchInput.addEventListener('input', function () {
+      clearTimeout(searchTimer);
+      const keyword = courseSearchInput.value.trim();
+
+      // 지역도 없고 키워드도 짧으면 검색 안 함
+      if (!currentRegion && keyword.length < 2) {
+        coursePanel.classList.remove('jc_course_panel--visible');
+        return;
+      }
+
+      searchTimer = setTimeout(function () {
+        fetchAndShowCourses(currentRegion, keyword);
+      }, 300);
+    });
+
+    // 검색창 클릭이 바깥 클릭 이벤트로 안 번지게
+    courseSearchInput.addEventListener('click', function (e) {
+      e.stopPropagation();
+    });
+  }
+
+  // ------------------------------------------------
+  // API 호출 (region, keyword 둘 다 선택적으로 전달)
+  // ------------------------------------------------
+  function fetchAndShowCourses(region, keyword) {
+    coursePanel.innerHTML = '<div class="jc_course_empty">불러오는 중...</div>';
+    coursePanel.classList.add('jc_course_panel--visible');
+
+    const params = new URLSearchParams();
+    if (region) params.append('region', region);
+    if (keyword) params.append('keyword', keyword);
+
+    fetch('/join/api/golf_courses?' + params.toString())
+      .then(function (res) { return res.json(); })
+      .then(function (data) { renderCourseList(data.results); })
+      .catch(function () {
+        coursePanel.innerHTML = '<div class="jc_course_empty">불러오기에 실패했습니다</div>';
+      });
+  }
+
+  // ------------------------------------------------
+  // 검색/필터링 결과를 드롭다운 목록으로 렌더링
+  // ------------------------------------------------
+  function renderCourseList(results) {
+    coursePanel.innerHTML = '';
+
+    if (!results || results.length === 0) {
+      coursePanel.innerHTML = '<div class="jc_course_empty">골프장을 찾을 수 없습니다</div>';
+      return;
+    }
+
+    results.forEach(function (course) {
+      const item = document.createElement('div');
+      item.className = 'jc_course_item';
+      item.innerHTML =
+        '<img class="jc_course_item_thumb" src="' + (course.image || '/static/img/no_image.png') + '">' +
+        '<div class="jc_course_item_info">' +
+          '<span class="jc_course_item_name">' + course.name + '</span>' +
+          '<span class="jc_course_item_region">' + course.region + '</span>' +
+        '</div>';
+
+      item.addEventListener('click', function () {
+        courseSearchInput.value = course.name;
+        courseNameHidden.value = course.name;
+        // 지역이 선택 안 된 상태로 검색해서 고른 경우, 그 골프장의 지역으로 자동 반영
+        if (!currentRegion) {
+          regionHidden.value = course.region;
+        }
+        thumbImgHidden.value = course.image || '';
+        coursePanel.classList.remove('jc_course_panel--visible');
+      });
+
+      coursePanel.appendChild(item);
+    });
+  }
+
+  // 드롭다운 바깥 클릭 시 지역/골프장 패널 둘 다 닫기
+  document.addEventListener('click', function () {
+    if (regionSelect) regionSelect.classList.remove('jc_region_select--open');
+    coursePanel.classList.remove('jc_course_panel--visible');
+  });
+
+  if (regionSelect) {
+    regionSelect.addEventListener('click', function (e) {
+      e.stopPropagation();
     });
   }
 

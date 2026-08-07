@@ -21,7 +21,7 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   background: #ffffff;
 }
 
-/* ===== jc_head : 페이지 상단 타이틀 영역 (join.html j_head와 동일 톤) ===== */
+/* ===== jc_head : 페이지 상단 타이틀 영역 ===== */
 .jc_head { margin-bottom: 24px; }
 .jc_title {
   font-size: 26px;
@@ -39,7 +39,6 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 
 /* ============================================
    g_form : 공통 폼 컴포넌트 (join_apply.css와 동일 구조)
-   카드형 배경 + hover 시 형광초록 테두리, join.html의 jt_row와 톤 통일
    ============================================ */
 .g_form_section {
   margin-bottom: 20px;
@@ -50,13 +49,12 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
-.g_form_section:hover {
+/* .g_form_section:hover {
   border-color: #39e07a;
   box-shadow: 0 0 0 1px #39e07a, 0 8px 20px rgba(57, 224, 122, 0.18), 0 4px 10px rgba(16, 35, 63, 0.06);
   transform: translateY(-2px);
-}
+} */
 
-/* 섹션 제목 (join.html의 jt_course_badge 톤과 통일) */
 .g_form_section_title {
   background: #16233f;
   color: #fff;
@@ -89,7 +87,7 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   flex: 1;
   padding: 14px 16px;
   font-size: 14px;
-  position: relative;   /* 지역 드롭다운 패널의 기준점 */
+  position: relative;
 }
 
 .g_form_input--text,
@@ -142,22 +140,19 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 }
 
 /* ============================================
-   jc_course_row : 골프장 선택 입력창 + 지역 드롭다운 한 줄 배치
+   jc_course_row : 지역 드롭다운 + 골프장 검색, 한 줄 배치
    ============================================ */
 .jc_course_row {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.jc_course_name_input {
-  flex: 1;   /* 골프장 입력창이 남는 공간을 다 채움 */
-}
 
-/* ===== jc_region_select : 지역 선택 드롭다운 (골프장 입력창 옆, 고정폭) ===== */
+/* ===== 지역 드롭다운 - 고정폭 ===== */
 .jc_region_select {
   position: relative;
   flex-shrink: 0;
-  width: 120px;
+  width: 110px;
 }
 .jc_region_bt {
   display: flex;
@@ -193,8 +188,9 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   display: none;
   position: absolute;
   top: calc(100% + 6px);
-  right: 0;
-  min-width: 140px;
+  left: 0;
+  min-width: 140px;max-height: 280px;      /* ← 추가: 목록 길어지면 스크롤 */
+  overflow-y: auto; 
   background: #fff;
   border: 1px solid #e4e6ea;
   border-radius: 8px;
@@ -217,7 +213,56 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 }
 .jc_region_option:hover { background: #f4f6f8; }
 
-/* ===== jc_submit_bt : CREATE 버튼 (join.html의 jt_join_bt와 동일 톤, 딥그린 그라데이션) ===== */
+/* ===== 골프장 검색 - 남는 공간을 채움 ===== */
+.jc_course_search_wrap {
+  position: relative;
+  flex: 1;
+}
+
+.jc_course_panel {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #e4e6ea;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(16, 24, 40, 0.1);
+  z-index: 20;
+  max-height: 240px;
+  overflow-y: auto;
+}
+.jc_course_panel--visible { display: block; }
+
+.jc_course_item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+.jc_course_item:hover { background: #f4f6f8; }
+.jc_course_item_thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #eceef1;
+  flex-shrink: 0;
+}
+.jc_course_item_info { display: flex; flex-direction: column; }
+.jc_course_item_name { font-size: 13px; font-weight: 600; color: #16233f; }
+.jc_course_item_region { font-size: 11px; color: #9099a8; margin-top: 2px; }
+
+.jc_course_empty {
+  padding: 14px;
+  font-size: 13px;
+  color: #9099a8;
+  text-align: center;
+}
+
+/* ===== jc_submit_bt : CREATE 버튼 ===== */
 .jc_submit_bt {
   display: flex;
   align-items: center;
@@ -240,7 +285,7 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 }
 
 /* ============================================
-   반응형 : 태블릿(768px) / 모바일(480px)
+   반응형
    ============================================ */
 @media (max-width: 768px) {
   .p_join_create { padding: 20px 16px 60px; }
@@ -256,7 +301,6 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   .g_form_section_title { font-size: 13px; padding: 10px 14px; }
   .g_form_label, .g_form_input { padding: 12px 14px; }
 
-  /* 좁은 화면에서는 골프장+지역 세로로 쌓이게 */
   .jc_course_row {
     flex-direction: column;
     align-items: stretch;

@@ -27,24 +27,47 @@ PAR3 - JOIN CREATE
       <div class="g_form_row">
         <label class="g_form_label">골프장 선택</label>
         <div class="g_form_input jc_course_row">
-          <input type="text" class="g_form_input--text jc_course_name_input" name="course_name" placeholder="골프장 이름을 입력해주세요">
 
-          <!-- 지역 선택 드롭다운 : 골프장 입력창 옆에 나란히 배치 -->
+          <!-- 지역 드롭다운 -->
           <div class="jc_region_select" id="jc_region_select">
             <button type="button" class="jc_region_bt">
               <span class="jc_region_bt_text">지역</span>
               <span class="jc_region_icon"></span>
             </button>
             <div class="jc_region_panel">
-              <label class="jc_region_option"><input type="radio" name="region" value="서울"> 서울</label>
-              <label class="jc_region_option"><input type="radio" name="region" value="경기"> 경기</label>
-              <label class="jc_region_option"><input type="radio" name="region" value="부산"> 부산</label>
-              <label class="jc_region_option"><input type="radio" name="region" value="대전"> 대전</label>
-              <label class="jc_region_option"><input type="radio" name="region" value="강원도"> 강원도</label>
-              <label class="jc_region_option"><input type="radio" name="region" value="전라남도"> 전라남도</label>
-              <label class="jc_region_option"><input type="radio" name="region" value="전라북도"> 전라북도</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="서울"> 서울</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="인천"> 인천</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="대전"> 대전</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="대구"> 대구</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="광주"> 광주</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="부산"> 부산</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="울산"> 울산</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="세종"> 세종</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="경기"> 경기</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="강원도"> 강원도</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="충청북도"> 충청북도</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="충청남도"> 충청남도</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="경상북도"> 경상북도</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="경상남도"> 경상남도</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="전라북도"> 전라북도</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="전라남도"> 전라남도</label>
+  <label class="jc_region_option"><input type="radio" name="region_radio" value="제주도"> 제주도</label>
             </div>
           </div>
+
+          <!-- 골프장 검색 + 드롭다운 (타이핑 검색 / 지역 선택 시 목록 자동 표시 둘 다 지원) -->
+          <div class="jc_course_search_wrap">
+            <input type="text" class="g_form_input--text" id="jc_course_search_input"
+                   placeholder="골프장 이름을 검색하거나, 지역을 선택하면 목록이 나와요" autocomplete="off">
+            <div class="jc_course_panel" id="jc_course_panel">
+              <!-- 검색/필터링 결과 목록이 여기 채워짐 (JS) -->
+            </div>
+          </div>
+
+          <!-- 실제 제출되는 값들 -->
+          <input type="hidden" name="course_name" id="jc_course_name_hidden">
+          <input type="hidden" name="region" id="jc_region_hidden">
+          <input type="hidden" name="thumb_img_url" id="jc_thumb_img_hidden">
         </div>
       </div>
 
