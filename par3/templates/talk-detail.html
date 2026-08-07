@@ -1,32 +1,22 @@
 {% extends 'base.html' %}
 
 {% block extra_css %}
+<!-- static/talk-detail.css 파일 연결 -->
 <link rel="stylesheet" href="{{ url_for('static', filename='talk-detail.css') }}">
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="main-wrapper">
-
-        <!-- 1. 상세페이지 상단 헤더 -->
+        
+        <!-- 1. 상세페이지 상단 헤더 (카테고리, 제목, 작성정보) -->
         <div class="detail-header">
-            <!-- <span class="badge">{{ post.category }}</span> -->
+            <span class="badge">{{ post.category }}</span>
             <h2 class="detail-title">{{ post.title }}</h2>
-            <div class="detail-meta" style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <span>작성자: <strong>{{ post.author }}</strong></span> |
-                    <span>작성일: {{ post.created_at }}</span> |
-                    <span>조회수 🔎 {{ post.views }}</span>
-                </div>
-
-                <!-- [수정] current_user -> g.user 기준으로 통일 (로그인 처리 로직이 g.user를 사용하므로) -->
-                {% if g.user and g.user.nickname == post.author %}
-                <div>
-                    <button type="button" onclick="deletePost('{{ post.id }}')" style="background-color: #264c22; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px;">
-                        🗑️ 삭제하기
-                    </button>
-                </div>
-                {% endif %}
+            <div class="detail-meta">
+                <span>작성자: <strong>{{ post.author }}</strong></span> | 
+                <span>작성일: {{ post.created_at }}</span> | 
+                <span>조회수 🔎 {{ post.views }}</span>
             </div>
         </div>
 
@@ -36,17 +26,18 @@
         <div class="detail-content">
             {% if post.image_url %}
                 <div class="detail-img-box" style="margin-bottom: 25px;">
+                    <!-- 🎥 동영상 확장자 체크 (.mp4, .webm, .ogg, .mov, .m4v, .avi) -->
                     {% if post.image_url.lower().endswith(('.mp4', '.webm', '.ogg', '.mov', '.m4v', '.avi')) %}
                         <video controls style="max-width: 100%; max-height: 500px; width: auto; border-radius: 8px;">
                             <source src="{{ post.image_url }}">
-                            웹 브라우저가 동영상 재생을 지원하지 않습니다.
+                            브라우저가 동영상 재생을 지원하지 않습니다.
                         </video>
                     {% else %}
                         <img src="{{ post.image_url }}" alt="첨부 이미지" style="max-width: 100%; height: auto; border-radius: 8px;">
                     {% endif %}
                 </div>
             {% endif %}
-
+            
             <div class="content-text" style="white-space: pre-wrap; line-height: 1.7; font-size: 16px; color: #333;">
                 {{ post.content }}
             </div>
@@ -65,9 +56,9 @@
         <div class="comments-section" style="margin-top: 30px;">
             <h3>💬 댓글 (<span id="comment-count">{{ post.comments_list|length }}</span>)</h3>
 
-            <!-- 댓글 작성 Input -->
+            <!-- 댓글 작성 Input (엔터키 작성 연동 추가) -->
             <div class="comment-write-box" style="display: flex; gap: 10px; margin: 20px 0;">
-                <input type="text" id="comment-input" placeholder="댓글을 자유롭게 작성해 보세요." style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
+                <input type="text" id="comment-input" placeholder="댓글을 자유롭게 작성해 보세요." onkeydown="if(event.key === 'Enter') addComment('{{ post.id }}')" style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
                 <button type="button" onclick="addComment('{{ post.id }}')" style="padding: 12px 24px; background-color: #000; color: #fff; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">
                     등록
                 </button>
@@ -89,55 +80,26 @@
             </ul>
         </div>
 
-        <!-- 하단 목록 버튼 -->
+        <!-- 하단 목록으로 이동 버튼 -->
         <div style="margin-top: 40px; text-align: right;">
-            <!-- [수정] url_for('talk_list') -> url_for('talk.list') -->
             <a href="{{ url_for('talk.list') }}" style="text-decoration: none; display: inline-block; padding: 10px 20px; background: #f8f9fa; color: #333; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">목록으로 돌아가기</a>
         </div>
 
     </div>
 </div>
 
-<!-- 5. 비동기 처리 스크립트 -->
+<!-- 5. 비동기 처리 스크립트 (좋아요 / 댓글 등록) -->
 <script>
-// 게시글 삭제 함수
-function deletePost(postId) {
-    if (!confirm('정말 이 게시글을 삭제하시겠습니까?')) return;
-
-    // [유지] /talk/<id>/delete 경로는 블루프린트 라우트와 일치
-    fetch(`/talk/${postId}/delete`, {
-        method: 'POST'
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            alert('게시글이 삭제되었습니다.');
-            location.href = "{{ url_for('talk.list') }}";
-        } else {
-            alert(data.message || '삭제에 실패했습니다.');
-        }
-    })
-    .catch(err => {
-        alert('삭제 중 오류가 발생했습니다.');
-    });
-}
-
-// 좋아요 클릭 함수 (로그인 여부 반영)
+// 좋아요 클릭 함수
 function likePost(postId) {
-    // [수정] /api/talk/... -> /talk/... 로 경로 수정 (블루프린트 라우트와 일치시킴)
-    fetch(`/talk/${postId}/like`, { method: 'POST' })
+    fetch(`/api/talk/${postId}/like`, { method: 'POST' })
     .then(res => res.json())
     .then(data => {
-        if (data.success) {
+        if(data.success) {
             document.getElementById('like-count').innerText = data.likes;
-        } else if (data.need_login) {
-            alert('좋아요는 로그인 후 이용 가능합니다.');
         } else {
-            alert(data.message || '좋아요 처리 실패');
+            alert('좋아요 처리 실패');
         }
-    })
-    .catch(err => {
-        alert('처리 중 오류가 발생했습니다.');
     });
 }
 
@@ -145,27 +107,23 @@ function likePost(postId) {
 function addComment(postId) {
     const input = document.getElementById('comment-input');
     const content = input.value.trim();
-
+    
     if(!content) {
         alert('댓글 내용을 입력해 주세요.');
         return;
     }
 
-    // [수정] /api/talk/... -> /talk/...
-    fetch(`/talk/${postId}/comment`, {
+    fetch(`/api/talk/${postId}/comment`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: content })
+        body: JSON.stringify({ content: content, author: '골프인' })
     })
     .then(res => res.json())
     .then(data => {
         if(data.success) {
             location.reload();
-        } else if (data.need_login) {
-            // [추가] 비로그인 상태로 댓글 시도 시 안내
-            alert('댓글은 로그인 후 이용 가능합니다.');
         } else {
-            alert(data.message || '댓글 등록 실패');
+            alert('댓글 등록 실패');
         }
     });
 }
