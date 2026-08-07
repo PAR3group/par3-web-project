@@ -24,7 +24,7 @@
 
         <div class="h_auth_bt">
             {% if g.user %}
-            <a href="#" class="h_my_page">{{ g.user.nickname }} 님</a> 
+            <a href="{{url_for('mypage.mypage')}}" class="h_my_page">{{ g.user.nickname }} 님</a> 
             <a href="{{url_for('auth.logout')}}" class="h_logout_bt">logout</a>
             {% else %}
             <a href="{{url_for('auth.login')}}" class="h_login_bt">LOGIN</a>

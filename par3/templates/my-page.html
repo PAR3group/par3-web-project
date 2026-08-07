@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='my-page.css') }}">
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/my-page.css') }}">
 <style>
     /* 프로필 박스 및 연필 버튼 정렬 */
     .avatar-box {
@@ -53,10 +53,10 @@
                     <img id="profile-preview" src="{{ profile.profile_img }}" alt="프로필 사진">
                     <!-- 연필 버튼 클릭 시 파일 창 열림 -->
                     <label for="avatar-input" class="btn-avatar-edit" title="사진 변경">✏️</label>
-                    <!-- 표준 파일 업로드 input (form 내부에 위치) -->
-                    <input type="file" id="avatar-input" name="avatar_file" accept="image/*" style="display: none;"
-                           onchange="if(this.files && this.files[0]) { document.getElementById('profile-preview').src = window.URL.createObjectURL(this.files[0]); }">
+                    <!-- 표준 파일 업로드 input (form 내부에 위치) - 선택 즉시 자동 업로드/저장됨 -->
+                    <input type="file" id="avatar-input" name="avatar_file" accept="image/*" style="display: none;">
                 </div>
+                <button type="button" id="btn-reset-avatar" class="btn-avatar-reset">기본 이미지로 변경</button>
                 <h3 class="user-nickname">{{ profile.nickname }}</h3>
             </div>
 
@@ -74,7 +74,7 @@
             <nav class="side-menu">
                 <ul>
                     <li class="menu-item active" data-target="sec-profile">내프로필</li>
-                    <li class="menu-item" data-target="sec-equipment">장비추천</li>
+                    <li class="menu-item" data-target="sec-equipment">피팅결과</li>
                     <li class="menu-item" data-target="sec-activity">이력관리</li>
                 </ul>
             </nav>
@@ -137,7 +137,14 @@
 
                         <div class="info-row">
                             <div class="info-label">⛳ 구력</div>
-                            <div class="info-value"><input type="text" name="golf_experience" value="{{ profile.golf_experience }}"></div>
+                            <div class="info-value">
+                                <select name="golf_experience">
+                                    <option value="0" {% if profile.golf_experience_code == 0 %}selected{% endif %}>1년 이하</option>
+                                    <option value="1" {% if profile.golf_experience_code == 1 %}selected{% endif %}>1년 ~ 2년</option>
+                                    <option value="2" {% if profile.golf_experience_code == 2 %}selected{% endif %}>2년 ~ 5년</option>
+                                    <option value="3" {% if profile.golf_experience_code == 3 %}selected{% endif %}>5년 이상</option>
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="info-row">
@@ -149,37 +156,41 @@
                         </div>
                         
                         <div class="card-action-row">
-                            <button type="submit" class="btn-save">정보 수정 저장</button>
+                            <button type="submit" class="btn-save">수정 정보 저장</button>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- 장비추천 카드 -->
+            <!-- 장비추천(채추천) 카드 -->
             <section id="sec-equipment" class="clean-card">
                 <div class="card-header">
-                    <h3>장비추천</h3>
+                    <h3>피팅결과</h3>
                 </div>
                 <div class="card-body">
-                    <p class="section-desc">⛳ {{ profile.nickname }}님 맞춤 골프 장비 추천 목록입니다.</p>
+                    <p class="section-desc">⛳ {{ profile.nickname }}님을 위한 샤프트추천 결과입니다.</p>
+                    {% if equipments %}
                     <div class="equipment-grid">
                         {% for item in equipments %}
-                        <a href="/shop/item/{{ loop.index }}" class="equip-card-link" title="{{ item.name }} 상품으로 이동">
-                            <div class="equip-card">
-                                <div class="equip-category-top">
-                                    <span class="category-title">{{ item.category }}</span>
-                                </div>
-                                <div class="equip-img-box">
-                                    <img src="{{ item.image }}" alt="{{ item.name }}">
-                                </div>
-                                <div class="equip-body">
-                                    <h4>{{ item.name }}</h4>
-                                    <p>{{ item.description }}</p>
-                                </div>
+                        <div class="equip-card">
+                            <p class="equip-card-label">{{ item.category }}</p>
+                            <div class="equip-img-box">
+                                <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.category }}">
                             </div>
-                        </a>
+                            <p class="equip-card-sub">추천 샤프트 무게</p>
+                            <p class="equip-card-value">{{ item.weight }}g</p>
+                            <p class="equip-card-sub">추천 플렉스</p>
+                            <span class="equip-card-flex">{{ item.flex }}</span>
+                        </div>
                         {% endfor %}
                     </div>
+                    {% else %}
+                    <div class="equip-empty">
+                        <p class="equip-empty-title">결과가 없습니다</p>
+                        <p class="equip-empty-desc">나에게 딱 맞는 채, 지금 추천받아보세요!</p>
+                        <a href="{{ url_for('recommend.shaft') }}" class="equip-empty-btn">추천받으러가기</a>
+                    </div>
+                    {% endif %}
                 </div>
             </section>
 
@@ -250,7 +261,58 @@
 </div>
 {% endblock %}
 
-{% block extra_js %}
+{% block js %}
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="{{ url_for('static', filename='my-page.js') }}"></script>
+<script src="{{ url_for('static', filename='js/my-page.js') }}"></script>
+<script>
+    // 프로필 사진은 선택 즉시 서버에 업로드해서 바로 저장한다 (정보 수정 저장 버튼과 무관)
+    document.getElementById('avatar-input').addEventListener('change', function () {
+        const file = this.files && this.files[0];
+        if (!file) return;
+
+        const preview = document.getElementById('profile-preview');
+        const previousSrc = preview.src;
+        preview.src = window.URL.createObjectURL(file);
+
+        const formData = new FormData();
+        formData.append('avatar_file', file);
+
+        fetch("{{ url_for('mypage.update_avatar') }}", {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    preview.src = data.profile_img;
+                } else {
+                    alert(data.message || '프로필 사진 저장에 실패했습니다.');
+                    preview.src = previousSrc;
+                }
+            })
+            .catch(() => {
+                alert('프로필 사진 저장 중 오류가 발생했습니다.');
+                preview.src = previousSrc;
+            })
+            .finally(() => {
+                document.getElementById('avatar-input').value = '';
+            });
+    });
+
+    // 기본 이미지로 되돌리기
+    document.getElementById('btn-reset-avatar').addEventListener('click', function () {
+        if (!confirm('프로필 사진을 기본 이미지로 되돌릴까요?')) return;
+
+        fetch("{{ url_for('mypage.reset_avatar') }}", { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('profile-preview').src = data.profile_img;
+                } else {
+                    alert(data.message || '기본 이미지로 변경하지 못했습니다.');
+                }
+            })
+            .catch(() => alert('처리 중 오류가 발생했습니다.'));
+    });
+</script>
 {% endblock %}

@@ -2,6 +2,7 @@
 
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/talk.css') }}?v=1.0">
+<link rel="stylesheet" href="{{url_for('static', filename='css/side_news.css')}}">
 {% endblock %}
 
 {% block content %}
@@ -69,7 +70,7 @@
                         <!-- 3. 하단 작성자 및 반응 뱃지 -->
                         <div class="post-footer">
                             <div class="author-info">
-                                {{ post.author }} | {{ post.created_at }}
+                                {{ post.author }} | {{ post.created_at|timeago }}
                             </div>
                             
                             <div class="post-stats">
@@ -107,5 +108,73 @@
             }
             return true; // 정상 제출
         }
-        </script>
+    </script>
+    <script>
+        // 사이드바가 스크롤에 딱 붙지 않고 뒤늦게 부드럽게 따라오는 효과
+        (function () {
+            const sidebar = document.querySelector('.right-sidebar');
+            const wrapper = document.querySelector('.content-body-wrapper');
+
+            if (!sidebar || !wrapper) return;
+
+            const HEADER_OFFSET = 90;
+            const EASE = 0.08;
+
+            let current = 0;
+            let raf = null;
+
+            function isMobile() {
+                return window.innerWidth <= 992;
+            }
+
+            function targetY() {
+                const wrapperTop = wrapper.getBoundingClientRect().top + window.scrollY;
+                const maxY = Math.max(wrapper.offsetHeight - sidebar.offsetHeight, 0);
+
+                let y = window.scrollY - wrapperTop + HEADER_OFFSET;
+
+                return Math.max(0, Math.min(y, maxY));
+            }
+
+            function tick() {
+
+                // 모바일에서는 따라다니기 해제
+                if (isMobile()) {
+                    sidebar.style.transform = "none";
+                    current = 0;
+                    raf = null;
+                    return;
+                }
+
+                const target = targetY();
+
+                current += (target - current) * EASE;
+
+                sidebar.style.transform = `translateY(${current}px)`;
+
+                if (Math.abs(target - current) > 0.5) {
+                    raf = requestAnimationFrame(tick);
+                } else {
+                    raf = null;
+                }
+            }
+
+
+            function requestTick() {
+                if (!raf) {
+                    raf = requestAnimationFrame(tick);
+                }
+            }
+
+
+            window.addEventListener('scroll', requestTick, { passive: true });
+
+            window.addEventListener('resize', () => {
+                requestTick();
+            });
+
+            requestTick();
+
+        })();
+    </script>
 {% endblock %}

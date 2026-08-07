@@ -28,13 +28,14 @@ def create_app():
     migrate.init_app(app, db)
 
     # 블루프린트 등록
-    from .views import main_views, join_views, auth_views, recommend_views, shop_views, talk_views
+    from .views import main_views, join_views, auth_views, recommend_views, shop_views, talk_views, mypage_views
     app.register_blueprint(main_views.bp)
     app.register_blueprint(join_views.bp)
     app.register_blueprint(auth_views.bp)
     app.register_blueprint(recommend_views.bp)
     app.register_blueprint(shop_views.bp)
     app.register_blueprint(talk_views.bp)
+    app.register_blueprint(mypage_views.bp)
 
     # 필터 등록
     # datetime_filter
