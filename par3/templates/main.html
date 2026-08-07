@@ -19,7 +19,7 @@ PAR3
     <section class="m_news_section">
         <div class="m_news_container">
             <h3 class="m_golf_news">- GOLF NEWS</h3>
-            <article class="m_news_card">
+            <article class="m_news_card m_news_card_prize">
                 <div class="m_news_card_sub">
                     <h4 class="m_news_c_title">KLPGA 상금순위 <span>(원)</span></h4>
 
@@ -36,7 +36,7 @@ PAR3
                 </div>
             </article>
 
-            <article class="m_news_card">
+            <article class="m_news_card m_news_card_drive">
                 <div class="m_news_card_sub">
                     <h4 class="m_news_c_title">KPGA 평균 드라이브 거리 <span>(yds)</span></h4>
 
@@ -53,7 +53,7 @@ PAR3
                 </div>
             </article>
 
-            <article class="m_news_card">
+            <article class="m_news_card m_news_card_event">
                 <div class="m_news_card_sub">
                     <h4 class="m_news_c_title">KLPGA 대회 정보</h4>
                     <div class="m_n_t_b">
@@ -66,7 +66,6 @@ PAR3
                 </div>
             </article>
         </div>
-
     </section>
 
     <section class="m_content_section">
@@ -102,7 +101,7 @@ PAR3
                         {% endif %}
                     </p>
 
-                    <p class="m_list_meta">{{ post.author }} <span>{{ post.created_at }}</span></p>
+                    <p class="m_list_meta">{{ post.author }} <span>{{ post.created_at|timeago }}</span></p>
 
                     <p class="m_list_stats">
                         <span>🔎 {{ post.views }}</span>
@@ -117,7 +116,7 @@ PAR3
             </article>
 
             <article class="fitting_card">
-                <p>어떤클럽?</p>
+                <p>나에게 맞는 샤프트는?</p>
                 <h3 class="m_fitting_title">PAR3 FITTING ZONE</h3>
                 <a href="{{url_for('recommend.shaft')}}">추천받으러가기</a>
             </article>
