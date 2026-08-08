@@ -9,16 +9,20 @@ PAR3 - FITTING ZONE
 {% endblock %}
 
 {% block content %}
+<div class="rc_page">
+
+    <div class="rc_page_head">
+        <div class="rc_page_head_left">
+            <h1 class="rc_page_title">🏒 Fitting Zone</h1>
+            <p class="rc_page_subtitle">키, 몸무게, 스윙스피드를 기반으로 나에게 맞는 샤프트 무게와 플렉스를 추천해드립니다.</p>
+        </div>
+        <span class="rc_live_status"><span class="rc_live_dot"></span>AI 샤프트 피팅</span>
+    </div>
+
 <div class="rc_wrap">
 
     <!-- 좌측: 입력 폼 -->
     <div class="rc_form_panel">
-        <h2 class="rc_form_title">🏒PAR3 FITTING ZONE</h2>
-        <p class="rc_form_sub">
-            키, 몸무게, 스윙스피드를 기반으로<br>
-            나에게 맞는 샤프트 무게와 플렉스를 추천해드립니다.
-        </p>
-
         <form method="POST" id="recommend-form">
             {{ form.hidden_tag() }}
 
@@ -225,6 +229,8 @@ PAR3 - FITTING ZONE
         </div>
         {% endif %}
     </div>
+
+</div>
 
 </div>
 

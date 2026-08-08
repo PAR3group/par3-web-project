@@ -59,6 +59,18 @@ class ProductReview(db.Model):
     rating = db.Column(db.Float, nullable=True)  # 리뷰별 평점 넣을 수 있게
     created_at = db.Column(db.DateTime, default=datetime.now)
 
+class CartItem(db.Model):
+    __tablename__ = 'cart_item'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('shop_product.id'), nullable=False)
+    quantity = db.Column(db.Integer, default=1, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+
+    product = db.relationship('ShopProduct')
+
+
 class Post(db.Model):
     __tablename__ = 'post'
 

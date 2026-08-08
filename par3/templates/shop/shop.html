@@ -239,6 +239,39 @@
             font-weight: bold;
             margin-bottom: 8px;
             color: #222;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-rating {
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .product-rating .review-count {
+            color: #888;
+            margin-left: 4px;
+        }
+
+        /* 별점을 소수점까지 정확히 표시 (빈 별 위에 채워진 별을 점수 비율만큼만 겹쳐서 클리핑) */
+        .star-rating {
+            position: relative;
+            display: inline-block;
+            line-height: 1;
+        }
+
+        .star-rating-bg {
+            color: #ddd;
+        }
+
+        .star-rating-fg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            color: #f0b400;
         }
 
         .product-price {
@@ -390,6 +423,36 @@
 
         let currentList = [...products];
 
+        // 별점을 소수점 비율까지 반영한 별 아이콘 HTML로 변환 (예: 4.5점 -> 별 4.5개만큼 채움)
+        function renderStars(rating) {
+            const pct = Math.min(5, Math.max(0, rating || 0)) / 5 * 100;
+            return `<span class="star-rating">` +
+                `<span class="star-rating-bg">★★★★★</span>` +
+                `<span class="star-rating-fg" style="width:${pct}%">★★★★★</span>` +
+                `</span>`;
+        }
+
+        // 로그인한 유저의 장바구니(DB)에 상품 담기
+        async function addToCart(productId, quantity) {
+            const res = await fetch('/shop/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ product_id: Number(productId), quantity })
+            });
+
+            if (res.status === 401) {
+                if (confirm('로그인이 필요합니다. 로그인 페이지로 이동할까요?')) {
+                    window.location.href = `/auth/login?next=${encodeURIComponent(location.pathname)}`;
+                }
+                return;
+            }
+
+            const data = await res.json();
+            if (data.success && confirm('장바구니에 상품을 담았습니다. 장바구니 페이지로 이동하시겠습니까?')) {
+                window.location.href = '/shop/cart';
+            }
+        }
+
         // 화면 출력 함수
         function renderProducts(items) {
             if (items.length === 0) {
@@ -409,6 +472,7 @@
             </div>
             <div class="product-info">
                 <div class="product-title">[${product.brand}] ${product.title}</div>
+                <div class="product-rating">${renderStars(product.rating)} <span class="review-count">(${product.reviewCount})</span></div>
                 <div class="product-price">${product.price.toLocaleString()} 원</div>
             </div>
         </a>
@@ -534,11 +598,9 @@
                 return;
             }
 
-            // 장바구니 버튼 클릭시 cart.html로
+            // 장바구니 버튼 클릭시 실제로 담고 cart 페이지로 이동
             if (target.classList.contains('btn-cart')) {
-                if (confirm('장바구니에 상품을 담았습니다. 장바구니 페이지로 이동하시겠습니까?')) {
-                    window.location.href = `/shop/cart?id=${productId}&qty=1`;
-                }
+                addToCart(productId, 1);
             }
 
             // 바로구매 버튼 클릭시 buy.html로

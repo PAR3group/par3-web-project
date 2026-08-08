@@ -42,6 +42,7 @@ def signup():
         user.experience_years = form.experience_years.data
         user.password = generate_password_hash(form.password1.data)
         user.phonenumber = phonenumber
+        user.home_address = form.home_address.data or None
 
         db.session.add(user)
         db.session.commit()
