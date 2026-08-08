@@ -272,7 +272,6 @@
     box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
     transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
     cursor: pointer;
-    /* [수정] 클릭 가능함을 표시 */
 }
 
 .m_community_card .m_community_list:first-of-type {
@@ -340,12 +339,22 @@
 .m_community_card .m_list_stats {
     position: absolute;
     bottom: 12px;
-    right: 0;
+    right: 12px;
     display: flex;
-    gap: 12px;
     align-items: center;
     font-size: 12px;
     opacity: 0.6;
+    margin-right: 4px;
+}
+
+.m_community_card .m_list_stats > span{
+    padding: 2px 8px;
+    font-size: 12px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    color: #555;
+    white-space: nowrap;
 }
 
 /* ===================================================
@@ -508,6 +517,7 @@
     display: flex;
     gap: 16px;
     transition: transform 0.5s ease;
+    margin: 0 6px;
 }
 
 .m_shop_card .shop_product_card {
@@ -524,6 +534,8 @@
     border-radius: 14px;
     box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
     transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    margin: 4px 0;
+    cursor: pointer;
 }
 
 .m_shop_card .shop_product_card:hover {
