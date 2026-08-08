@@ -511,8 +511,11 @@
 .m_shop_card .shop_product_card img {
     width: 100%;
     aspect-ratio: 1 / 1;
-    object-fit: cover;
+    object-fit: contain;
+    background: #f7f7f7;
     border-radius: 12px;
+    padding: 12px;
+    box-sizing: border-box;
 }
 
 .m_shop_card .shop_product_card p:first-of-type {
