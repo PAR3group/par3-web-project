@@ -77,6 +77,26 @@
       font-size: 16px;
     }
 
+    /* 별점을 소수점까지 정확히 표시 (빈 별 위에 채워진 별을 점수 비율만큼만 겹쳐서 클리핑) */
+    .star-rating {
+      position: relative;
+      display: inline-block;
+      line-height: 1;
+    }
+
+    .star-rating-bg {
+      color: #ddd;
+    }
+
+    .star-rating-fg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      color: #ffc107;
+    }
+
     .price {
       font-size: 42px;
       font-weight: 800;
@@ -305,10 +325,13 @@
     const product = {{ product| tojson }};
     const productId = product.id;
 
-    // 별점을 별 아이콘 문자열로 변환 (0~5점, 반올림해서 채운 별 개수 결정)
+    // 별점을 소수점 비율까지 반영한 별 아이콘 HTML로 변환 (예: 4.5점 -> 별 4.5개만큼 채움)
     function renderStars(rating) {
-      const filled = Math.round(Math.min(5, Math.max(0, rating || 0)));
-      return '★'.repeat(filled) + '☆'.repeat(5 - filled);
+      const pct = Math.min(5, Math.max(0, rating || 0)) / 5 * 100;
+      return `<span class="star-rating">` +
+        `<span class="star-rating-bg">★★★★★</span>` +
+        `<span class="star-rating-fg" style="width:${pct}%">★★★★★</span>` +
+        `</span>`;
     }
 
     // 로그인한 유저의 장바구니(DB)에 상품 담기
@@ -346,7 +369,7 @@
       document.getElementById('mainImg').src = product.mainImg;
       document.getElementById('brand').innerText = product.brand;
       document.getElementById('title').innerText = product.title;
-      document.getElementById('rating').innerText = `${renderStars(product.rating)} ${product.rating}`;
+      document.getElementById('rating').innerHTML = `${renderStars(product.rating)} ${product.rating}`;
       document.getElementById('reviewCount').innerText = `(${product.reviewCount})`;
       document.getElementById('shipping').innerText = product.shipping;
       document.getElementById('origin').innerText = product.origin;
