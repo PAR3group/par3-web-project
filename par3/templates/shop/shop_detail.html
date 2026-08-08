@@ -19,7 +19,7 @@
 
     .container {
       width: 1200px;
-      margin: 40px auto;
+      margin: 90px auto 40px;
       background: white;
       border-radius: 15px;
       padding: 40px;
@@ -222,12 +222,32 @@
       width: 180px;
       font-weight: bold;
     }
+
+    .back-bt {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 20px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #555;
+      cursor: pointer;
+    }
+
+    .back-bt:hover {
+      color: #111;
+    }
   </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
+  {% include 'header.html' %}
+
   <div class="container">
+    <a href="{{ url_for('shop.main') }}" class="back-bt" id="backBt">← 목록으로</a>
+
     <!-- 메인 상품 정보 -->
     <div class="product">
       <div class="left">
@@ -276,17 +296,57 @@
     </div>
   </div>
 
+  {% include 'footer.html' %}
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
   <!-- 1. data.js 파일 불러오기 -->
   <script>
     const product = {{ product| tojson }};
     const productId = product.id;
+
+    // 별점을 별 아이콘 문자열로 변환 (0~5점, 반올림해서 채운 별 개수 결정)
+    function renderStars(rating) {
+      const filled = Math.round(Math.min(5, Math.max(0, rating || 0)));
+      return '★'.repeat(filled) + '☆'.repeat(5 - filled);
+    }
+
+    // 로그인한 유저의 장바구니(DB)에 상품 담기
+    async function addToCart(id, quantity) {
+      const res = await fetch('/shop/cart/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product_id: Number(id), quantity })
+      });
+
+      if (res.status === 401) {
+        if (confirm('로그인이 필요합니다. 로그인 페이지로 이동할까요?')) {
+          window.location.href = `/auth/login?next=${encodeURIComponent(location.pathname)}`;
+        }
+        return;
+      }
+
+      const data = await res.json();
+      if (data.success && confirm('장바구니에 상품을 담았습니다. 장바구니 페이지로 이동하시겠습니까?')) {
+        window.location.href = '/shop/cart';
+      }
+    }
+
+    // 뒤로가기: 같은 사이트에서 넘어온 경우엔 브라우저 히스토리로, 아니면 목록으로 이동
+    const backBt = document.getElementById('backBt');
+    if (backBt && document.referrer && document.referrer.startsWith(location.origin)) {
+      backBt.addEventListener('click', (e) => {
+        e.preventDefault();
+        history.back();
+      });
+    }
 
     if (product) {
       // 1. 기본 정보 채우기
       document.getElementById('mainImg').src = product.mainImg;
       document.getElementById('brand').innerText = product.brand;
       document.getElementById('title').innerText = product.title;
-      document.getElementById('rating').innerText = product.rating;
+      document.getElementById('rating').innerText = `${renderStars(product.rating)} ${product.rating}`;
       document.getElementById('reviewCount').innerText = `(${product.reviewCount})`;
       document.getElementById('shipping').innerText = product.shipping;
       document.getElementById('origin').innerText = product.origin;
@@ -303,12 +363,16 @@
 
       // 3. 리뷰(reviews) 목록 채우기
       const reviewContainer = document.getElementById('reviewContainer');
-      reviewContainer.innerHTML = product.reviews.map(rev => `
-      <div class="review-box">
-        <span class="review-stars"> ${product.rating}</span>
-        <div>${rev}</div>
-      </div>
-    `).join('');
+      if (product.reviews.length === 0) {
+        reviewContainer.innerHTML = `<p style="color:#888;">아직 등록된 후기가 없습니다.</p>`;
+      } else {
+        reviewContainer.innerHTML = product.reviews.map(rev => `
+        <div class="review-box">
+          <span class="review-stars">${renderStars(rev.rating)} ${rev.rating}</span>
+          <div>${rev.content}</div>
+        </div>
+      `).join('');
+      }
 
       // 4. 수량 변경 및 총 가격 계산 기능
       const quantityInput = document.getElementById('quantity');
@@ -348,9 +412,7 @@
       // 장바구니 버튼 클릭 이벤트
       if (cartBtn) {
         cartBtn.addEventListener('click', () => {
-          if (confirm('장바구니에 상품을 담았습니다. 장바구니 페이지로 이동하시겠습니까?')) {
-            window.location.href = `/shop/cart?id=${productId}&qty=${count}`;
-          }
+          addToCart(productId, count);
         });
       }
 

@@ -24,7 +24,13 @@
 
         <div class="h_auth_bt">
             {% if g.user %}
-            <a href="{{url_for('mypage.mypage')}}" class="h_my_page">{{ g.user.nickname }} 님</a> 
+            <div class="h_user_menu">
+                <a href="{{url_for('mypage.mypage')}}" class="h_my_page">{{ g.user.nickname }} 님</a>
+                <div class="h_user_dropdown">
+                    <a href="{{url_for('mypage.mypage')}}" class="h_user_dropdown_item">마이페이지</a>
+                    <a href="{{url_for('shop.cart')}}" class="h_user_dropdown_item">장바구니</a>
+                </div>
+            </div>
             <a href="{{url_for('auth.logout')}}" class="h_logout_bt">logout</a>
             {% else %}
             <a href="{{url_for('auth.login')}}" class="h_login_bt">LOGIN</a>

@@ -389,22 +389,32 @@
 
 /* ===================================================
    실시간 골프 조인 - 카드 리스트 그리드
+   (join/join.html 의 jt_row 카드 디자인과 통일)
 =================================================== */
 .join_card .m_join_list {
-    margin-top: 16px;
+    margin-top: 12px;
     display: grid;
     grid-template-columns: 72px 1fr auto;
     grid-template-rows: auto auto auto;
     column-gap: 14px;
     row-gap: 2px;
     align-items: center;
-    padding: 14px 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 14px 16px;
+    background: #ffffff;
+    border: 1px solid #eceef1;
+    border-radius: 14px;
+    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 
 .join_card .m_join_list:first-of-type {
-    border-top: none;
-    padding-top: 4px;
+    margin-top: 16px;
+}
+
+.join_card .m_join_list:hover {
+    border-color: #39e07a;
+    box-shadow: 0 0 0 1px #39e07a, 0 8px 20px rgba(57, 224, 122, 0.18), 0 4px 10px rgba(16, 35, 63, 0.06);
+    transform: translateY(-2px);
 }
 
 .join_card .m_join_list img {
@@ -412,8 +422,9 @@
     grid-row: 1 / span 3;
     width: 72px;
     height: 72px;
-    border-radius: 12px;
+    border-radius: 10px;
     object-fit: cover;
+    background: #eceef1;
 }
 
 .join_card .m_join_list p:nth-of-type(1) {
@@ -421,42 +432,58 @@
     grid-row: 1;
     font-weight: 700;
     font-size: 15px;
+    color: #16233f;
     margin: 0;
 }
 
 .join_card .m_join_list p:nth-of-type(2) {
     grid-column: 2;
     grid-row: 2;
-    font-size: 13px;
+    font-size: 12px;
+    color: #9099a8;
     margin: 0;
-    opacity: 0.75;
 }
 
 .join_card .m_join_list p:nth-of-type(3) {
     grid-column: 2;
     grid-row: 3;
     font-size: 12px;
-    margin: 0;
-    opacity: 0.6;
+    font-weight: 700;
+    color: #0f6e56;
+    background: #eaf2ee;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin: 4px 0 0;
 }
 
 .join_card .m_join_list .jl_condition {
-    margin-left: 8px;
+    margin-left: 6px;
     font-size: 11px;
-    opacity: 0.55;
+    font-weight: 500;
+    color: #b98a3d;
+    background: none;
+    padding: 0;
 }
 
 .join_card .m_join_list button {
     grid-column: 3;
     grid-row: 1 / span 3;
     align-self: center;
-    padding: 10px 18px;
+    background: linear-gradient(135deg, #3f9a92, #0f6e56);
+    color: #fff;
+    padding: 9px 16px;
     border: none;
-    border-radius: 24px;
+    border-radius: 9px;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
     white-space: nowrap;
+    transition: opacity 0.15s;
+}
+
+.join_card .m_join_list button:hover {
+    opacity: 0.9;
 }
 
 /* ===================================================
