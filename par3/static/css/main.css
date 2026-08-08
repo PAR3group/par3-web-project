@@ -230,6 +230,8 @@
     border-radius: 16px;
     padding: 20px;
     position: relative;
+    /* grid item 기본값(min-width:auto)이 안의 큰 이미지 때문에 트랙 크기를 밀어내는 것 방지 */
+    min-width: 0;
 }
 
 .m_content_title {
