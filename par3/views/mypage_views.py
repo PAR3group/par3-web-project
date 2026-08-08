@@ -110,6 +110,7 @@ def mypage():
 @bp.route('/update-profile', methods=['POST'])
 @login_required
 def update_profile():
+    # 1. 기존 편지 내용(이름, 이메일 등) 읽기
     user = g.user
 
     email = request.form.get('email')
@@ -134,6 +135,14 @@ def update_profile():
         user.experience_years = int(golf_experience)
     if home_address:
         user.home_address = home_address
+
+    # 2. 사진 선물 상자(avatar_file)가 들어왔는지 확인하고 저장하기
+    avatar_file = request.files.get('avatar_file')
+    if avatar_file and avatar_file.filename:
+        try:
+            user.profile_img = storage.upload_image(avatar_file, 'avatars')
+        except Exception:
+            pass # 사진 저장 중 에러가 나면 기존 사진 유지
 
     db.session.commit()
 
