@@ -114,7 +114,7 @@ class Join(db.Model):
     gender_condition = db.Column(db.String(20))                         # 성별 조건
     title = db.Column(db.String(200))                                    # 제목
     content = db.Column(db.Text)                                          # 상세 내용
-    thumb_img = db.Column(db.String(200), default='no_image.png')         # 썸네일 이미지 파일명
+    thumb_img = db.Column(db.String(200), default='golf_replace.png')  # 이미지 없을 때 기본 이미지         # 썸네일 이미지 파일명
     create_date = db.Column(db.DateTime, default=datetime.now)
 
 

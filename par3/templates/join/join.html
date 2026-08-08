@@ -13,7 +13,10 @@ PAR3 - JOIN
 
   <div class="j_head">
     <div class="j_head_left">
-      <h1 class="j_title">⛳ Join</h1>
+      <h1 class="j_title">
+        <img src="{{ url_for('static', filename='img/join_imgs/join_icon.svg') }}" alt="" class="j_title_icon">
+        Join
+      </h1>
       <p class="j_subtitle">함께 라운딩할 멤버를 찾아보세요.</p>
     </div>
     <span class="j_live_status"><span class="j_live_dot"></span>실시간 골프 조인 현황</span>
@@ -111,7 +114,11 @@ PAR3 - JOIN
         <div class="jt_dday">D-{{ join.dday }}</div>
       </div>
 
-      <img class="jt_thumb" src="{{ url_for('static', filename='img/' + join.thumb_img) }}" alt="{{ join.course_name }}">
+      {% if join.thumb_img.startswith('http') %}
+<img class="jt_thumb" src="{{ join.thumb_img }}" alt="{{ join.course_name }}">
+{% else %}
+<img class="jt_thumb" src="{{ url_for('static', filename='img/join_imgs/' + join.thumb_img) }}" alt="{{ join.course_name }}">
+{% endif %}
 
       <div class="jt_info">
         <div class="jt_info_top">
@@ -135,9 +142,9 @@ PAR3 - JOIN
       <div class="jt_participants_wrap">
         <div class="jt_participants_label">참가자</div>
         <div class="jt_participants">
-          {% set avatar_colors = ['#3b5fc0', '#f0b95c', '#c25f8a', '#3f9a92', '#7ec7c1', '#e59bb8'] %}
+          {% set avatar_colors = ['#f0b95c', '#3b5fc0', '#c25f8a', '#3f9a92', '#7ec7c1'] %}
           {% for initial in join.applicant_initials %}
-          <span class="jt_avatar" style="background:{ avatar_colors[loop.index0 % avatar_colors|length] };">{{ initial }}</span>
+          <span class="jt_avatar" style="background:{{ avatar_colors | random }};">{{ initial }}</span>
           {% endfor %}
           {% if join.applicant_initials|length < join.recruit_count %}
           <span class="jt_avatar jt_avatar--empty">+</span>
