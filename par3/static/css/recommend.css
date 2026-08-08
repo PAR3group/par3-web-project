@@ -1,7 +1,56 @@
-.rc_wrap {
-    max-width: 1080px;
+/* ===================================================
+   Fitting Zone 페이지
+   join/join.html(.p_join, .jt_row 등)과 톤을 통일:
+   흰 배경 + 네이비(#16233f) 타이포 + 그린(#0f6e56/#39e07a) 포인트 +
+   흰 카드(테두리 #eceef1 + 옅은 그림자 + hover 시 그린 테두리로 살짝 떠오름)
+=================================================== */
+
+.rc_page {
+    max-width: 1160px;
     margin: 0 auto;
-    padding: 40px 24px 80px;
+    padding: 32px 24px 80px;
+    background: #ffffff;
+}
+
+/* ===== 페이지 헤더 (join의 .j_head와 동일 구조) ===== */
+.rc_page_head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.rc_page_title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #16233f;
+}
+
+.rc_page_subtitle {
+    font-size: 13px;
+    color: #8a93a3;
+    margin-top: 6px;
+    max-width: 480px;
+}
+
+.rc_live_status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 6px;
+    white-space: nowrap;
+}
+
+.rc_live_dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #0f6e56;
+}
+
+.rc_wrap {
     display: grid;
     grid-template-columns: 1fr 1.2fr;
     gap: 24px;
@@ -17,22 +66,25 @@
 /* ===== 공통 패널 ===== */
 .rc_form_panel,
 .rc_result_panel {
-    background: #f7f7f7;
-    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e4e6ea;
+    border-radius: 14px;
     padding: 28px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.06);
 }
 
 .rc_form_title,
 .rc_result_title {
-    font-size: 20px;
-    font-weight: 800;
+    font-size: 18px;
+    font-weight: 700;
+    color: #16233f;
     margin-bottom: 8px;
 }
 
 .rc_form_sub,
 .rc_result_sub {
     font-size: 13px;
-    color: #666;
+    color: #8a93a3;
     line-height: 1.5;
     margin-bottom: 24px;
 }
@@ -43,20 +95,21 @@
 }
 
 .rc_section_title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
+    color: #16233f;
     margin-bottom: 14px;
 }
 
 .rc_section_hint {
     font-size: 12px;
     font-weight: 400;
-    color: #888;
+    color: #9099a8;
 }
 
 .rc_divider {
     border: none;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #e4e6ea;
     margin: 24px 0;
 }
 
@@ -75,16 +128,24 @@
     display: block;
     font-size: 13px;
     font-weight: 600;
+    color: #16233f;
     margin-bottom: 6px;
 }
 
 .rc_input {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    border: 1px solid #e4e6ea;
+    border-radius: 8px;
     font-size: 14px;
     background: #fff;
+    color: #16233f;
+    transition: border-color 0.15s;
+}
+
+.rc_input:focus {
+    outline: none;
+    border-color: #39e07a;
 }
 
 .rc_input--small {
@@ -95,6 +156,7 @@
     display: flex;
     gap: 14px;
     font-size: 13px;
+    color: #16233f;
 }
 
 .rc_speed_row {
@@ -120,13 +182,13 @@
     gap: 6px;
     margin-top: 8px;
     font-size: 12px;
-    color: #666;
+    color: #9099a8;
     cursor: pointer;
 }
 
 .rc_input--small:disabled {
-    background: #eee;
-    color: #aaa;
+    background: #f4f6f8;
+    color: #b3b9c4;
     cursor: not-allowed;
 }
 
@@ -136,6 +198,7 @@
     flex-wrap: wrap;
     gap: 16px;
     font-size: 14px;
+    color: #16233f;
 }
 
 .rc_club_check {
@@ -164,22 +227,23 @@
     max-width: 160px;
 }
 
-/* ===== 제출 버튼 ===== */
+/* ===== 제출 버튼 (join의 jt_write_bt와 동일 톤) ===== */
 .rc_submit_bt {
     width: 100%;
     padding: 14px;
-    background: #4CAF50;
+    background: #16233f;
     color: #fff;
     border: none;
-    border-radius: 8px;
+    border-radius: 9px;
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
     margin-top: 8px;
+    transition: background 0.15s;
 }
 
 .rc_submit_bt:hover {
-    background: #3d9142;
+    background: #223258;
 }
 
 /* ===== 우측 결과: placeholder ===== */
@@ -188,14 +252,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #aaa;
+    color: #9099a8;
     font-size: 14px;
-    background: #fff;
-    border: 1px dashed #ddd;
-    border-radius: 8px;
+    background: #fafbfc;
+    border: 1px dashed #e4e6ea;
+    border-radius: 10px;
 }
 
-/* ===== 우측 결과: 카드 ===== */
+/* ===== 우측 결과: 카드 (join의 jt_row와 동일 톤: hover 시 그린 테두리로 떠오름) ===== */
 .rc_result_cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -204,22 +268,31 @@
 
 .rc_result_card {
     background: #fff;
-    border: 1px solid #eee;
-    border-radius: 10px;
+    border: 1px solid #eceef1;
+    border-radius: 12px;
     padding: 16px;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.rc_result_card:hover {
+    border-color: #39e07a;
+    box-shadow: 0 0 0 1px #39e07a, 0 8px 20px rgba(57, 224, 122, 0.18), 0 4px 10px rgba(16, 35, 63, 0.06);
+    transform: translateY(-2px);
 }
 
 .rc_card_label {
     font-size: 13px;
     font-weight: 700;
+    color: #16233f;
     margin-bottom: 10px;
 }
 
 .rc_card_img {
     width: 100%;
     aspect-ratio: 1 / 1;
-    background: #e9e9e9;
+    background: #f4f6f8;
     border-radius: 8px;
     margin-bottom: 10px;
 }
@@ -232,14 +305,14 @@
 
 .rc_card_sub {
     font-size: 11px;
-    color: #999;
+    color: #9099a8;
     margin: 6px 0 2px;
 }
 
 .rc_card_value {
     font-size: 28px;
     font-weight: 800;
-    color: #4CAF50;
+    color: #0f6e56;
 }
 
 .rc_card_flex {
@@ -249,8 +322,8 @@
     height: 34px;
     line-height: 34px;
     border-radius: 50%;
-    border: 1.5px solid #4CAF50;
-    color: #4CAF50;
+    border: 1.5px solid #0f6e56;
+    color: #0f6e56;
     font-size: 18px;
     font-weight: 700;
 }
@@ -258,8 +331,8 @@
 /* ===== 계산 근거 / 안내사항 / 클럽구매 박스 ===== */
 .rc_info_box {
     background: #fff;
-    border: 1px solid #eee;
-    border-radius: 10px;
+    border: 1px solid #eceef1;
+    border-radius: 12px;
     padding: 18px;
     margin-top: 16px;
 }
@@ -267,12 +340,13 @@
 .rc_info_title {
     font-size: 14px;
     font-weight: 700;
+    color: #16233f;
     margin-bottom: 8px;
 }
 
 .rc_info_text {
     font-size: 12px;
-    color: #777;
+    color: #8a93a3;
     line-height: 1.6;
 }
 
@@ -294,6 +368,16 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    padding: 10px;
+    border: 1px solid #eceef1;
+    border-radius: 10px;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+
+.rc_shop_card:hover {
+    border-color: #39e07a;
+    box-shadow: 0 8px 20px rgba(57, 224, 122, 0.15);
+    transform: translateY(-2px);
 }
 
 .rc_shop_card img {
@@ -305,22 +389,25 @@
 
 .rc_shop_card p:first-of-type {
     font-size: 12px;
+    color: #16233f;
     margin-top: 2px;
 }
 
 .rc_shop_price {
     font-size: 13px;
     font-weight: 700;
+    color: #16233f;
 }
 
 .rc_shop_card a {
     font-size: 11px;
-    color: #888;
+    color: #0f6e56;
+    font-weight: 600;
     text-decoration: none;
 }
 
 .rc_shop_card a:hover {
-    color: #333;
+    color: #0b5744;
 }
 
 /* ===== 결과 저장하기 버튼 ===== */
@@ -330,19 +417,18 @@
     text-align: center;
     margin-top: 20px;
     padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    border: 1px solid #e4e6ea;
+    border-radius: 9px;
     font-size: 13px;
-    color: #555;
+    color: #16233f;
     text-decoration: none;
     background-color: #fff;
     cursor: pointer;
-    box-sizing: border-box; 
+    box-sizing: border-box;
     /* 패딩 때문에 크기가 깨지는 것 방지 */
 }
 
 .rc_reset_bt:hover {
-    background-color: #f2f2f2; 
-    color: #111;   
-    border-color: #b7b7b7; 
+    background-color: #f4f6f8;
+    border-color: #39e07a;
 }
