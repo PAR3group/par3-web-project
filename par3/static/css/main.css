@@ -518,6 +518,9 @@
 .m_shop_card .shop_product_card p:first-of-type {
     font-size: 13px;
     margin: 4px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .m_shop_card .shop_product_card p:nth-of-type(2) {
