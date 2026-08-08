@@ -504,6 +504,7 @@
 
 .m_shop_card .shop_product_card {
     flex: 0 0 calc(50% - 8px);
+    min-width: 0;
     /* 한 화면에 2개씩 보임 */
     display: flex;
     flex-direction: column;
@@ -513,7 +514,7 @@
 .m_shop_card .shop_product_card img {
     width: 100%;
     aspect-ratio: 1 / 1;
-    object-fit: contain;
+    object-fit: cover;
     background: #f7f7f7;
     border-radius: 12px;
     padding: 12px;
