@@ -5,7 +5,7 @@
 # 연결 템플릿: templates/join.html
 # ============================================
 
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, redirect, render_template, request, url_for,g
 from par3.models import Join, JoinApply, User
 from par3 import db
 from datetime import date, datetime
@@ -21,7 +21,7 @@ bp = Blueprint('join', __name__, url_prefix='/join')
 # ------------------------------------------------
 @bp.route('/')
 def join_list():
-    joins = Join.query.order_by(Join.round_date.asc()).all()
+    joins = Join.query.order_by(Join.create_date.desc()).all()
 
     today = date.today()
     weekday_kr = ['월', '화', '수', '목', '금', '토', '일']
@@ -42,13 +42,13 @@ def join_list():
 # ------------------------------------------------
 @bp.route('/create', methods=['GET', 'POST'])
 def join_create():
-    if request.method == 'POST':
-        # ⚠️ TODO: 로그인 기능 연동 후 session에서 실제 로그인한 사용자 id 가져오기
-        # 지금은 임시로 첫 번째 회원(id=1)을 작성자로 고정
-        temp_user = User.query.first()
+ # 로그인 안 했으면 로그인 페이지로 이동
+    if g.user is None:
+        return redirect(url_for('auth.login', next=request.path))
 
+    if request.method == 'POST':
         new_join = Join(
-            writer_id=temp_user.id if temp_user else 1,
+            writer_id=g.user.id,   # ← 실제 로그인한 사용자의 id
             course_name=request.form['course_name'],
             region=request.form.get('region', '기타'),
             round_date=datetime.strptime(request.form['round_date'], '%Y-%m-%d').date(),
@@ -60,6 +60,7 @@ def join_create():
             title=request.form['title'],
             content=request.form['content'],
             filled_count=1,
+            thumb_img=request.form.get('thumb_img_url') or 'golf_replace.png',
         )
         db.session.add(new_join)
         db.session.commit()
@@ -75,17 +76,18 @@ def join_create():
 # ------------------------------------------------
 @bp.route('/apply/<int:join_id>', methods=['GET', 'POST'])
 def join_apply(join_id):
-    join = Join.query.get_or_404(join_id)
+    if g.user is None:
+        return redirect(url_for('auth.login', next=request.path))
 
-    # ⚠️ TODO: 로그인 기능 연동 후 session에서 실제 로그인 사용자로 교체
-    applicant = User.query.first()
+    join = Join.query.get_or_404(join_id)
+    applicant = g.user   # ← 실제 로그인한 사용자
 
     if request.method == 'POST':
         new_apply = JoinApply(
             join_id=join.id,
-            applicant_id=applicant.id if applicant else 1,
-            applicant_name=applicant.nickname if applicant else '',
-            applicant_phone=applicant.phonenumber if applicant else '',
+            applicant_id=applicant.id,
+            applicant_name=applicant.nickname,
+            applicant_phone=applicant.phonenumber,
             golf_experience=request.form.get('golf_experience', ''),
             handicap=request.form.get('handicap', ''),
         )

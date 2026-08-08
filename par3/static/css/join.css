@@ -20,8 +20,15 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   color: #16233f;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
+
+.j_title_icon {
+  width: 26px;
+  height: 26px;
+  vertical-align: middle;
+}
+
 .j_subtitle {
   font-size: 13px;
   color: #8a93a3;
