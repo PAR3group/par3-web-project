@@ -43,18 +43,21 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   background: #ffffff;
   border: 1px solid #eceef1;
   border-radius: 14px;
-  overflow: visible;
+  /* overflow: visible; */
+  overflow: hidden;
   box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  border-color: #39e07a;
+  /* box-shadow: 0 0 0 1px #39e07a, 0 8px 20px rgba(57, 224, 122, 0.18), 0 4px 10px rgba(16, 35, 63, 0.06); */
 }
-.g_form_section:hover {
+/* .g_form_section:hover {
   border-color: #39e07a;
   box-shadow: 0 0 0 1px #39e07a, 0 8px 20px rgba(57, 224, 122, 0.18), 0 4px 10px rgba(16, 35, 63, 0.06);
   transform: translateY(-2px);
-}
+} */
 
 .g_form_section_title {
-  background: #024e24;
+  background: #0b8341;
   color: #fff;
   padding: 12px 18px;
   font-weight: 600;
@@ -105,6 +108,8 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 .g_form_input--text[readonly] {
   background: #f7f7f7;
   color: #6b7280;
+  font-weight: 600;
+  padding: 4px;
 }
 
 .g_form_input--radio {
@@ -131,6 +136,166 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   cursor: pointer;
   font-size: 13px;
   color: #16233f;
+}
+
+/* ===== jc_phone_wrap : 연락처 3칸 입력 ===== */
+.jc_phone_wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.jc_phone_part {
+  width: 60px;
+  text-align: center;
+  border: 1px solid #e4e6ea !important;
+  border-radius: 6px;
+  padding: 8px 4px !important;
+}
+
+.jc_phone_dash {
+  color: #9099a8;
+  font-weight: 600;
+}
+
+/* ===== ja_applicant_list : 신청자 카드 리스트 ===== */
+.ja_applicant_list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== ja_card : 신청자 한 명 카드 ===== */
+.ja_card {
+  border: 1px solid #eceef1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ja_card_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f4f6f8;
+  padding: 8px 14px;
+}
+
+.ja_card_title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #16233f;
+}
+
+.ja_remove_bt {
+  font-size: 12px;
+  color: #ef4444;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* 카드 안 필드를 2열로 배치 */
+.ja_card_row {
+  display: flex;
+  border-top: 1px solid #eceef1;
+}
+.ja_card_row:first-of-type {
+  border-top: none;
+}
+
+.ja_card_field {
+  flex: 1;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ja_card_field:first-child {
+  border-right: 1px solid #eceef1;
+}
+
+.ja_card_label {
+  font-size: 11px;
+  color: #9099a8;
+}
+
+/* 카드 안 radio는 좁은 공간에 맞게 세로로 */
+.ja_card_field .g_form_input--radio {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-size: 12px;
+}
+.ja_card_field .g_form_input--radio label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #16233f;
+}
+
+/* ===== ja_add_bt : + 인원 추가하기 (은은한 스타일) ===== */
+/* .ja_add_bt {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px;
+  padding: 10px;
+  background: #eaf2ee;
+  border: 1px dashed #0f6e56;
+  border-radius: 10px;
+  color: #0f6e56;
+  font-size: 13px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;}
+
+.ja_add_bt:hover {
+  border-color: #0f6e56;
+  color: #0f6e56;
+  background: #f7fbfa;
+} */
+
+.ja_add_bt {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 0 16px 16px;
+  padding: 10px;
+  background: #f7fbfa;
+  border: 1px dashed #0f6e56;
+  border-radius: 10px;
+  color: #0f6e56;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.ja_add_bt:hover {
+  background: #eaf2ee;
+  border-color: #0c5a46;
+  box-shadow: 0 4px 10px rgba(15, 110, 86, 0.15);
+  transform: translateY(-1px);
+}
+.ja_add_bt:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(15, 110, 86, 0.15);
+}
+
+
+/* ===== 모집글 내용(readonly) - 리사이즈 핸들 제거, 스크롤 없이 내용만큼 자연스럽게 표시 ===== */
+.g_form_input--textarea[readonly] {
+  width: 100%;
+  display: block;
+  resize: none;
+  background: #f7f7f7;
+  color: #666;
+  border: none;
+  outline: none;
+  min-height: 60px;
+  overflow: hidden;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 4px;
+  box-sizing: border-box;
 }
 
 /* ===== ja_actions : 취소하기 + 신청하기 버튼 가로 배치 ===== */

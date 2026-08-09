@@ -15,7 +15,7 @@ PAR3 - JOIN APPLY
     <h1 class="ja_title">⛳ JOIN 신청하기</h1>
   </div>
 
-  <form class="g_form" action="/join/apply/{{ join.id }}" method="POST">
+  <form class="g_form" action="/join/apply/{{ join.id }}" method="POST" data-max-companions="{{ max_companions }}">
 
     <!-- ===== 섹션 1. 라운드 요약 정보 영역 : join 데이터 자동 표시 ===== -->
     <div class="g_form_section">
@@ -25,7 +25,7 @@ PAR3 - JOIN APPLY
         <label class="g_form_label">골프장 | 날짜/시간</label>
         <div class="g_form_input">
           <input type="text" class="g_form_input--text"
-                 value="{{ join.course_name }} | {{ join.round_date }} {{ join.tee_time }}" readonly>
+            value="{{ join.course_name }} | {{ join.round_date }} {{ join.tee_time }}" readonly>
         </div>
       </div>
 
@@ -33,7 +33,7 @@ PAR3 - JOIN APPLY
         <label class="g_form_label">비용 | 조건</label>
         <div class="g_form_input">
           <input type="text" class="g_form_input--text"
-                 value="{{ '{:,}'.format(join.cost) }}원 / {{ join.gender_condition }}, {{ join.recruit_count }}인" readonly>
+            value="{{ '{:,}'.format(join.cost) }}원 / {{ join.gender_condition }}, {{ join.recruit_count }}인" readonly>
         </div>
       </div>
     </div>
@@ -42,22 +42,63 @@ PAR3 - JOIN APPLY
     <div class="g_form_section">
       <div class="g_form_section_title">2. 신청자 기본 정보 영역</div>
 
-      <div class="g_form_row">
-        <label class="g_form_label">신청자 이름(닉네임)</label>
-        <div class="g_form_input">
-          <input type="text" class="g_form_input--text" name="applicant_name" placeholder="닉네임을 입력해주세요">
+      <div class="ja_applicant_list" id="ja_applicant_list">
+
+        <!-- 신청자(본인) 카드 -->
+        <div class="ja_card">
+          <div class="ja_card_header">
+            <span class="ja_card_title">신청자 1 (본인)</span>
+          </div>
+
+          <div class="ja_card_row">
+            <div class="ja_card_field">
+              <label class="ja_card_label">이름(닉네임)</label>
+              <input type="text" class="g_form_input--text" name="applicant_name" value="{{ applicant.nickname }}"
+                placeholder="이름이나 닉네임을 입력해주세요" required>
+            </div>
+            <div class="ja_card_field">
+              <label class="ja_card_label">연락처</label>
+              <div class="jc_phone_wrap">
+                <input type="text" class="g_form_input--text jc_phone_part" id="phone1" maxlength="3" placeholder="010"
+                  required>
+                <span class="jc_phone_dash">-</span>
+                <input type="text" class="g_form_input--text jc_phone_part" id="phone2" maxlength="4" placeholder="0000"
+                  required>
+                <span class="jc_phone_dash">-</span>
+                <input type="text" class="g_form_input--text jc_phone_part" id="phone3" maxlength="4" placeholder="0000"
+                  required>
+              </div>
+              <input type="hidden" name="applicant_phone" id="applicant_phone_hidden"
+                value="{{ applicant.phonenumber }}">
+            </div>
+          </div>
+
+          <div class="ja_card_row">
+            <div class="ja_card_field">
+              <label class="ja_card_label">구력</label>
+              <input type="text" class="g_form_input--text" name="experience_years" placeholder="예: 3년차">
+            </div>
+            <div class="ja_card_field">
+              <label class="ja_card_label">평균 스코어(핸디캡)</label>
+              <div class="g_form_input--radio">
+                <label><input type="radio" name="handicap" value="80대 이하"> 80대 이하</label>
+                <label><input type="radio" name="handicap" value="90대"> 90대</label>
+                <label><input type="radio" name="handicap" value="100대"> 100대</label>
+                <label><input type="radio" name="handicap" value="110 이상"> 110 이상</label>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
 
-      <div class="g_form_row">
-        <label class="g_form_label">연락처(필수)</label>
-        <div class="g_form_input">
-          <input type="text" class="g_form_input--text" name="applicant_phone" placeholder="010-0000-0000">
-        </div>
-      </div>
+      {% if max_companions > 0 %}
+      <button type="button" class="ja_add_bt" id="ja_add_companion_bt">+ 인원 추가하기</button>
+      {% endif %}
+
     </div>
 
-    <!-- ===== 섹션 3. 플레이 성향 및 핸디캡 영역 ===== -->
+    <!-- ===== 섹션 3. 플레이 성향 및 핸디캡 영역 =====
     <div class="g_form_section">
       <div class="g_form_section_title">3. 플레이 성향 및 핸디캡</div>
 
@@ -75,6 +116,25 @@ PAR3 - JOIN APPLY
           <label><input type="radio" name="handicap" value="90대"> 90대</label>
           <label><input type="radio" name="handicap" value="100대"> 100대</label>
           <label><input type="radio" name="handicap" value="110 이상"> 110 이상</label>
+        </div>
+      </div>
+    </div> -->
+
+    <!-- ===== 섹션 3. 모집글 내용 ===== -->
+    <div class="g_form_section">
+      <div class="g_form_section_title">3. 모집글 내용</div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">제목</label>
+        <div class="g_form_input">
+          <input type="text" class="g_form_input--text" value="{{ join.title }}" readonly>
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">내용</label>
+        <div class="g_form_input">
+          <textarea class="g_form_input--textarea" readonly>{{ join.content }}</textarea>
         </div>
       </div>
     </div>
@@ -108,4 +168,8 @@ PAR3 - JOIN APPLY
   </form>
 
 </div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/join_apply.js') }}"></script>
 {% endblock %}

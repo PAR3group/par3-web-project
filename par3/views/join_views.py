@@ -114,24 +114,65 @@ def join_apply(join_id):
     if already_applied:
         return redirect(url_for('join.join_list'))
 
-    if request.method == 'POST':
-        new_apply = JoinApply(
-            join_id=join.id,
-            applicant_id=applicant.id,
-            applicant_name=applicant.nickname,
-            applicant_phone=applicant.phonenumber,
-            experience_years=request.form.get('experience_years', ''),
-            handicap=request.form.get('handicap', ''),
-        )
-        db.session.add(new_apply)
+     # 남은 자리 계산 → 동반자 최대 추가 가능 수 (본인 신청분 1자리 제외)
+    remaining_slots = join.recruit_count - join.filled_count
+    max_companions = max(remaining_slots - 1, 0)
 
-        if join.filled_count < join.recruit_count:
-            join.filled_count += 1
+    if request.method == 'POST':
+        # ------------------------------------------------
+        # 본인 신청 정보 (첫 번째 세트, 이름/연락처는 index 없이 그대로)
+        # 동반자 정보는 companion_name_1, companion_phone_1 ... 식으로 넘어옴
+        # ------------------------------------------------
+        applications_to_add = []
+
+        # 본인
+        applications_to_add.append({
+            'name': request.form.get('applicant_name', applicant.nickname),
+            'phone': request.form.get('applicant_phone', applicant.phonenumber),
+            'experience': request.form.get('experience_years', ''),
+            'handicap': request.form.get('handicap', ''),
+        })
+
+        # 동반자들 (있는 만큼만 순서대로 읽어옴)
+        i = 1
+        while request.form.get(f'companion_name_{i}') is not None:
+            companion_name = request.form.get(f'companion_name_{i}', '').strip()
+            if companion_name:   # 이름이 비어있지 않은 경우에만 추가
+                applications_to_add.append({
+                    'name': companion_name,
+                    'phone': request.form.get(f'companion_phone_{i}', ''),
+                    'experience': request.form.get(f'companion_experience_{i}', ''),
+                    'handicap': request.form.get(f'companion_handicap_{i}', ''),
+                })
+            i += 1
+
+        # 실제 신청 인원수가 남은 자리를 초과하지 않도록 서버에서도 한 번 더 방어
+        applications_to_add = applications_to_add[:remaining_slots]
+
+        for app_data in applications_to_add:
+            new_apply = JoinApply(
+                join_id=join.id,
+                applicant_id=applicant.id,   # 동반자도 신청 주체는 로그인한 본인으로 기록
+                applicant_name=app_data['name'],
+                applicant_phone=app_data['phone'],
+                experience_years=app_data['experience'],
+                handicap=app_data['handicap'],
+            )
+            db.session.add(new_apply)
+
+        # 실제 신청 인원수만큼 filled_count 증가 (정원 초과 방지)
+        add_count = len(applications_to_add)
+        join.filled_count = min(join.filled_count + add_count, join.recruit_count)
 
         db.session.commit()
         return redirect(url_for('join.join_list'))
 
-    return render_template('join/join_apply.html', join=join, applicant=applicant)
+    return render_template(
+        'join/join_apply.html',
+        join=join,
+        applicant=applicant,
+        max_companions=max_companions,
+    )
 
 from par3.tour_api import search_golf_courses
 
