@@ -1,0 +1,360 @@
+/* chat.css - PAR3 조인 채팅 */
+
+body {
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  background: #ffffff;
+  color: #16233f;
+}
+
+/* ============================================
+   공통 - 채팅방 목록 페이지
+   ============================================ */
+.c_rooms {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 20px 80px;
+}
+
+.c_rooms_head {
+  margin-bottom: 28px;
+}
+
+.c_rooms_title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #16233f;
+  margin: 0 0 6px;
+}
+
+.c_rooms_sub {
+  font-size: 14px;
+  color: #9099a8;
+  margin: 0;
+}
+
+.c_room_list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.c_room_card {
+  border: 1px solid #eceef1;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
+  transition: box-shadow 0.15s, transform 0.15s;
+}
+
+.c_room_card:hover {
+  box-shadow: 0 0 0 1px #39e07a, 0 8px 20px rgba(57, 224, 122, 0.18), 0 4px 10px rgba(16, 35, 63, 0.06);
+  transform: translateY(-1px);
+}
+
+.c_room_card_link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.c_room_card_thumb {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background-size: cover;
+  background-position: center;
+  background-color: #f4f6f8;
+}
+
+.c_room_card_body {
+  flex: 1;
+  min-width: 0;
+}
+
+.c_room_card_title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #16233f;
+  margin: 0 0 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.c_room_card_meta {
+  font-size: 13px;
+  color: #9099a8;
+  margin: 0 0 2px;
+}
+
+.c_room_card_host {
+  font-size: 12px;
+  color: #9099a8;
+  margin: 0;
+}
+
+.c_room_card_host_name {
+  color: #0f6e56;
+  font-weight: 600;
+}
+
+.c_room_card_arrow {
+  color: #9099a8;
+  font-size: 20px;
+}
+
+.c_rooms_empty {
+  text-align: center;
+  padding: 64px 20px;
+  border: 1px dashed #d8dce4;
+  border-radius: 14px;
+  color: #9099a8;
+}
+
+.c_rooms_empty_bt {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: #0f6e56;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.c_rooms_empty_bt:hover {
+  background: #0b5744;
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   채팅방 페이지
+   ============================================ */
+.c_room {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 220px);
+  min-height: 480px;
+}
+
+.c_room_head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eceef1;
+  margin-bottom: 12px;
+}
+
+.c_room_back {
+  flex: 0 0 auto;
+  color: #9099a8;
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.c_room_back:hover {
+  color: #0f6e56;
+}
+
+.c_room_head_info {
+  min-width: 0;
+}
+
+.c_room_title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #16233f;
+  margin: 0 0 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.c_room_sub {
+  font-size: 13px;
+  color: #9099a8;
+  margin: 0;
+}
+
+/* 라운드 안내 배너 (상단 고정, 접기/펴기 가능) */
+.c_notice {
+  flex: 0 0 auto;
+  border: 1px solid #eaf2ee;
+  background: #eaf2ee;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.c_notice_toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.c_notice_toggle_label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f6e56;
+}
+
+.c_notice_toggle_icon {
+  color: #0f6e56;
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.15s;
+}
+
+.c_notice_body {
+  padding: 0 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.c_notice_body p {
+  margin: 0;
+  font-size: 13px;
+  color: #16233f;
+  line-height: 1.5;
+}
+
+.c_notice--collapsed .c_notice_body {
+  display: none;
+}
+
+.c_notice--collapsed .c_notice_toggle_icon {
+  transform: rotate(-90deg);
+}
+
+/* 메시지 영역 */
+.c_messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #f4f6f8;
+  border-radius: 14px;
+  margin-bottom: 14px;
+}
+
+.c_msg {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 0 12px;
+  max-width: 78%;
+}
+
+.c_msg_nick {
+  display: none; /* 상대 메시지 버블 위에 닉네임 표시하고 싶으면 CSS만 조정하면 됨 */
+}
+
+.c_msg_bubble {
+  background: #ffffff;
+  border: 1px solid #e4e6ea;
+  padding: 10px 14px;
+  border-radius: 16px 16px 16px 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #16233f;
+  word-break: break-word;
+}
+
+.c_msg_time {
+  font-size: 11px;
+  color: #9099a8;
+  white-space: nowrap;
+}
+
+/* 내가 보낸 메시지: 오른쪽 정렬 + 그린 톤 */
+.c_msg--mine {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.c_msg--mine .c_msg_bubble {
+  background: #eaf2ee;
+  border-color: #0f6e56;
+  border-radius: 16px 16px 4px 16px;
+  color: #16233f;
+}
+
+.c_msg_system {
+  align-self: center;
+  font-size: 12px;
+  color: #9099a8;
+  background: #eceef1;
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+/* 입력창 */
+.c_form {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.c_input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #d8dce4;
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #16233f;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.c_input:focus {
+  border-color: #39e07a;
+  box-shadow: 0 0 0 1px #39e07a, 0 6px 14px rgba(57, 224, 122, 0.18);
+}
+
+.c_send_bt {
+  flex: 0 0 auto;
+  padding: 0 22px;
+  border: none;
+  border-radius: 12px;
+  background: #0f6e56;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+  box-shadow: 0 4px 10px rgba(15, 110, 86, 0.15);
+}
+
+.c_send_bt:hover {
+  background: #0b5744;
+  transform: translateY(-1px);
+}
+
+.c_send_bt:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 3px rgba(15, 110, 86, 0.15);
+}

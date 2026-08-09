@@ -156,6 +156,27 @@ class Join(db.Model):
     create_date = db.Column(db.DateTime, default=datetime.now)
 
 
+# 조인페이지 - 실시간 채팅 메시지
+class ChatMessage(db.Model):
+    __tablename__ = 'chat_message'
+
+    id = db.Column(db.Integer, primary_key=True)
+    join_id = db.Column(
+        db.Integer,
+        db.ForeignKey("join.id"),
+        nullable=False
+    )
+    sender_id = db.Column(
+        db.Integer,
+        db.ForeignKey("user.id"),
+        nullable=False
+    )
+    message = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+
+    sender = db.relationship('User')
+
+
 # 관리자 페이지 - 접속 시간대 통계용 방문 로그
 class PageVisit(db.Model):
     __tablename__ = 'page_visit'

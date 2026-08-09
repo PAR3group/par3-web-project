@@ -29,6 +29,7 @@
                 <div class="h_user_dropdown">
                     <a href="{{url_for('mypage.mypage')}}" class="h_user_dropdown_item">마이페이지</a>
                     <a href="{{url_for('shop.cart')}}" class="h_user_dropdown_item">장바구니</a>
+                    <a href="{{url_for('chat.my_chat_rooms')}}" class="h_user_dropdown_item">조인 채팅방</a>
                     {% if g.user.is_admin %}
                     <a href="{{url_for('admin.dashboard')}}" class="h_user_dropdown_item">관리자 페이지</a>
                     {% endif %}

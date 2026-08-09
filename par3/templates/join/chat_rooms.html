@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - 조인 채팅방
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="c_rooms">
+
+  <div class="c_rooms_head">
+    <h1 class="c_rooms_title">조인 채팅방</h1>
+    <p class="c_rooms_sub">참여중인 라운드의 채팅방 목록이에요.</p>
+  </div>
+
+  {% if rooms %}
+  <ul class="c_room_list">
+    {% for room in rooms %}
+    <li class="c_room_card">
+      <a href="{{ url_for('chat.chat_room', join_id=room.id) }}" class="c_room_card_link">
+        {% if room.thumb_img.startswith('http') %}
+        <div class="c_room_card_thumb" style="background-image: url('{{ room.thumb_img }}');"></div>
+        {% else %}
+        <div class="c_room_card_thumb" style="background-image: url('{{ url_for('static', filename='img/join_imgs/' ~ room.thumb_img) }}');"></div>
+        {% endif %}
+        <div class="c_room_card_body">
+          <p class="c_room_card_title">{{ room.title }}</p>
+          <p class="c_room_card_meta">{{ room.course_name }} · {{ room.round_date.strftime('%Y.%m.%d') }}</p>
+          <p class="c_room_card_host">주최자 <span class="c_room_card_host_name">{{ room.writer_nickname }}</span></p>
+        </div>
+        <span class="c_room_card_arrow">›</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="c_rooms_empty">
+    <p>아직 참여중인 조인이 없어요.</p>
+    <a href="{{ url_for('join.join_list') }}" class="c_rooms_empty_bt">조인 둘러보기</a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

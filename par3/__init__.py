@@ -1,12 +1,14 @@
 from flask import Flask, g, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_socketio import SocketIO
 from sqlalchemy import MetaData
 import config
 from par3.filter import format_datetime, format_markdown, format_timeago
 
 
 migrate = Migrate()
+socketio = SocketIO()
 
 # 네이밍 컨벤션(포린키 네임 오류 방지를 위해 작성)
 naming_convention = {
@@ -26,9 +28,10 @@ def create_app():
     from . import models
     db.init_app(app)
     migrate.init_app(app, db)
+    socketio.init_app(app, async_mode='threading', cors_allowed_origins="*")
 
     # 블루프린트 등록
-    from .views import main_views, join_views, auth_views, recommend_views, shop_views, talk_views, mypage_views, admin_views
+    from .views import main_views, join_views, auth_views, recommend_views, shop_views, talk_views, mypage_views, admin_views, chat_views
     app.register_blueprint(main_views.bp)
     app.register_blueprint(join_views.bp)
     app.register_blueprint(auth_views.bp)
@@ -37,6 +40,10 @@ def create_app():
     app.register_blueprint(talk_views.bp)
     app.register_blueprint(mypage_views.bp)
     app.register_blueprint(admin_views.bp)
+    app.register_blueprint(chat_views.bp)
+
+    # 조인 채팅 소켓 이벤트 핸들러 등록
+    from . import sockets
 
     # 필터 등록
     # datetime_filter
