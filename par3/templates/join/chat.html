@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - {{ join.title }} 채팅
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="c_room" data-join-id="{{ join.id }}" data-user-id="{{ g.user.id }}">
+
+  <div class="c_room_head">
+    <a href="{{ url_for('chat.my_chat_rooms') }}" class="c_room_back">‹ 채팅방 목록</a>
+    <div class="c_room_head_info">
+      <h1 class="c_room_title">{{ join.title }}</h1>
+      <p class="c_room_sub">{{ join.course_name }} · {{ join.round_date.strftime('%Y.%m.%d') }} · 주최자 {{ join.writer_nickname }}</p>
+    </div>
+  </div>
+
+  <div id="c_messages" class="c_messages"></div>
+
+  <form id="c_form" class="c_form">
+    <input type="text" id="c_input" class="c_input" placeholder="메시지를 입력하세요" autocomplete="off">
+    <button type="submit" class="c_send_bt">전송</button>
+  </form>
+
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+{% endblock %}

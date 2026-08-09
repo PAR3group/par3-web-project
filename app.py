@@ -1,9 +1,9 @@
 # app.py
-from par3 import create_app
+from par3 import create_app, socketio
 from dotenv import load_dotenv
 load_dotenv()
 
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
