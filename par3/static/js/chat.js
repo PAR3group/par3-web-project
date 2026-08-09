@@ -27,11 +27,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function appendMessage({ sender_id, sender_nickname, message, created_at }) {
         const div = document.createElement('div');
         div.className = 'c_msg' + (sender_id === myUserId ? ' c_msg--mine' : '');
-        div.innerHTML = `
-            <span class="c_msg_nick">${sender_nickname}</span>
-            <span class="c_msg_bubble">${message}</span>
-            <span class="c_msg_time">${created_at}</span>
-        `;
+
+        const nick = document.createElement('span');
+        nick.className = 'c_msg_nick';
+        nick.textContent = sender_nickname;
+
+        const row = document.createElement('div');
+        row.className = 'c_msg_row';
+
+        const bubble = document.createElement('span');
+        bubble.className = 'c_msg_bubble';
+        bubble.textContent = message;
+
+        const time = document.createElement('span');
+        time.className = 'c_msg_time';
+        time.textContent = created_at;
+
+        row.appendChild(bubble);
+        row.appendChild(time);
+        div.appendChild(nick);
+        div.appendChild(row);
+
         messagesEl.appendChild(div);
         messagesEl.scrollTop = messagesEl.scrollHeight;
     }

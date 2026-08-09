@@ -262,14 +262,24 @@ body {
 
 .c_msg {
   display: flex;
-  align-items: flex-end;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
   padding: 0 12px;
   max-width: 78%;
 }
 
 .c_msg_nick {
-  display: none; /* 상대 메시지 버블 위에 닉네임 표시하고 싶으면 CSS만 조정하면 됨 */
+  font-size: 12px;
+  font-weight: 600;
+  color: #9099a8;
+  padding: 0 2px;
+}
+
+.c_msg_row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
 }
 
 .c_msg_bubble {
@@ -289,9 +299,17 @@ body {
   white-space: nowrap;
 }
 
-/* 내가 보낸 메시지: 오른쪽 정렬 + 그린 톤 */
+/* 내가 보낸 메시지: 오른쪽 정렬 + 그린 톤, 닉네임은 안 보여줌 */
 .c_msg--mine {
   align-self: flex-end;
+  align-items: flex-end;
+}
+
+.c_msg--mine .c_msg_nick {
+  display: none;
+}
+
+.c_msg--mine .c_msg_row {
   flex-direction: row-reverse;
 }
 
