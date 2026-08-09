@@ -77,7 +77,8 @@ PAR3
 
                 {% for post in posts[:3] %}
                 <!-- [수정] 클릭 시 상세페이지 이동 (post-box와 동일한 방식) -->
-                <div class="m_community_list" onclick="goDetail('{{ post.id }}')">
+                <div class="m_community_list" onclick="location.href='{{ url_for('talk.detail', id=post.id) }}'"
+                    style="cursor: pointer;">
 
                     <!-- [수정] 실제 첨부 이미지/동영상 여부 분기 처리 (community 페이지 로직과 동일하게) -->
                     {% if post.image_url %}
@@ -130,7 +131,8 @@ PAR3
                     {% if j.thumb_img.startswith('http') %}
                     <img src="{{ j.thumb_img }}" alt="{{ j.course_name }}">
                     {% else %}
-                    <img src="{{ url_for('static', filename='img/join_imgs/' + j.thumb_img) }}" alt="{{ j.course_name }}">
+                    <img src="{{ url_for('static', filename='img/join_imgs/' + j.thumb_img) }}"
+                        alt="{{ j.course_name }}">
                     {% endif %}
                     <p>{{ j.course_name }}</p>
                     <p>{{ j.round_date.strftime('%m.%d') }}({{ ['월','화','수','목','금','토','일'][j.round_date.weekday()] }})
@@ -154,7 +156,8 @@ PAR3
                     <div class="shop_product_container">
                         {% for p in shop_products %}
                         <div class="shop_product_card">
-                            <img src="{{ p.mainImg or url_for('static', filename='img/no_image.png') }}" alt="{{ p.title }}">
+                            <img src="{{ p.mainImg or url_for('static', filename='img/no_image.png') }}"
+                                alt="{{ p.title }}">
                             <p>{{ p.title }}</p>
                             <p>{{ '{:,}'.format(p.price) }}원</p>
                             <a href="{{ url_for('shop.detail', id=p.id) }}">바로 구매하기</a>
