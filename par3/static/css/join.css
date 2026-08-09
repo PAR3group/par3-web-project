@@ -15,9 +15,11 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   margin-bottom: 24px;
 }
 .j_title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #16233f;
+  font-size: 28px;
+  font-weight: 800;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;    /* 자간 간격 */
+  color: #0c1c3e;
   display: flex;
   align-items: center;
   gap: 6px;

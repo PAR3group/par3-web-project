@@ -14,6 +14,23 @@
 // ============================================
 
 document.addEventListener('DOMContentLoaded', function () {
+  // ------------------------------------------------
+  // 라운드 날짜 선택 - Flatpickr (placeholder: 2026-08-09 형식 표시,
+  // 달력 아이콘은 CSS로 입력창 왼쪽에 배치)
+  // ------------------------------------------------
+  flatpickr("#round_date_picker", {
+    dateFormat: "Y-m-d",   // 저장/전송되는 실제 값 형식 (YYYY-MM-DD)
+    minDate: "today",       // 과거 날짜 선택 방지 (선택사항, 필요없으면 이 줄 삭제)
+  });
+  // ------------------------------------------------
+  // 티오프 시간 선택 - Flatpickr (시간 전용 모드)
+  // ------------------------------------------------
+  flatpickr("#tee_time_picker", {
+    enableTime: true,
+    noCalendar: true,      // 날짜 달력 없이 시간만
+    dateFormat: "h:i K",   // 화면 표시: 오전/오후 형식 (예: 11:30 AM)
+    time_24hr: false,        // 12시간제 + AM/PM
+  });
 
   const form = document.querySelector('.g_form');
 
@@ -74,6 +91,10 @@ document.addEventListener('DOMContentLoaded', function () {
   if (courseSearchInput) {
     // 검색창 타이핑 → 지역 선택 여부와 무관하게 검색
     courseSearchInput.addEventListener('input', function () {
+      // 사용자가 직접 입력한 값도 실시간으로 hidden input에 반영
+      // (드롭다운에서 고르면 이 값이 덮어써짐)
+      courseNameHidden.value = courseSearchInput.value;
+      
       clearTimeout(searchTimer);
       const keyword = courseSearchInput.value.trim();
 
@@ -130,8 +151,8 @@ document.addEventListener('DOMContentLoaded', function () {
       item.innerHTML =
         '<img class="jc_course_item_thumb" src="' + (course.image || '/static/img/no_image.png') + '">' +
         '<div class="jc_course_item_info">' +
-          '<span class="jc_course_item_name">' + course.name + '</span>' +
-          '<span class="jc_course_item_region">' + course.region + '</span>' +
+        '<span class="jc_course_item_name">' + course.name + '</span>' +
+        '<span class="jc_course_item_region">' + course.region + '</span>' +
         '</div>';
 
       item.addEventListener('click', function () {
