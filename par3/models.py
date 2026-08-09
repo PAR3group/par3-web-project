@@ -10,6 +10,7 @@ class User(db.Model):
     username = db.Column(db.String(20), nullable=False)
     phonenumber = db.Column(db.String(20), unique=True, nullable=False)
     user_sex = db.Column(db.String(1), nullable=False)
+    
     experience_years = db.Column(db.Integer, nullable=False)
     # 관리자 여부 추가
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
@@ -148,6 +149,6 @@ class JoinApply(db.Model):
     )
     applicant_name = db.Column(db.String(50))
     applicant_phone = db.Column(db.String(20))
-    golf_experience = db.Column(db.String(20))
+    experience_years = db.Column(db.String(20))
     handicap = db.Column(db.String(20))
     create_date = db.Column(db.DateTime, default=datetime.now)
