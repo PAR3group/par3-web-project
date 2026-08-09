@@ -44,10 +44,10 @@ def signup():
         user.phonenumber = phonenumber
         user.home_address = form.home_address.data or None
 
-    db.session.add(user)
-    db.session.commit()
-    flash('회원가입이 완료되었습니다. 로그인해주세요.')
-    return redirect(url_for('auth.login'))
+        db.session.add(user)
+        db.session.commit()
+        flash('회원가입이 완료되었습니다. 로그인해주세요.')
+        return redirect(url_for('auth.login'))
 
     return render_template('auth/signup.html', form=form)
 
