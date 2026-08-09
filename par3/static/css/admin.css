@@ -1,0 +1,64 @@
+/* admin.css - 관리자 페이지 전용 스타일 (join_create.css 톤과 통일) */
+
+.a_wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+}
+
+.a_head {
+    margin-bottom: 24px;
+}
+
+.a_title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #16233f;
+}
+
+.a_subtitle {
+    font-size: 13px;
+    color: #8a93a3;
+    margin-top: 6px;
+}
+
+.a_card {
+    background: #ffffff;
+    border: 1px solid #eceef1;
+    border-radius: 14px;
+    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.a_card_title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #16233f;
+    margin-bottom: 6px;
+}
+
+.a_card_desc {
+    font-size: 13px;
+    color: #8a93a3;
+    margin-bottom: 20px;
+}
+
+.a_chart_wrap {
+    max-width: 100%;
+}
+
+.a_bt {
+    display: inline-block;
+    background: #0f6e56;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.a_bt:hover {
+    background: #0c5a46;
+}

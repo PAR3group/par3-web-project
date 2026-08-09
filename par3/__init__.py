@@ -1,4 +1,4 @@
-from flask import Flask, g, render_template, session
+from flask import Flask, g, render_template, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from sqlalchemy import MetaData
@@ -28,7 +28,7 @@ def create_app():
     migrate.init_app(app, db)
 
     # 블루프린트 등록
-    from .views import main_views, join_views, auth_views, recommend_views, shop_views, talk_views, mypage_views
+    from .views import main_views, join_views, auth_views, recommend_views, shop_views, talk_views, mypage_views, admin_views
     app.register_blueprint(main_views.bp)
     app.register_blueprint(join_views.bp)
     app.register_blueprint(auth_views.bp)
@@ -36,6 +36,7 @@ def create_app():
     app.register_blueprint(shop_views.bp)
     app.register_blueprint(talk_views.bp)
     app.register_blueprint(mypage_views.bp)
+    app.register_blueprint(admin_views.bp)
 
     # 필터 등록
     # datetime_filter
@@ -46,7 +47,7 @@ def create_app():
 
     # 전역 함수 등록
     # g.user 확인 함수
-    from .models import User
+    from .models import User, PageVisit
     @app.before_request
     def load_logged_in_user():
         user_id = session.get('user_id')
@@ -55,8 +56,21 @@ def create_app():
         else:
             g.user = User.query.get(user_id)
 
+    # 관리자 페이지 접속 시간대 통계용 방문 로그 (정적 파일/관리자 페이지 자체는 제외)
+    @app.before_request
+    def log_page_visit():
+        if request.method != 'GET' or request.endpoint is None:
+            return
+        if request.endpoint == 'static' or request.endpoint.startswith('admin.'):
+            return
+        db.session.add(PageVisit(
+            user_id=g.user.id if g.user else None,
+            path=request.path,
+        ))
+        db.session.commit()
 
-    app.config['WTF_CSRF_ENABLED'] = True  
+
+    app.config['WTF_CSRF_ENABLED'] = True
     # 개발 단계 동안 CSRF 기능 잠시 끄기
     
     return app

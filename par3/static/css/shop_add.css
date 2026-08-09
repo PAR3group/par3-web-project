@@ -1,0 +1,67 @@
+/* shop_add.css - 관리자 상품 등록 폼 (join_create.css 톤과 통일) */
+
+.sa_wrap {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+}
+
+.sa_head {
+    margin-bottom: 24px;
+}
+
+.sa_title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #16233f;
+}
+
+.sa_subtitle {
+    font-size: 13px;
+    color: #8a93a3;
+    margin-top: 6px;
+}
+
+.sa_form {
+    background: #ffffff;
+    border: 1px solid #eceef1;
+    border-radius: 14px;
+    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
+    padding: 24px;
+}
+
+.sa_form_row {
+    margin-bottom: 18px;
+}
+
+.sa_form_label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #16233f;
+    margin-bottom: 6px;
+}
+
+.sa_form_input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dfe3ea;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.sa_submit_bt {
+    width: 100%;
+    background: #0f6e56;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.sa_submit_bt:hover {
+    background: #0c5a46;
+}
