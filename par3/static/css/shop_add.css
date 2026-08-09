@@ -65,3 +65,78 @@
 .sa_submit_bt:hover {
     background: #0c5a46;
 }
+
+.sa_detail_blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.sa_detail_block {
+    border: 1px solid #dfe3ea;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fafbfc;
+}
+
+.sa_detail_block_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.sa_detail_block_label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f6e56;
+}
+
+.sa_block_remove_bt {
+    background: none;
+    border: none;
+    color: #e63946;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.sa_detail_textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.sa_detail_existing_img {
+    max-width: 100%;
+    max-height: 160px;
+    display: block;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.sa_detail_hint {
+    font-size: 12px;
+    color: #8a93a3;
+    margin-bottom: 8px;
+}
+
+.sa_detail_add_bts {
+    display: flex;
+    gap: 8px;
+}
+
+.sa_detail_add_bt {
+    background: #eef2f6;
+    border: 1px solid #dfe3ea;
+    color: #16233f;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.sa_detail_add_bt:hover {
+    background: #e2e7ed;
+}

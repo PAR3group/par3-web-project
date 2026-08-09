@@ -374,11 +374,22 @@
       document.getElementById('shipping').innerText = product.shipping;
       document.getElementById('origin').innerText = product.origin;
 
-      // 상세 이미지 그려주기 
+      // 상세 설명(텍스트/이미지 블록) 그려주기
       const detailImgBox = document.getElementById('detailImgBox');
-     if (product.detailImg) {
-       detailImgBox.innerHTML = `<img src="${product.detailImg}" alt="상세 이미지" style="width:100%; display:block;">`;
-     }
+      (product.detailBlocks || []).forEach(block => {
+        if (block.type === 'image' && block.image) {
+          const img = document.createElement('img');
+          img.src = block.image;
+          img.alt = '상세 이미지';
+          img.style.cssText = 'width:100%; display:block; margin-bottom:16px;';
+          detailImgBox.appendChild(img);
+        } else if (block.type === 'text' && block.text) {
+          const p = document.createElement('p');
+          p.textContent = block.text;
+          p.style.cssText = 'white-space:pre-wrap; line-height:1.8; font-size:16px; color:#333; margin-bottom:20px;';
+          detailImgBox.appendChild(p);
+        }
+      });
 
       // 2. 특징(features) 목록 채우기
       const featuresList = document.getElementById('featuresList');

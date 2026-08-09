@@ -25,8 +25,14 @@ PAR3 - 관리자 페이지
 
     <section class="a_card">
         <h2 class="a_card_title">상품 관리</h2>
-        <p class="a_card_desc">par3 shop에 새 상품을 등록할 수 있습니다.</p>
-        <a href="{{ url_for('shop.add_product_form') }}" class="a_bt">상품 등록하러 가기</a>
+        <p class="a_card_desc">par3 shop 상품을 등록·수정·삭제할 수 있습니다.</p>
+        <a href="{{ url_for('shop.manage_products') }}" class="a_bt">상품 관리하러 가기</a>
+    </section>
+
+    <section class="a_card">
+        <h2 class="a_card_title">회원 관리</h2>
+        <p class="a_card_desc">전체 회원 목록을 확인할 수 있습니다.</p>
+        <a href="{{ url_for('admin.members') }}" class="a_bt">회원 목록 보기</a>
     </section>
 </div>
 {% endblock %}
