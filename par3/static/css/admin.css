@@ -1,7 +1,7 @@
 /* admin.css - 관리자 페이지 전용 스타일 (join_create.css 톤과 통일) */
 
 .a_wrap {
-    max-width: 900px;
+    max-width: 1160px;
     margin: 0 auto;
     padding: 32px 24px 80px;
 }
