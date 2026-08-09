@@ -15,12 +15,16 @@ PAR3 - 조인 관리
         <p class="a_subtitle">골프 조인 게시글을 관리합니다. (총 {{ joins|length }}건)</p>
     </div>
 
-    <nav class="a_nav">
-        <a href="{{ url_for('admin.dashboard') }}" class="a_nav_link">대시보드</a>
-        <a href="{{ url_for('admin.members') }}" class="a_nav_link">회원 관리</a>
-        <a href="{{ url_for('admin.posts') }}" class="a_nav_link">게시글 관리</a>
-        <a href="{{ url_for('admin.joins') }}" class="a_nav_link a_nav_link_active">조인 관리</a>
-    </nav>
+    {% set active = 'joins' %}
+    {% include 'admin/_nav.html' %}
+
+    <form action="{{ url_for('admin.joins') }}" method="GET" class="a_search_form">
+        <input type="text" name="q" value="{{ q }}" placeholder="제목, 골프장명, 지역, 작성자 닉네임 검색" class="a_search_input">
+        <button type="submit" class="a_search_bt">검색</button>
+        {% if q %}
+        <a href="{{ url_for('admin.joins') }}" class="a_search_reset">초기화</a>
+        {% endif %}
+    </form>
 
     <div class="a_card">
         <table class="a_table">
@@ -56,7 +60,7 @@ PAR3 - 조인 관리
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="9" class="a_table_empty">등록된 조인 게시글이 없습니다.</td>
+                    <td colspan="9" class="a_table_empty">{{ '검색 결과가 없습니다.' if q else '등록된 조인 게시글이 없습니다.' }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

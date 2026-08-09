@@ -176,8 +176,16 @@ def add_product():
 @bp.route('/manage')
 @admin_required
 def manage_products():
-    products = ShopProduct.query.order_by(ShopProduct.created_at.desc()).all()
-    return render_template('shop/shop_manage.html', products=[product_to_dict(p) for p in products])
+    q = request.args.get('q', '').strip()
+    query = ShopProduct.query
+    if q:
+        like = f'%{q}%'
+        query = query.filter(
+            ShopProduct.title.ilike(like)
+            | ShopProduct.brand.ilike(like)
+        )
+    products = query.order_by(ShopProduct.created_at.desc()).all()
+    return render_template('shop/shop_manage.html', products=[product_to_dict(p) for p in products], q=q)
 
 
 @bp.route('/<int:id>/edit', methods=['GET'])
