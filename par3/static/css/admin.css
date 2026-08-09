@@ -62,3 +62,44 @@
 .a_bt:hover {
     background: #0c5a46;
 }
+
+.a_table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.a_table th,
+.a_table td {
+    padding: 12px 14px;
+    text-align: left;
+    border-bottom: 1px solid #eceef1;
+    font-size: 13px;
+    color: #16233f;
+}
+
+.a_table th {
+    background: #16233f;
+    color: #fff;
+    font-weight: 600;
+}
+
+.a_table_empty {
+    text-align: center;
+    color: #8a93a3;
+    padding: 40px 0;
+}
+
+.a_badge {
+    display: inline-block;
+    background: #eef2f6;
+    color: #16233f;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 999px;
+}
+
+.a_badge_admin {
+    background: #0f6e56;
+    color: #fff;
+}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - 상품 관리
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/shop_manage.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="sm_wrap">
+    <div class="sm_head">
+        <h1 class="sm_title">상품 관리</h1>
+        <a href="{{ url_for('shop.add_product_form') }}" class="sm_add_bt">+ 상품 등록</a>
+    </div>
+
+    <table class="sm_table">
+        <thead>
+            <tr>
+                <th>이미지</th>
+                <th>브랜드</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in products %}
+            <tr>
+                <td><img class="sm_thumb" src="{{ p.mainImg or url_for('static', filename='img/no_image.png') }}" alt="{{ p.title }}"></td>
+                <td>{{ p.brand }}</td>
+                <td>{{ p.title }}</td>
+                <td>{{ '{:,}'.format(p.price) }}원</td>
+                <td class="sm_actions">
+                    <a href="{{ url_for('shop.edit_product_form', id=p.id) }}" class="sm_edit_bt">수정</a>
+                    <form action="{{ url_for('shop.delete_product', id=p.id) }}" method="POST" class="sm_delete_form" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                        <button type="submit" class="sm_delete_bt">삭제</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="5" class="sm_empty">등록된 상품이 없습니다.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

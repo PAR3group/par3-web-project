@@ -1,0 +1,106 @@
+/* shop_manage.css - 관리자 상품 목록/수정/삭제 (join_create.css 톤과 통일) */
+
+.sm_wrap {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+}
+
+.sm_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.sm_title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #16233f;
+}
+
+.sm_add_bt {
+    background: #0f6e56;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.sm_add_bt:hover {
+    background: #0c5a46;
+}
+
+.sm_table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #eceef1;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.sm_table th,
+.sm_table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eceef1;
+    font-size: 14px;
+    color: #16233f;
+}
+
+.sm_table th {
+    background: #16233f;
+    color: #fff;
+    font-weight: 600;
+}
+
+.sm_thumb {
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: #f5f5f5;
+}
+
+.sm_actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.sm_edit_bt {
+    color: #0f6e56;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.sm_edit_bt:hover {
+    text-decoration: underline;
+}
+
+.sm_delete_form {
+    display: inline;
+}
+
+.sm_delete_bt {
+    background: none;
+    border: none;
+    color: #e63946;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+}
+
+.sm_delete_bt:hover {
+    text-decoration: underline;
+}
+
+.sm_empty {
+    text-align: center;
+    color: #8a93a3;
+    padding: 40px 0;
+}

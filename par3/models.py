@@ -48,6 +48,24 @@ class ShopProduct(db.Model):
     origin = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, default=datetime.now)
     reviews = db.relationship('ProductReview', backref='product')
+    detail_blocks = db.relationship(
+        'ProductDetailBlock',
+        backref='product',
+        order_by='ProductDetailBlock.sort_order',
+        cascade='all, delete-orphan',
+    )
+
+
+# 상품 상세설명 영역 (샵 상세페이지 하단) - 관리자가 텍스트/이미지를 순서대로 추가
+class ProductDetailBlock(db.Model):
+    __tablename__ = 'product_detail_block'
+
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('shop_product.id'), nullable=False)
+    sort_order = db.Column(db.Integer, default=0, nullable=False)
+    block_type = db.Column(db.String(10), nullable=False)  # 'text' 또는 'image'
+    text_content = db.Column(db.Text)
+    image_url = db.Column(db.String(500))
 
 
 class ProductReview(db.Model):
