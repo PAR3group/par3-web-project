@@ -190,6 +190,63 @@ body {
   margin: 0;
 }
 
+/* 라운드 안내 배너 (상단 고정, 접기/펴기 가능) */
+.c_notice {
+  flex: 0 0 auto;
+  border: 1px solid #eaf2ee;
+  background: #eaf2ee;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.c_notice_toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.c_notice_toggle_label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f6e56;
+}
+
+.c_notice_toggle_icon {
+  color: #0f6e56;
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.15s;
+}
+
+.c_notice_body {
+  padding: 0 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.c_notice_body p {
+  margin: 0;
+  font-size: 13px;
+  color: #16233f;
+  line-height: 1.5;
+}
+
+.c_notice--collapsed .c_notice_body {
+  display: none;
+}
+
+.c_notice--collapsed .c_notice_toggle_icon {
+  transform: rotate(-90deg);
+}
+
 /* 메시지 영역 */
 .c_messages {
   flex: 1;

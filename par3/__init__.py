@@ -28,7 +28,7 @@ def create_app():
     from . import models
     db.init_app(app)
     migrate.init_app(app, db)
-    socketio.init_app(app, async_mode='eventlet', cors_allowed_origins="*")
+    socketio.init_app(app, async_mode='threading', cors_allowed_origins="*")
 
     # 블루프린트 등록
     from .views import main_views, join_views, auth_views, recommend_views, shop_views, talk_views, mypage_views, admin_views, chat_views

@@ -19,6 +19,19 @@ PAR3 - {{ join.title }} 채팅
     </div>
   </div>
 
+  <div class="c_notice" id="c_notice">
+    <button type="button" class="c_notice_toggle" id="c_notice_toggle">
+      <span class="c_notice_toggle_label">📋 라운드 안내</span>
+      <span class="c_notice_toggle_icon">▾</span>
+    </button>
+    <div class="c_notice_body" id="c_notice_body">
+      <p>⛳ 골프장: {{ join.course_name or '미정' }}</p>
+      <p>🕐 티오프 시간: {{ join.tee_time or '미정' }}</p>
+      <p>📌 클럽하우스는 티오프 <strong>30분 전</strong>까지 도착해주세요.</p>
+      <p>👋 참여자분들과 미리 인사 나눠보세요!</p>
+    </div>
+  </div>
+
   <div id="c_messages" class="c_messages"></div>
 
   <form id="c_form" class="c_form">

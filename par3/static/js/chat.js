@@ -7,8 +7,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const messagesEl = document.getElementById('c_messages');
     const form = document.getElementById('c_form');
     const input = document.getElementById('c_input');
+    const notice = document.getElementById('c_notice');
+    const noticeToggle = document.getElementById('c_notice_toggle');
 
     const socket = io();
+
+    // 라운드 안내 배너 접기/펴기 (방마다 상태 기억)
+    const noticeStorageKey = `c_notice_collapsed_${joinId}`;
+    if (notice) {
+        if (localStorage.getItem(noticeStorageKey) === '1') {
+            notice.classList.add('c_notice--collapsed');
+        }
+        noticeToggle.addEventListener('click', () => {
+            notice.classList.toggle('c_notice--collapsed');
+            localStorage.setItem(noticeStorageKey, notice.classList.contains('c_notice--collapsed') ? '1' : '0');
+        });
+    }
 
     function appendMessage({ sender_id, sender_nickname, message, created_at }) {
         const div = document.createElement('div');

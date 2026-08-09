@@ -26,13 +26,16 @@ def _is_participant(join_id, user_id):
 def handle_join(data):
     join_id = data.get('join_id')
     user = _get_current_user()
+    print(f'[DEBUG] join 이벤트 수신 - join_id={join_id}, user={user}')
 
     if user is None or not _is_participant(join_id, user.id):
+        print('[DEBUG] join 거부됨 - 참여자 아님 또는 로그인 안 됨')
         emit('error', {'msg': '참여자만 입장 가능합니다.'})
         return
 
     room = f'join_{join_id}'
     join_room(room)
+    print(f'[DEBUG] {user.nickname}님이 room={room} 입장 완료')
     emit('system_message', {'msg': f'{user.nickname}님이 입장했습니다.'}, room=room)
 
 
@@ -51,11 +54,14 @@ def handle_send_message(data):
     join_id = data.get('join_id')
     text = (data.get('message') or '').strip()
     user = _get_current_user()
+    print(f'[DEBUG] send_message 이벤트 수신 - join_id={join_id}, user={user}, text={text!r}')
 
     if user is None or not _is_participant(join_id, user.id):
+        print('[DEBUG] send_message 거부됨 - 참여자 아님 또는 로그인 안 됨')
         emit('error', {'msg': '참여자만 메시지를 보낼 수 있습니다.'})
         return
     if not text:
+        print('[DEBUG] send_message 무시됨 - 빈 텍스트')
         return
 
     new_message = ChatMessage(join_id=join_id, sender_id=user.id, message=text)
@@ -63,6 +69,7 @@ def handle_send_message(data):
     db.session.commit()
 
     room = f'join_{join_id}'
+    print(f'[DEBUG] room={room}에 receive_message 브로드캐스트')
     emit('receive_message', {
         'sender_id': user.id,
         'sender_nickname': user.nickname,
