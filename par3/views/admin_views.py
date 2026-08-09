@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, g, redirect, render_template, url_for
+from flask import Blueprint, flash, g, redirect, render_template, request, url_for
 from sqlalchemy import extract, func
 
 from par3 import db
@@ -35,10 +35,21 @@ def dashboard():
 @bp.route('/members')
 @admin_required
 def members():
-    users = User.query.order_by(User.id.asc()).all()
+    q = request.args.get('q', '').strip()
+    query = User.query
+    if q:
+        like = f'%{q}%'
+        query = query.filter(
+            User.nickname.ilike(like)
+            | User.user_id.ilike(like)
+            | User.username.ilike(like)
+            | User.email.ilike(like)
+            | User.phonenumber.ilike(like)
+        )
+    users = query.order_by(User.id.asc()).all()
     for u in users:
         u.experience_label = GOLF_EXPERIENCE_LABELS.get(u.experience_years, f'{u.experience_years}년차')
-    return render_template('admin/members.html', users=users)
+    return render_template('admin/members.html', users=users, q=q)
 
 
 @bp.route('/members/<int:id>/toggle-admin', methods=['POST'])
@@ -92,8 +103,17 @@ def toggle_withdraw(id):
 @bp.route('/posts')
 @admin_required
 def posts():
-    posts = Post.query.order_by(Post.created_at.desc()).all()
-    return render_template('admin/posts.html', posts=posts)
+    q = request.args.get('q', '').strip()
+    query = Post.query
+    if q:
+        like = f'%{q}%'
+        query = query.filter(
+            Post.title.ilike(like)
+            | Post.content.ilike(like)
+            | Post.author.ilike(like)
+        )
+    posts = query.order_by(Post.created_at.desc()).all()
+    return render_template('admin/posts.html', posts=posts, q=q)
 
 
 @bp.route('/posts/<int:id>/delete', methods=['POST'])
@@ -122,13 +142,26 @@ def delete_comment(id):
 @bp.route('/joins')
 @admin_required
 def joins():
-    joins = Join.query.order_by(Join.create_date.desc()).all()
+    q = request.args.get('q', '').strip()
+    query = Join.query
+    if q:
+        like = f'%{q}%'
+        matched_writer_ids = [
+            u.id for u in User.query.filter(User.nickname.ilike(like)).all()
+        ]
+        query = query.filter(
+            Join.title.ilike(like)
+            | Join.course_name.ilike(like)
+            | Join.region.ilike(like)
+            | Join.writer_id.in_(matched_writer_ids)
+        )
+    joins = query.order_by(Join.create_date.desc()).all()
     writer_ids = {j.writer_id for j in joins}
     writers = {u.id: u for u in User.query.filter(User.id.in_(writer_ids)).all()} if writer_ids else {}
     for j in joins:
         writer = writers.get(j.writer_id)
         j.writer_nickname = writer.nickname if writer else '알 수 없음'
-    return render_template('admin/joins.html', joins=joins)
+    return render_template('admin/joins.html', joins=joins, q=q)
 
 
 @bp.route('/joins/<int:id>/delete', methods=['POST'])

@@ -5,11 +5,15 @@ PAR3 - 상품 관리
 {% endblock %}
 
 {% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/shop_manage.css') }}">
 {% endblock %}
 
 {% block content %}
 <div class="sm_wrap">
+    {% set active = 'shop' %}
+    {% include 'admin/_nav.html' %}
+
     <div class="sm_head">
         <h1 class="sm_title">상품 관리</h1>
         <a href="{{ url_for('shop.add_product_form') }}" class="sm_add_bt">+ 상품 등록</a>

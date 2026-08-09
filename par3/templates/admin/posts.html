@@ -15,12 +15,16 @@ PAR3 - 게시글 관리
         <p class="a_subtitle">talk 커뮤니티 게시글과 댓글을 관리합니다. (총 {{ posts|length }}건)</p>
     </div>
 
-    <nav class="a_nav">
-        <a href="{{ url_for('admin.dashboard') }}" class="a_nav_link">대시보드</a>
-        <a href="{{ url_for('admin.members') }}" class="a_nav_link">회원 관리</a>
-        <a href="{{ url_for('admin.posts') }}" class="a_nav_link a_nav_link_active">게시글 관리</a>
-        <a href="{{ url_for('admin.joins') }}" class="a_nav_link">조인 관리</a>
-    </nav>
+    {% set active = 'posts' %}
+    {% include 'admin/_nav.html' %}
+
+    <form action="{{ url_for('admin.posts') }}" method="GET" class="a_search_form">
+        <input type="text" name="q" value="{{ q }}" placeholder="제목, 내용, 작성자 검색" class="a_search_input">
+        <button type="submit" class="a_search_bt">검색</button>
+        {% if q %}
+        <a href="{{ url_for('admin.posts') }}" class="a_search_reset">초기화</a>
+        {% endif %}
+    </form>
 
     {% for post in posts %}
     <div class="a_card">
@@ -67,7 +71,7 @@ PAR3 - 게시글 관리
     </div>
     {% else %}
     <div class="a_card">
-        <p class="a_table_empty">등록된 게시글이 없습니다.</p>
+        <p class="a_table_empty">{{ '검색 결과가 없습니다.' if q else '등록된 게시글이 없습니다.' }}</p>
     </div>
     {% endfor %}
 </div>

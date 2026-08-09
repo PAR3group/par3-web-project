@@ -1,0 +1,7 @@
+<nav class="a_nav">
+    <a href="{{ url_for('admin.dashboard') }}" class="a_nav_link{% if active == 'dashboard' %} a_nav_link_active{% endif %}">대시보드</a>
+    <a href="{{ url_for('admin.members') }}" class="a_nav_link{% if active == 'members' %} a_nav_link_active{% endif %}">회원 관리</a>
+    <a href="{{ url_for('admin.posts') }}" class="a_nav_link{% if active == 'posts' %} a_nav_link_active{% endif %}">게시글 관리</a>
+    <a href="{{ url_for('admin.joins') }}" class="a_nav_link{% if active == 'joins' %} a_nav_link_active{% endif %}">조인 관리</a>
+    <a href="{{ url_for('shop.manage_products') }}" class="a_nav_link{% if active == 'shop' %} a_nav_link_active{% endif %}">상품 관리</a>
+</nav>
