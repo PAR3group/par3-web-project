@@ -19,6 +19,14 @@ PAR3 - 상품 관리
         <a href="{{ url_for('shop.add_product_form') }}" class="sm_add_bt">+ 상품 등록</a>
     </div>
 
+    <form action="{{ url_for('shop.manage_products') }}" method="GET" class="a_search_form">
+        <input type="text" name="q" value="{{ q }}" placeholder="브랜드, 상품명 검색" class="a_search_input">
+        <button type="submit" class="a_search_bt">검색</button>
+        {% if q %}
+        <a href="{{ url_for('shop.manage_products') }}" class="a_search_reset">초기화</a>
+        {% endif %}
+    </form>
+
     <table class="sm_table">
         <thead>
             <tr>
@@ -45,7 +53,7 @@ PAR3 - 상품 관리
             </tr>
             {% else %}
             <tr>
-                <td colspan="5" class="sm_empty">등록된 상품이 없습니다.</td>
+                <td colspan="5" class="sm_empty">{{ '검색 결과가 없습니다.' if q else '등록된 상품이 없습니다.' }}</td>
             </tr>
             {% endfor %}
         </tbody>
