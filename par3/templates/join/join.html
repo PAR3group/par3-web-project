@@ -115,10 +115,10 @@ PAR3 - JOIN
       </div>
 
       {% if join.thumb_img.startswith('http') %}
-<img class="jt_thumb" src="{{ join.thumb_img }}" alt="{{ join.course_name }}">
-{% else %}
-<img class="jt_thumb" src="{{ url_for('static', filename='img/join_imgs/' + join.thumb_img) }}" alt="{{ join.course_name }}">
-{% endif %}
+      <img class="jt_thumb" src="{{ join.thumb_img }}" alt="{{ join.course_name }}">
+      {% else %}
+      <img class="jt_thumb" src="{{ url_for('static', filename='img/join_imgs/' + join.thumb_img) }}" alt="{{ join.course_name }}">
+      {% endif %}
 
       <div class="jt_info">
         <div class="jt_info_top">
@@ -162,7 +162,13 @@ PAR3 - JOIN
 
       <div class="jt_actions">
         <span class="jt_heart_bt"></span>
+        {% if join.is_full %}
+        <button type="button" class="jt_join_bt jt_join_bt--full" disabled>마감</button>
+        {% elif join.is_owner or join.is_applied %}
+        <button type="button" class="jt_join_bt jt_join_bt--applied" disabled>참여중</button>
+        {% else %}
         <a href="/join/apply/{{ join.id }}" class="jt_join_bt">참여하기 <span class="jt_join_bt_arrow">›</span></a>
+        {% endif %}
       </div>
     </div>
     {% endfor %}

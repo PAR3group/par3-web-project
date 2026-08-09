@@ -33,6 +33,20 @@ def join_list():
         # 이 조인 글에 실제로 신청한 사람들 목록 조회 (JoinApply 테이블에서)
         applies = JoinApply.query.filter_by(join_id=j.id).all()
         j.applicant_initials = [a.applicant_name[0].upper() for a in applies if a.applicant_name]
+        # ------------------------------------------------
+        # 참여하기 버튼 상태 계산
+        # is_owner   : 로그인한 사용자가 이 글의 작성자인지
+        # is_applied : 로그인한 사용자가 이미 신청했는지
+        # is_full    : 정원이 다 찼는지
+        # ------------------------------------------------
+        if g.user is not None:
+            j.is_owner = (j.writer_id == g.user.id)
+            j.is_applied = JoinApply.query.filter_by(join_id=j.id, applicant_id=g.user.id).first() is not None
+        else:
+            j.is_owner = False
+            j.is_applied = False
+
+        j.is_full = j.filled_count >= j.recruit_count
 
     return render_template('join/join.html', joins=joins)
 
@@ -42,13 +56,12 @@ def join_list():
 # ------------------------------------------------
 @bp.route('/create', methods=['GET', 'POST'])
 def join_create():
- # 로그인 안 했으면 로그인 페이지로 이동
     if g.user is None:
         return redirect(url_for('auth.login', next=request.path))
 
     if request.method == 'POST':
         new_join = Join(
-            writer_id=g.user.id,   # ← 실제 로그인한 사용자의 id
+            writer_id=g.user.id,
             course_name=request.form['course_name'],
             region=request.form.get('region', '기타'),
             round_date=datetime.strptime(request.form['round_date'], '%Y-%m-%d').date(),
@@ -63,6 +76,18 @@ def join_create():
             thumb_img=request.form.get('thumb_img_url') or 'golf_replace.png',
         )
         db.session.add(new_join)
+        db.session.flush()
+
+        writer_apply = JoinApply(
+            join_id=new_join.id,
+            applicant_id=g.user.id,
+            applicant_name=g.user.nickname,
+            applicant_phone=g.user.phonenumber,
+            experience_years=g.user.experience_years or '',
+            handicap='',
+        )
+        db.session.add(writer_apply)
+
         db.session.commit()
         return redirect(url_for('join.join_list'))
 
@@ -81,6 +106,13 @@ def join_apply(join_id):
 
     join = Join.query.get_or_404(join_id)
     applicant = g.user   # ← 실제 로그인한 사용자
+    # 본인 글이거나 이미 신청했으면 리스트로 돌려보냄
+    if join.writer_id == applicant.id:
+        return redirect(url_for('join.join_list'))
+
+    already_applied = JoinApply.query.filter_by(join_id=join.id, applicant_id=applicant.id).first()
+    if already_applied:
+        return redirect(url_for('join.join_list'))
 
     if request.method == 'POST':
         new_apply = JoinApply(
@@ -88,7 +120,7 @@ def join_apply(join_id):
             applicant_id=applicant.id,
             applicant_name=applicant.nickname,
             applicant_phone=applicant.phonenumber,
-            golf_experience=request.form.get('golf_experience', ''),
+            experience_years=request.form.get('experience_years', ''),
             handicap=request.form.get('handicap', ''),
         )
         db.session.add(new_apply)
