@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - 관리자 페이지
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="a_wrap">
+    <div class="a_head">
+        <h1 class="a_title">관리자 페이지</h1>
+        <p class="a_subtitle">시간대별 접속 현황과 상품 관리를 확인하세요.</p>
+    </div>
+
+    <section class="a_card">
+        <h2 class="a_card_title">시간대별 접속 현황</h2>
+        <p class="a_card_desc">최근 로그를 기준으로 시간대(0~23시)별 페이지 접속 횟수를 보여줍니다.</p>
+        <div class="a_chart_wrap">
+            <canvas id="visitChart"></canvas>
+        </div>
+    </section>
+
+    <section class="a_card">
+        <h2 class="a_card_title">상품 관리</h2>
+        <p class="a_card_desc">par3 shop에 새 상품을 등록할 수 있습니다.</p>
+        <a href="{{ url_for('shop.add_product_form') }}" class="a_bt">상품 등록하러 가기</a>
+    </section>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+    const hourlyCounts = {{ hourly_counts | tojson }};
+    const hourLabels = Array.from({ length: 24 }, (_, i) => `${i}시`);
+
+    new Chart(document.getElementById('visitChart'), {
+        type: 'bar',
+        data: {
+            labels: hourLabels,
+            datasets: [{
+                label: '접속 횟수',
+                data: hourlyCounts,
+                backgroundColor: '#0f6e56',
+                borderRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { precision: 0 }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

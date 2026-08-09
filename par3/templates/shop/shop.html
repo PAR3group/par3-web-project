@@ -332,6 +332,9 @@
     <div class="container">
         <!-- 검색창 -->
         <div class="search-bar-container">
+            {% if g.user and g.user.is_admin %}
+            <a href="{{ url_for('shop.add_product_form') }}" class="btn-nav" style="margin-right: 10px;">상품 등록</a>
+            {% endif %}
             <div class="search-bar">
                 <input type="text" id="searchInput" placeholder="상품검색">
                 <button type="button" id="searchBtn">검색</button>

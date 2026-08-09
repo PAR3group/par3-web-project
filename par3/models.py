@@ -134,7 +134,17 @@ class Join(db.Model):
     create_date = db.Column(db.DateTime, default=datetime.now)
 
 
-# 조인페이지 - 조인참여하기 
+# 관리자 페이지 - 접속 시간대 통계용 방문 로그
+class PageVisit(db.Model):
+    __tablename__ = 'page_visit'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    path = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.now)
+
+
+# 조인페이지 - 조인참여하기
 class JoinApply(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     join_id = db.Column(
