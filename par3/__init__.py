@@ -54,7 +54,12 @@ def create_app():
         if user_id is None:
             g.user = None
         else:
-            g.user = User.query.get(user_id)
+            user = User.query.get(user_id)
+            # 정지/강제 탈퇴된 회원은 세션을 즉시 무효화
+            if user is not None and (user.is_suspended or user.is_withdrawn):
+                session.clear()
+                user = None
+            g.user = user
 
     # 관리자 페이지 접속 시간대 통계용 방문 로그 (정적 파일/관리자 페이지 자체는 제외)
     @app.before_request

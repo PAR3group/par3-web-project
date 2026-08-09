@@ -15,6 +15,13 @@ PAR3 - 회원 관리
         <p class="a_subtitle">전체 회원 목록입니다. (총 {{ users|length }}명)</p>
     </div>
 
+    <nav class="a_nav">
+        <a href="{{ url_for('admin.dashboard') }}" class="a_nav_link">대시보드</a>
+        <a href="{{ url_for('admin.members') }}" class="a_nav_link a_nav_link_active">회원 관리</a>
+        <a href="{{ url_for('admin.posts') }}" class="a_nav_link">게시글 관리</a>
+        <a href="{{ url_for('admin.joins') }}" class="a_nav_link">조인 관리</a>
+    </nav>
+
     <div class="a_card">
         <table class="a_table">
             <thead>
@@ -26,7 +33,8 @@ PAR3 - 회원 관리
                     <th>이메일</th>
                     <th>전화번호</th>
                     <th>골프 경력</th>
-                    <th>구분</th>
+                    <th>상태</th>
+                    <th>관리</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,18 +46,39 @@ PAR3 - 회원 관리
                     <td>{{ u.username }}</td>
                     <td>{{ u.email }}</td>
                     <td>{{ u.phonenumber }}</td>
-                    <td>{{ u.experience_years }}년차</td>
+                    <td>{{ u.experience_label }}</td>
                     <td>
                         {% if u.is_admin %}
                         <span class="a_badge a_badge_admin">관리자</span>
                         {% else %}
                         <span class="a_badge">일반회원</span>
                         {% endif %}
+                        {% if u.is_suspended %}
+                        <span class="a_badge a_badge_warn">정지</span>
+                        {% endif %}
+                        {% if u.is_withdrawn %}
+                        <span class="a_badge a_badge_danger">탈퇴</span>
+                        {% endif %}
+                    </td>
+                    <td class="a_actions">
+                        {% if u.id == g.user.id %}
+                        <span class="a_actions_self">본인 계정</span>
+                        {% else %}
+                        <form action="{{ url_for('admin.toggle_admin', id=u.id) }}" method="POST" class="a_inline_form" onsubmit="return confirm('{{ u.nickname }}님의 관리자 권한을 {{ '해제' if u.is_admin else '부여' }}하시겠습니까?');">
+                            <button type="submit" class="a_bt_sm">{{ '관리자 해제' if u.is_admin else '관리자 지정' }}</button>
+                        </form>
+                        <form action="{{ url_for('admin.toggle_suspend', id=u.id) }}" method="POST" class="a_inline_form" onsubmit="return confirm('{{ u.nickname }}님을 {{ '정지 해제' if u.is_suspended else '정지' }}하시겠습니까?');">
+                            <button type="submit" class="a_bt_sm a_bt_sm_warn">{{ '정지 해제' if u.is_suspended else '정지' }}</button>
+                        </form>
+                        <form action="{{ url_for('admin.toggle_withdraw', id=u.id) }}" method="POST" class="a_inline_form" onsubmit="return confirm('{{ u.nickname }}님을 {{ '탈퇴 취소' if u.is_withdrawn else '강제 탈퇴' }}하시겠습니까?');">
+                            <button type="submit" class="a_bt_sm a_bt_sm_danger">{{ '탈퇴 취소' if u.is_withdrawn else '강제 탈퇴' }}</button>
+                        </form>
+                        {% endif %}
                     </td>
                 </tr>
                 {% else %}
                 <tr>
-                    <td colspan="8" class="a_table_empty">등록된 회원이 없습니다.</td>
+                    <td colspan="9" class="a_table_empty">등록된 회원이 없습니다.</td>
                 </tr>
                 {% endfor %}
             </tbody>

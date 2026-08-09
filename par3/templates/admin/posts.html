@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - 게시글 관리
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="a_wrap">
+    <div class="a_head">
+        <h1 class="a_title">게시글 관리</h1>
+        <p class="a_subtitle">talk 커뮤니티 게시글과 댓글을 관리합니다. (총 {{ posts|length }}건)</p>
+    </div>
+
+    <nav class="a_nav">
+        <a href="{{ url_for('admin.dashboard') }}" class="a_nav_link">대시보드</a>
+        <a href="{{ url_for('admin.members') }}" class="a_nav_link">회원 관리</a>
+        <a href="{{ url_for('admin.posts') }}" class="a_nav_link a_nav_link_active">게시글 관리</a>
+        <a href="{{ url_for('admin.joins') }}" class="a_nav_link">조인 관리</a>
+    </nav>
+
+    {% for post in posts %}
+    <div class="a_card">
+        <div class="a_post_head">
+            <div>
+                <span class="a_badge">{{ post.category }}</span>
+                <span class="a_post_title">{{ post.title }}</span>
+            </div>
+            <form action="{{ url_for('admin.delete_post', id=post.id) }}" method="POST" class="a_inline_form" onsubmit="return confirm('이 게시글을 삭제하시겠습니까? (댓글도 함께 삭제됩니다)');">
+                <button type="submit" class="a_bt_sm a_bt_sm_danger">게시글 삭제</button>
+            </form>
+        </div>
+        <p class="a_post_meta">작성자 {{ post.author }} · {{ post.created_at|datetime }} · 조회 {{ post.views }} · 좋아요 {{ post.likes }}</p>
+        <p class="a_post_content">{{ post.content }}</p>
+
+        {% if post.comments_list %}
+        <table class="a_table a_table_nested">
+            <thead>
+                <tr>
+                    <th>작성자</th>
+                    <th>댓글 내용</th>
+                    <th>작성일</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in post.comments_list %}
+                <tr>
+                    <td>{{ c.author }}</td>
+                    <td>{{ c.content }}</td>
+                    <td>{{ c.created_at|datetime }}</td>
+                    <td>
+                        <form action="{{ url_for('admin.delete_comment', id=c.id) }}" method="POST" class="a_inline_form" onsubmit="return confirm('이 댓글을 삭제하시겠습니까?');">
+                            <button type="submit" class="a_bt_sm a_bt_sm_danger">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="a_post_meta">댓글 없음</p>
+        {% endif %}
+    </div>
+    {% else %}
+    <div class="a_card">
+        <p class="a_table_empty">등록된 게시글이 없습니다.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
