@@ -1,3 +1,4 @@
+import re
 from flask import Blueprint, g, jsonify, render_template, request, session, url_for
 
 from par3 import db, storage
@@ -11,7 +12,6 @@ DEFAULT_PROFILE_IMG = "https://raw.githubusercontent.com/feathericons/feather/ma
 GENDER_DB_TO_LABEL = {'M': '남성', 'F': '여성'}
 GENDER_LABEL_TO_DB = {'남성': 'M', '여성': 'F'}
 
-# signup.html의 UserCreateForm.experience_years와 동일한 구력 선택지
 GOLF_EXPERIENCE_LABELS = {
     0: '1년 이하',
     1: '1년 ~ 2년',
@@ -19,7 +19,6 @@ GOLF_EXPERIENCE_LABELS = {
     3: '5년 이상',
 }
 
-# (weight 컬럼, 카드 라벨, 이미지) - /recommend/shaft/ 결과 카드와 동일한 클럽 구성/이미지 사용
 CLUB_META = [
     ("driver_weight", "드라이버", "img/rec_D.jpg"),
     ("wood5_weight", "5번 우드", "img/rec_W.jpg"),
@@ -69,12 +68,28 @@ def build_recent_activities(user, limit=3):
 
 
 def build_profile(user):
+    # 🟢 DB의 phonenumber (+82 010-0000-0000)를 국가코드와 전화번호로 파싱
+    country_code = ""
+    phone_number = user.phonenumber or ""
+
+    if phone_number.startswith("+"):
+        parts = phone_number.split(" ", 1)
+        if len(parts) == 2:
+            country_code = parts[0]
+            phone_number = parts[1]
+        else:
+            match = re.match(r"^(\+\d{1,3})(.*)$", phone_number)
+            if match:
+                country_code = match.group(1)
+                phone_number = match.group(2).strip()
+
     return {
         "user_id": user.user_id,
         "email": user.email,
         "nickname": user.nickname,
         "name": user.username,
-        "phone": user.phonenumber,
+        "country_code": country_code,  # 🟢 파싱된 국가코드 (+82)
+        "phone": phone_number,         # 🟢 파싱된 전화번호 (010-0000-0000)
         "gender": GENDER_DB_TO_LABEL.get(user.user_sex, user.user_sex),
         "golf_experience": GOLF_EXPERIENCE_LABELS.get(user.experience_years, '-'),
         "golf_experience_code": user.experience_years,
@@ -89,7 +104,6 @@ def build_activity_data(user):
         "posts_count": Post.query.filter_by(author=user.nickname).count(),
         "join_posts_count": Join.query.filter_by(writer_id=user.id).count(),
         "join_participate_count": JoinApply.query.filter_by(applicant_id=user.id).count(),
-        # 골프조인 찜 / 쇼핑 찜 / 쇼핑 주문은 아직 모델이 없어 잠정적으로 0으로 표시
         "join_likes_count": 0,
         "shop_likes_count": 0,
         "shop_orders_count": 0,
@@ -115,7 +129,8 @@ def update_profile():
     email = request.form.get('email')
     nickname = request.form.get('nickname')
     name = request.form.get('name')
-    phone = request.form.get('phone')
+    country_code = request.form.get('country_code')  # 🟢 국가코드 (+82)
+    phone = request.form.get('phone')                 # 🟢 전화번호 입력값
     gender = request.form.get('gender')
     golf_experience = request.form.get('golf_experience')
     home_address = request.form.get('home_address')
@@ -126,14 +141,28 @@ def update_profile():
         user.nickname = nickname
     if name:
         user.username = name
+        
+    # 🟢 중복 방지 및 국가코드 + 전화번호 정제 저장
     if phone:
-        user.phonenumber = phone
+        clean_phone = re.sub(r"^\+\d{1,3}\s*", "", phone.strip())  # 기존에 섞여 들어간 +82 등 제거
+        if country_code:
+            user.phonenumber = f"{country_code} {clean_phone}"
+        else:
+            user.phonenumber = clean_phone
+
     if gender:
         user.user_sex = GENDER_LABEL_TO_DB.get(gender, gender)
     if golf_experience in ('0', '1', '2', '3'):
         user.experience_years = int(golf_experience)
     if home_address:
         user.home_address = home_address
+
+    avatar_file = request.files.get('avatar_file')
+    if avatar_file and avatar_file.filename:
+        try:
+            user.profile_img = storage.upload_image(avatar_file, 'avatars')
+        except Exception:
+            pass
 
     db.session.commit()
 
