@@ -155,7 +155,7 @@ PAR3
                 <div class="shop_product_viewport">
                     <div class="shop_product_container">
                         {% for p in shop_products %}
-                        <div class="shop_product_card">
+                        <div class="shop_product_card" onclick="location.href='{{ url_for('shop.detail', id=p.id) }}'">
                             <img src="{{ p.mainImg or url_for('static', filename='img/no_image.png') }}"
                                 alt="{{ p.title }}">
                             <p>{{ p.title }}</p>
