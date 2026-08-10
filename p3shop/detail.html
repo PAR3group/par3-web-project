@@ -9,7 +9,7 @@
   body { background:#f5f5f5; }
   
   .container {
-    width:1200px;
+    width:1160px;
     margin:40px auto;
     background:white;
     border-radius:15px;
@@ -76,11 +76,30 @@
   .table { margin-top:50px; border-top:2px solid black; }
   .table div { display:flex; padding:20px; border-bottom:1px solid #ddd; }
   .table span:first-child { width:180px; font-weight:bold; }
+
+  /* ★ 상세페이지 전용 로고 크기 및 간격 조절 ★ */
+  #logoContainer img, 
+  #logoContainer svg {
+    width: 250px !important;  /* 로고 크기 */
+    height: auto !important;
+    display: block;
+  }
+
+  header {
+    margin-bottom: 35px !important; /* 이미지 카드 영역과 떨어진 간격 */
+  }
 </style>
 </head>
 <body>
 
 <div class="container">
+
+  <header>
+    <div class="header-content">
+        <a href="shop.html" id="logoContainer" style="text-decoration: none; display: inline-block;"></a>
+    </div>
+</header>
+
   <!-- 메인 상품 정보 -->
   <div class="product">
     <div class="left">
@@ -107,7 +126,6 @@
           <button type="button" id="btnPlus">+</button>
         </div>
 
-        <!-- ★ [수정] id="btnCart"와 id="btnBuy"를 추가하여 클릭 오작동 방지 ★ -->
         <div class="btn">
           <button type="button" class="cart" id="btnCart">장바구니</button>
           <button type="button" class="buy" id="btnBuy">바로구매</button>
@@ -132,47 +150,66 @@
 <!-- 1. data.js 파일 불러오기 -->
 <script src="data.js"></script>
 
-<!-- 2. data.js 데이터 연동, 수량 연산 및 페이지 이동 스크립트 -->
+<!-- 2. 상세페이지 기능 및 장바구니 저장 스크립트 -->
 <script>
+  // 1) 장바구니 데이터 깨짐 방지 및 자동 청소
+  try {
+    const raw = localStorage.getItem('cartList');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) localStorage.removeItem('cartList');
+    }
+  } catch (e) {
+    localStorage.removeItem('cartList');
+  }
+
+  // 2) URL에서 상품 ID 가져오기
   const urlParams = new URLSearchParams(window.location.search);
   const productId = parseInt(urlParams.get('id')) || 1;
 
-  const product = products.find(p => p.id === productId);
+  // data.js에서 해당 상품 찾기
+  const product = (typeof products !== 'undefined') ? products.find(p => p.id === productId) : null;
 
   if (product) {
-    // 1. 기본 정보 채우기
-    document.getElementById('mainImg').src = product.mainImg;
-    document.getElementById('brand').innerText = product.brand;
-    document.getElementById('title').innerText = product.title;
-    document.getElementById('rating').innerText = product.rating;
-    document.getElementById('reviewCount').innerText = `(${product.reviewCount})`;
-    document.getElementById('shipping').innerText = product.shipping;
-    document.getElementById('origin').innerText = product.origin;
+    // 화면 정보 출력
+    if(document.getElementById('mainImg')) document.getElementById('mainImg').src = product.mainImg;
+    if(document.getElementById('brand')) document.getElementById('brand').innerText = product.brand;
+    if(document.getElementById('title')) document.getElementById('title').innerText = product.title;
+    if(document.getElementById('rating')) document.getElementById('rating').innerText = product.rating;
+    if(document.getElementById('reviewCount')) document.getElementById('reviewCount').innerText = `(${product.reviewCount})`;
+    if(document.getElementById('shipping')) document.getElementById('shipping').innerText = product.shipping;
+    if(document.getElementById('origin')) document.getElementById('origin').innerText = product.origin;
 
-    // 상세 이미지 그려주기 
+    // 상세 이미지
     const detailImgBox = document.getElementById('detailImgBox');
-    if (product.detailImgs && product.detailImgs.length > 0) {
-      detailImgBox.innerHTML = product.detailImgs.map(imgSrc => `
-        <img src="${imgSrc}" alt="상세 이미지" style="width:100%; display:block; margin-bottom:10px;">
-      `).join('');
-    } else if (product.detailImg) {
-      detailImgBox.innerHTML = `<img src="${product.detailImg}" alt="상세 이미지" style="width:100%; display:block;">`;
+    if (detailImgBox) {
+      if (product.detailImgs && product.detailImgs.length > 0) {
+        detailImgBox.innerHTML = product.detailImgs.map(imgSrc => `
+          <img src="${imgSrc}" alt="상세 이미지" style="width:100%; display:block; margin-bottom:10px;">
+        `).join('');
+      } else if (product.detailImg) {
+        detailImgBox.innerHTML = `<img src="${product.detailImg}" alt="상세 이미지" style="width:100%; display:block;">`;
+      }
     }
 
-    // 2. 특징(features) 목록 채우기
+    // 특징 목록
     const featuresList = document.getElementById('featuresList');
-    featuresList.innerHTML = product.features.map(feat => `<li>${feat}</li>`).join('');
+    if (featuresList && product.features) {
+      featuresList.innerHTML = product.features.map(feat => `<li>${feat}</li>`).join('');
+    }
 
-    // 3. 리뷰(reviews) 목록 채우기
+    // 리뷰 목록
     const reviewContainer = document.getElementById('reviewContainer');
-    reviewContainer.innerHTML = product.reviews.map(rev => `
-      <div class="review-box">
-        <span class="review-stars"> ${product.rating}</span>
-        <div>${rev}</div>
-      </div>
-    `).join('');
+    if (reviewContainer && product.reviews) {
+      reviewContainer.innerHTML = product.reviews.map(rev => `
+        <div class="review-box">
+          <span class="review-stars"> ${product.rating}</span>
+          <div>${rev}</div>
+        </div>
+      `).join('');
+    }
 
-    // 4. 수량 변경 및 총 가격 계산 기능
+    // 수량 조절 및 가격 연산
     const quantityInput = document.getElementById('quantity');
     const totalPriceEl = document.getElementById('totalPrice');
     const btnMinus = document.getElementById('btnMinus');
@@ -182,51 +219,66 @@
     const basePrice = product.price;
 
     function updatePrice() {
-      quantityInput.value = count;
-      const total = basePrice * count;
-      totalPriceEl.innerText = total.toLocaleString() + '원';
+      if(quantityInput) quantityInput.value = count;
+      if(totalPriceEl) totalPriceEl.innerText = (basePrice * count).toLocaleString() + '원';
     }
 
     updatePrice();
 
-    // + 버튼 클릭 시 (수량만 1 증가)
-    btnPlus.addEventListener('click', () => {
-      count++;
-      updatePrice();
-    });
+    if(btnPlus) btnPlus.addEventListener('click', () => { count++; updatePrice(); });
+    if(btnMinus) btnMinus.addEventListener('click', () => { if (count > 1) { count--; updatePrice(); } });
 
-    // - 버튼 클릭 시 (수량만 1 감소)
-    btnMinus.addEventListener('click', () => {
-      if (count > 1) {
-        count--;
-        updatePrice();
-      }
-    });
-
-    // ★ 5. 장바구니 및 바로구매 버튼 (id로 정확히 지정) ★
+    // 3) ★ 장바구니 버튼 클릭 이벤트 (여기가 핵심) ★
     const cartBtn = document.getElementById('btnCart');
     const buyBtn = document.getElementById('btnBuy');
 
-    // 장바구니 버튼 클릭 이벤트
     if (cartBtn) {
       cartBtn.addEventListener('click', () => {
+        let cart = [];
+        try {
+          const raw = localStorage.getItem('cartList');
+          cart = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(cart)) cart = [];
+        } catch(e) {
+          cart = [];
+        }
+
+        const existingIndex = cart.findIndex(item => item.id === product.id);
+
+        if (existingIndex > -1) {
+          cart[existingIndex].qty += count;
+        } else {
+          cart.push({
+            id: product.id,
+            brand: product.brand,
+            title: product.title,
+            price: product.price,
+            mainImg: product.mainImg,
+            qty: count
+          });
+        }
+
+        localStorage.setItem('cartList', JSON.stringify(cart));
+
         if (confirm('장바구니에 상품을 담았습니다. 장바구니 페이지로 이동하시겠습니까?')) {
-          window.location.href = `cart.html?id=${productId}&qty=${count}`;
+          window.location.href = 'cart.html';
         }
       });
     }
 
-    // 바로구매 버튼 클릭 이벤트
     if (buyBtn) {
       buyBtn.addEventListener('click', () => {
-        window.location.href = `buy.html?id=${productId}&qty=${count}`;
+        window.location.href = `buy.html?id=${product.id}&qty=${count}`;
       });
     }
 
   } else {
-    alert('상품 정보를 찾을 수 없습니다.');
+    alert('상품 정보(data.js)를 불러올 수 없습니다.');
   }
 </script>
+
+<!-- 3. 공통 헤더 및 로고 스크립트는 맨 마지막에 고정 -->
+<script src="script.js"></script>
 
 </body>
 </html>

@@ -401,4 +401,4 @@ const products = [
   shipping: "3,000원",
   origin: "일본"
   },
-  ] 
+  ]
