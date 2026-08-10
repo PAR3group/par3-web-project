@@ -1,0 +1,125 @@
+From 8256f2dc4b03b30a64c79d108dddd764bdb94870 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 10 Aug 2026 02:24:30 +0000
+Subject: [PATCH] =?UTF-8?q?=EC=83=B5=20=EB=A9=94=EC=9D=B8=ED=8E=98?=
+ =?UTF-8?q?=EC=9D=B4=EC=A7=80=20=EB=A1=9C=EA=B3=A0=20=EB=85=B8=EC=B6=9C=20?=
+ =?UTF-8?q?=EB=B0=8F=20=EC=9E=A5=EB=B0=94=EA=B5=AC=EB=8B=88/=EC=A3=BC?=
+ =?UTF-8?q?=EB=AC=B8=EA=B2=B0=EC=A0=9C=20=ED=8E=98=EC=9D=B4=EC=A7=80=20?=
+ =?UTF-8?q?=EB=92=A4=EB=A1=9C=EA=B0=80=EA=B8=B0=20=EB=B2=84=ED=8A=BC=20?=
+ =?UTF-8?q?=EC=B6=94=EA=B0=80?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+- shop.html: JS에서 참조만 하던 logoContainer 요소가 없어 로고가 표시되지
+  않던 문제를 수정하고, 검색창 라인 좌측에 배치
+- shop_cart.html, shop_buy.html: 뒤로가기 버튼 추가, 평소에는 기존 색상을
+  유지하고 hover 시 주문하기 버튼과 동일한 색상(#1b4332)으로 전환
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_018drsQS89qVoThtVtpDyEud
+---
+ par3/templates/shop/shop.html      | 29 ++++++++++++++++++++++-------
+ par3/templates/shop/shop_buy.html  |  5 +++++
+ par3/templates/shop/shop_cart.html |  5 +++++
+ 3 files changed, 32 insertions(+), 7 deletions(-)
+
+diff --git a/par3/templates/shop/shop.html b/par3/templates/shop/shop.html
+index 74369c9..5a766d6 100644
+--- a/par3/templates/shop/shop.html
++++ b/par3/templates/shop/shop.html
+@@ -68,10 +68,22 @@
+         /* 검색 영역 */
+         .search-bar-container {
+             display: flex;
+-            justify-content: flex-end;
++            justify-content: space-between;
++            align-items: center;
+             margin: 25px 0;
+         }
+ 
++        .shop-logo {
++            display: inline-flex;
++            align-items: center;
++            cursor: pointer;
++        }
++
++        .search-bar-right {
++            display: flex;
++            align-items: center;
++        }
++
+         .search-bar {
+             display: flex;
+             gap: 5px;
+@@ -332,12 +344,15 @@
+     <div class="container">
+         <!-- 검색창 -->
+         <div class="search-bar-container">
+-            {% if g.user and g.user.is_admin %}
+-            <a href="{{ url_for('shop.manage_products') }}" class="btn-nav" style="margin-right: 10px;">상품 관리</a>
+-            {% endif %}
+-            <div class="search-bar">
+-                <input type="text" id="searchInput" placeholder="상품검색">
+-                <button type="button" id="searchBtn">검색</button>
++            <a href="javascript:void(0)" id="logoContainer" class="shop-logo"></a>
++            <div class="search-bar-right">
++                {% if g.user and g.user.is_admin %}
++                <a href="{{ url_for('shop.manage_products') }}" class="btn-nav" style="margin-right: 10px;">상품 관리</a>
++                {% endif %}
++                <div class="search-bar">
++                    <input type="text" id="searchInput" placeholder="상품검색">
++                    <button type="button" id="searchBtn">검색</button>
++                </div>
+             </div>
+         </div>
+ 
+diff --git a/par3/templates/shop/shop_buy.html b/par3/templates/shop/shop_buy.html
+index 8142b28..3b51d4c 100644
+--- a/par3/templates/shop/shop_buy.html
++++ b/par3/templates/shop/shop_buy.html
+@@ -56,6 +56,9 @@
+         .btn-pay { width: 100%; padding: 16px; background-color: #1b4332; color: #fff; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; }
+         .btn-pay:hover { background-color: #2d6a4f; }
+ 
++        .btn-back { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 999px; color: #333; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 20px; transition: background-color 0.2s, border-color 0.2s, color 0.2s; }
++        .btn-back:hover { background-color: #1b4332; border-color: #1b4332; color: #fff; }
++
+         @media (max-width: 768px) {
+             .checkout-layout { grid-template-columns: 1fr; }
+         }
+@@ -68,6 +71,8 @@
+     <div class="page-title">주문 / 결제</div>
+         </header>
+ 
++        <button type="button" class="btn-back" onclick="history.back()">&lsaquo; 뒤로가기</button>
++
+         <div class="checkout-layout">
+             <!-- Left: Delivery & Payment Options -->
+             <div>
+diff --git a/par3/templates/shop/shop_cart.html b/par3/templates/shop/shop_cart.html
+index 15c2a64..b50dcfc 100644
+--- a/par3/templates/shop/shop_cart.html
++++ b/par3/templates/shop/shop_cart.html
+@@ -48,6 +48,9 @@
+         .btn-checkout:disabled { background-color: #ccc; cursor: not-allowed; }
+         .btn-continue { width: 100%; padding: 12px; background: #fff; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; margin-top: 8px; cursor: pointer; text-align: center; text-decoration: none; display: block; color: #333; }
+ 
++        .btn-back { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 999px; color: #333; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 20px; transition: background-color 0.2s, border-color 0.2s, color 0.2s; }
++        .btn-back:hover { background-color: #1b4332; border-color: #1b4332; color: #fff; }
++
+         @media (max-width: 768px) {
+             .cart-layout { grid-template-columns: 1fr; }
+         }
+@@ -60,6 +63,8 @@
+     <div class="page-title">장바구니</div>
+         </header>
+ 
++        <button type="button" class="btn-back" onclick="history.back()">&lsaquo; 뒤로가기</button>
++
+         <div class="cart-layout">
+             <!-- Left: Item List -->
+             <div>
+-- 
+2.43.0
+

@@ -48,6 +48,9 @@
         .btn-checkout:disabled { background-color: #ccc; cursor: not-allowed; }
         .btn-continue { width: 100%; padding: 12px; background: #fff; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; margin-top: 8px; cursor: pointer; text-align: center; text-decoration: none; display: block; color: #333; }
 
+        .btn-back { display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background: #fff; border: 1px solid #ccc; border-radius: 999px; color: #333; font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 20px; transition: background-color 0.2s, border-color 0.2s, color 0.2s; }
+        .btn-back:hover { background-color: #1b4332; border-color: #1b4332; color: #fff; }
+
         @media (max-width: 768px) {
             .cart-layout { grid-template-columns: 1fr; }
         }
@@ -59,6 +62,8 @@
     <a href="{{ url_for('shop.main') }}" id="logoContainer" style="text-decoration: none; display: inline-block;"></a>
     <div class="page-title">장바구니</div>
         </header>
+
+        <button type="button" class="btn-back" onclick="history.back()">&lsaquo; 뒤로가기</button>
 
         <div class="cart-layout">
             <!-- Left: Item List -->
@@ -213,8 +218,8 @@
 
         recalcTotals();
 
-        // ★ 로고 파일(shop_logo.html) 불러와서 삽입 ★
-        fetch('/static/logo/shop_logo.html')
+        // ★ 로고 파일(main1111.html) 불러와서 삽입 ★
+        fetch('/static/logo/main1111.html')
             .then(response => response.text())
             .then(data => {
                 const logoContainer = document.getElementById('logoContainer');
@@ -222,6 +227,5 @@
             })
             .catch(error => console.error('로고 로드 오류:', error));
     </script>
-    <script src="{{ url_for('static', filename='js/shop_side_banner.js') }}"></script>
 </body>
 </html>
