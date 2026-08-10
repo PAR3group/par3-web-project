@@ -12,7 +12,10 @@ PAR3 - JOIN APPLY
 <div class="p_join_apply">
 
   <div class="ja_head">
-    <h1 class="ja_title">⛳ JOIN 신청하기</h1>
+    <h1 class="ja_title">
+      <img src="{{ url_for('static', filename='img/join_imgs/join_icon.svg') }}" alt="" class="j_title_icon">
+    Join Create
+    </h1>
   </div>
 
   <form class="g_form" action="/join/apply/{{ join.id }}" method="POST" data-max-companions="{{ max_companions }}">
@@ -127,14 +130,14 @@ PAR3 - JOIN APPLY
       <div class="g_form_row">
         <label class="g_form_label">제목</label>
         <div class="g_form_input">
-          <input type="text" class="g_form_input--text" value="{{ join.title }}" readonly>
+          <input type="text" class="g_form_input--text jc_no_bg" value="{{ join.title }}" readonly>
         </div>
       </div>
 
       <div class="g_form_row">
         <label class="g_form_label">내용</label>
         <div class="g_form_input">
-          <textarea class="g_form_input--textarea" readonly>{{ join.content }}</textarea>
+          <textarea class="g_form_input--textarea jc_no_bg"" readonly>{{ join.content }}</textarea>
         </div>
       </div>
     </div>

@@ -9,7 +9,8 @@ PAR3 - JOIN CREATE
 
   <!-- jc_head : 페이지 타이틀 영역 (join.html의 j_head와 동일 톤) -->
   <div class="jc_head">
-    <h1 class="jc_title">⛳Join Create </h1>
+    <h1 class="jc_title"><img src="{{ url_for('static', filename='img/join_imgs/join_icon.svg') }}" alt="" class="j_title_icon">
+        Join </h1>
     <p class="jc_subtitle">라운딩 멤버를 모집해보세요.</p>
   </div>
 
@@ -73,7 +74,7 @@ PAR3 - JOIN CREATE
           <div class="jc_date_wrap">
             <span class="jc_date_icon"></span>
             <input type="text" class="g_form_input--date" id="round_date_picker" name="round_date"
-              placeholder="0000-00-0" autocomplete="off" required>
+              placeholder="0000-00-00" autocomplete="off" required>
           </div>
         </div>
       </div>
