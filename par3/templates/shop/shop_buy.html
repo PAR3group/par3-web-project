@@ -1,71 +1,262 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PAR3 - 주문/결제</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; color: #333; }
-        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
         /* Header */
-        header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 2px solid #1b4332; margin-bottom: 30px; }
-        .logo { font-size: 24px; font-weight: 800; color: #1b4332; text-decoration: none; }
-        .page-title { font-size: 22px; font-weight: bold; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #1b4332;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1b4332;
+            text-decoration: none;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: bold;
+        }
 
         /* Grid Layout */
-        .checkout-layout { display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 30px; }
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1.8fr 1.2fr;
+            gap: 30px;
+        }
 
         /* Section Cards */
-        .section-card { background: #fff; border-radius: 8px; padding: 25px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
-        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #222; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
+        .section-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #222;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
 
         /* Form Inputs */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 13px; font-weight: bold; color: #666; margin-bottom: 5px; }
-        .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .form-group {
+            margin-bottom: 15px;
+        }
 
-        .form-row { display: flex; gap: 10px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+        }
 
         /* Order Product Item */
-        .order-item { display: flex; align-items: center; gap: 15px; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
-        .order-item:last-child { border-bottom: none; }
-        .order-item img { width: 70px; height: 70px; object-fit: contain; border: 1px solid #eee; border-radius: 6px; }
-        .item-details { flex-grow: 1; }
-        .item-brand { font-size: 11px; color: #888; font-weight: bold; }
-        .item-title { font-size: 14px; font-weight: bold; }
-        .item-qty { font-size: 13px; color: #666; margin-top: 3px; }
-        .item-price { font-weight: bold; font-size: 15px; }
+        .order-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
 
-        .btn-autofill { padding: 8px 14px; background: #fff; color: #1b4332; border: 1px solid #1b4332; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; }
-        .btn-autofill:hover { background-color: #e8f5e9; }
-        .section-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
-        .section-title-row .section-title { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            border: 1px solid #eee;
+            border-radius: 6px;
+        }
+
+        .item-details {
+            flex-grow: 1;
+        }
+
+        .item-brand {
+            font-size: 11px;
+            color: #888;
+            font-weight: bold;
+        }
+
+        .item-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .item-qty {
+            font-size: 13px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .item-price {
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .btn-autofill {
+            padding: 8px 14px;
+            background: #fff;
+            color: #1b4332;
+            border: 1px solid #1b4332;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-autofill:hover {
+            background-color: #e8f5e9;
+        }
+
+        .section-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .section-title-row .section-title {
+            margin-bottom: 0;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
 
         /* Payment Options */
-        .pay-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .pay-btn { padding: 12px; border: 1px solid #ccc; background: #fff; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; text-align: center; }
-        .pay-btn.active { border-color: #1b4332; background-color: #e8f5e9; color: #1b4332; }
+        .pay-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .pay-btn {
+            padding: 12px;
+            border: 1px solid #ccc;
+            background: #fff;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .pay-btn.active {
+            border-color: #1b4332;
+            background-color: #e8f5e9;
+            color: #1b4332;
+        }
 
         /* Summary Box */
-        .summary-card { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); position: sticky; top: 20px; }
-        .summary-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 15px; color: #555; }
-        .summary-row.total { font-size: 20px; font-weight: bold; color: #e63946; border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px; }
+        .summary-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            position: sticky;
+            top: 20px;
+        }
 
-        .btn-pay { width: 100%; padding: 16px; background-color: #1b4332; color: #fff; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px; }
-        .btn-pay:hover { background-color: #2d6a4f; }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .summary-row.total {
+            font-size: 20px;
+            font-weight: bold;
+            color: #e63946;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 16px;
+            background-color: #1b4332;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .btn-pay:hover {
+            background-color: #2d6a4f;
+        }
 
         @media (max-width: 768px) {
-            .checkout-layout { grid-template-columns: 1fr; }
+            .checkout-layout {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <header>
-    <a href="{{ url_for('shop.main') }}" id="logoContainer" style="text-decoration: none; display: inline-block;"></a>
-    <div class="page-title">주문 / 결제</div>
+            <a href="{{ url_for('shop.main') }}" id="logoContainer"
+                style="text-decoration: none; display: inline-block;"></a>
+            <div class="page-title">주문 / 결제</div>
         </header>
 
         <div class="checkout-layout">
@@ -133,11 +324,10 @@
             </div>
         </div>
     </div>
-
-<<<<<<< HEAD:par3/templates/shop/shop_buy.html
+    <script src="data.js"></script>
     <script>
-        const orderItems = {{ order_items|tojson }};
-        const shippingInfo = {{ shipping_info|tojson }};
+        const orderItems = {{ order_items| tojson }};
+        const shippingInfo = {{ shipping_info| tojson }};
 
         if (!orderItems || orderItems.length === 0) {
             alert('주문할 상품 정보를 찾을 수 없습니다.');
@@ -161,9 +351,7 @@
                 <div class="item-price">${(item.price * item.quantity).toLocaleString()} 원</div>
             </div>
         `).join('');
-=======
-<script src="data.js"></script>
-    <script>
+
         // 스타일 주입
         const fixStyle = document.createElement('style');
         fixStyle.innerHTML = `
@@ -178,13 +366,11 @@
             }
         `;
         document.head.appendChild(fixStyle);
->>>>>>> e12c9f7d270ea3ba69ef1766936cd673097e282e:p3shop/buy.html
 
         const urlParams = new URLSearchParams(window.location.search);
         const directId = urlParams.get('id');
         const directQty = parseInt(urlParams.get('qty')) || 1;
 
-<<<<<<< HEAD:par3/templates/shop/shop_buy.html
         // 회원 정보로 배송지 자동입력
         const btnAutofill = document.getElementById('btnAutofill');
         if (btnAutofill && shippingInfo) {
@@ -218,7 +404,6 @@
 
         // ★ 로고 파일(main1111.html) 불러와서 삽입 ★
         fetch('/static/logo/main1111.html')
-=======
         let orderItems = [];
         let isDirectBuy = false;
 
@@ -286,12 +471,12 @@
             const grandTotal = subTotal + shipping;
 
             document.getElementById('orderItemBox').innerHTML = orderItemHTML;
-            if(document.getElementById('buySubTotal')) document.getElementById('buySubTotal').innerText = subTotal.toLocaleString() + ' 원';
-            if(document.getElementById('buyShipping')) document.getElementById('buyShipping').innerText = shipping === 0 ? '무료배송' : shipping.toLocaleString() + ' 원';
-            if(document.getElementById('buyGrandTotal')) document.getElementById('buyGrandTotal').innerText = grandTotal.toLocaleString() + ' 원';
+            if (document.getElementById('buySubTotal')) document.getElementById('buySubTotal').innerText = subTotal.toLocaleString() + ' 원';
+            if (document.getElementById('buyShipping')) document.getElementById('buyShipping').innerText = shipping === 0 ? '무료배송' : shipping.toLocaleString() + ' 원';
+            if (document.getElementById('buyGrandTotal')) document.getElementById('buyGrandTotal').innerText = grandTotal.toLocaleString() + ' 원';
         }
 
-        window.removeOrderItem = function(index) {
+        window.removeOrderItem = function (index) {
             if (confirm('이 상품을 주문 목록에서 제외하시겠습니까?')) {
                 orderItems.splice(index, 1);
                 saveCartList(orderItems);
@@ -299,7 +484,7 @@
             }
         };
 
-        window.selectPay = function(element) {
+        window.selectPay = function (element) {
             document.querySelectorAll('.pay-btn').forEach(btn => btn.classList.remove('active'));
             element.classList.add('active');
         };
@@ -317,10 +502,10 @@
                 const grandTotal = subTotal + shipping;
 
                 alert(`${grandTotal.toLocaleString()}원 결제가 완료되었습니다. 주문해 주셔서 감사합니다!`);
-                
+
                 // 장바구니 주문이었을 때만 장바구니 비우기 (바로구매는 장바구니에 영향 없음)
                 if (!isDirectBuy) {
-                    localStorage.setItem('cartList', JSON.stringify([])); 
+                    localStorage.setItem('cartList', JSON.stringify([]));
                 }
 
                 window.location.href = 'shop.html';
@@ -330,7 +515,6 @@
         renderOrderPage();
 
         fetch('main1111.html')
->>>>>>> e12c9f7d270ea3ba69ef1766936cd673097e282e:p3shop/buy.html
             .then(response => response.text())
             .then(data => {
                 const logoContainer = document.getElementById('logoContainer');
@@ -340,4 +524,5 @@
     </script>
     <script src="script.js"></script>
 </body>
+
 </html>
