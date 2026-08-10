@@ -22,7 +22,7 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 /* ===== ja_head : 페이지 상단 타이틀 영역 (jc_head와 동일 톤) ===== */
 .ja_head { margin-bottom: 24px; }
 .ja_title {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
   color: #030b05;
   display: flex;
@@ -68,6 +68,7 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 .g_form_row {
   display: flex;
   border-bottom: 1px solid #eceef1;
+  align-items: stretch;
 }
 .g_form_row:last-child {
   border-bottom: none;
@@ -88,6 +89,8 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   flex: 1;
   padding: 14px 16px;
   font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .g_form_input--text,
@@ -108,8 +111,12 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 .g_form_input--text[readonly] {
   background: #f7f7f7;
   color: #6b7280;
+  font-size: 13px;
   font-weight: 600;
   padding: 4px;
+  align-items: center;
+  min-height: 100%;
+  display: flex;
 }
 
 .g_form_input--radio {
@@ -204,14 +211,23 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 }
 
 .ja_card_field {
-  flex: 1;
+  /* flex: 1; */
   padding: 10px 14px;
   display: flex;
   flex-direction: column;
   gap: 4px;
+  box-sizing: border-box;
+  min-width: 0;
+
 }
 .ja_card_field:first-child {
   border-right: 1px solid #eceef1;
+  flex: 0 0 160px;
+  width: 160px;
+}
+
+.ja_card_field:last-child {
+  flex: 1;
 }
 
 .ja_card_label {
@@ -293,9 +309,12 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   min-height: 60px;
   overflow: hidden;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   padding: 4px;
   box-sizing: border-box;
+}
+.jc_no_bg {
+  background: transparent !important;
 }
 
 /* ===== ja_actions : 취소하기 + 신청하기 버튼 가로 배치 ===== */
@@ -330,7 +349,7 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 
 .ja_apply_bt {
   flex: 2;
-  background: linear-gradient(135deg, #14a455, #05ac4f);
+  background: linear-gradient(135deg, #094825, #1ccc28);
   color: #fff;
   padding: 14px;
   border-radius: 12px;
@@ -340,7 +359,8 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   cursor: pointer;
   transition: opacity 0.15s;
 }
-.ja_apply_bt:hover { opacity: 0.9; }
+.ja_apply_bt:hover { opacity: 0.9;
+  background: linear-gradient(135deg, #094825, #1ccc28); }
 
 /* ============================================
    반응형
@@ -358,5 +378,23 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   .ja_title { font-size: 22px; }
   .g_form_section_title { font-size: 13px; padding: 10px 14px; }
   .g_form_label, .g_form_input { padding: 12px 14px; }
+  
+  .ja_card_field {
+    gap: 4px;   /* 4px → 8px, 라벨과 값 사이 간격 넓힘 */
+  }
+  .ja_card_label {
+    margin-bottom: 2px;
+    display: block;
+  }
+  
+  .ja_card_field:first-child {
+    flex: 0 0 90px;
+    width: 90px;
+  }
+
+  .ja_card_field:last-child {
+    flex: 1;
+  }
   .ja_actions { flex-direction: column; }
+
 }

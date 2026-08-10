@@ -223,12 +223,29 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 .j_tabs {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 24px;
   border-bottom: 1px solid #e4e6ea;
   padding-bottom: 12px;
   padding-left: 20px;
   margin-bottom: 20px;
 }
+
+.j_tabs_left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+  /* 
+  .j_tabs {display: flex;
+  align-items: center;
+  gap: 30px;
+  border-bottom: 1px solid #e4e6ea;
+  padding-bottom: 12px;
+  padding-left: 20px;
+  margin-bottom: 20px;
+} */
+
 .j_tab {
   font-size: 14px;
   color: #9099a8;
@@ -552,21 +569,128 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 
 /* 480px 이하 : 카드 padding 줄임 */
 @media (max-width: 480px) {
-  .jt_row { padding: 12px 14px; }
+  .jt_row { padding: 12px}
   .jt_thumb { width: 72px; height: 72px; }
   .jt_join_bt {
-    width: 84px;      /* 모바일에서는 살짝 줄임 */
     padding: 8px 12px;
     font-size: 12px;
   }
+
+  /* ===== 참가자/작성자 블록 안 내용물 가운데 정렬 ===== */
+  .jt_price_wrap {
+    text-align: center;
+  }
+  .jt_participants {
+    justify-content: center;
+  }
+  .jt_writer_info {
+    align-items: center;
+  }
+
+  /* ===== 하트 + 참여하기 : 하트 고정, 버튼이 나머지 폭 다 채움 ===== */
+  .jt_actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .jt_heart_bt {
+    flex-shrink: 0;
+  }
+  .jt_join_bt {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* ===== 필터바 : 좁아지면 자연스럽게 줄바꿈 ===== */
+  .j_filter_bar {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .j_dropdown {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .j_dropdown_bt {
+    padding: 8px 8px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  .j_filter_bar_divider {
+    display: none;
+  }
+  .j_filter_search_wrap {
+    flex-basis: 100%;
+    order: 3;
+    margin-top: 4px;
+  }
+  .jt_write_bt {
+    order: 4;
+    flex-basis: 100%;
+    margin-top: 6px;
+    justify-content: center;
+  }
+
+  /* ===== 정렬 탭 : 왼쪽 그룹 + 오른쪽 완료팀제외 고정 ===== */
+  .j_tabs {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 4px 4px 4px 0;
+  }
+
+  .j_tabs_left {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .j_tab {
+    display: flex;
+    align-items: center;
+    height: 28px;
+    font-size: 12px;
+    padding: 0 8px;
+    margin-bottom: 0;
+    white-space: nowrap;
+    line-height: 1;
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
+  .j_tab--active::after {
+    bottom: 0;
+  }
+
+  .j_exclude_full {
+    display: flex;
+    align-items: center;
+    height: 28px;
+    font-size: 11px;
+    white-space: nowrap;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-left: auto;
+    padding-left: 8px;
+    border-left: 1px solid #e4e6ea;
+    box-sizing: border-box;
+  }
+
+  .j_toggle {
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
+
 /* ===== 더 많은 조인 글 보기 (페이지네이션/더보기, 추후 기능 연결 예정) ===== */
-/* ===== 더 많은 조인 글 보기 =====
-   j_table_body 바로 아래 붙도록 여백 축소 + hover 효과 + 화살표 정리 */
 .j_load_more {
   text-align: center;
-  margin-top: 2px;   /* 더 위로 붙임 */
+  margin-top: 2px;
 }
 .j_load_more span {
   display: inline-flex;
@@ -581,7 +705,6 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   border: 1px solid transparent;
   transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
 }
-/* hover 시 join 페이지 톤(딥그린 계열)으로 반응 */
 .j_load_more span:hover {
   background: #eaf2ee;
   border-color: #39e07a;
@@ -589,8 +712,6 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   transform: translateY(-1px);
 }
 
-/* 화살표 아이콘 - 텍스트 옆에서 자연스러운 "아래 방향" 꺾쇠 모양 */
-/* 더보기 아이콘 - 작고 귀여운 아래방향 화살표(V자 꺾쇠) */
 .j_load_more_icon {
   width: 6px;
   height: 6px;

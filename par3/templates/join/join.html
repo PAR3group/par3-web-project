@@ -88,10 +88,12 @@ PAR3 - JOIN
   </div>
 
   <div class="j_tabs">
-    <div class="j_tab j_tab--active" id="j_tab_all">전체</div>
-    <div class="j_tab" id="j_tab_date">날짜순</div>
-    <div class="j_tab" id="j_tab_price" data-order="asc">가격순</div>
-    <div class="j_tab" id="j_tab_urgent">마감임박순</div>
+    <div class="j_tabs_left">
+      <div class="j_tab j_tab--active" id="j_tab_all">전체</div>
+      <div class="j_tab" id="j_tab_date">날짜순</div>
+      <div class="j_tab" id="j_tab_price" data-order="asc">가격순</div>
+      <div class="j_tab" id="j_tab_urgent">마감임박순</div>
+    </div>
 
     <label class="j_exclude_full">
       <span class="j_toggle">
@@ -135,7 +137,7 @@ PAR3 - JOIN
           <span class="jt_course_badge">{{ join.course_info }}</span>
         </div>
         <div class="jt_info_sub">
-          <span>{{ join.tee_time }} 티업</span>
+          <span>{{ join.tee_time }} 티오프</span>
           <span>📍{{ join.region }}</span>
         </div>
       </div>

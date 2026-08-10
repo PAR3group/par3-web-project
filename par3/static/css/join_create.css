@@ -24,13 +24,23 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 /* ===== jc_head : 페이지 상단 타이틀 영역 ===== */
 .jc_head { margin-bottom: 24px; }
 .jc_title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #16233f;
+  font-size: 28px;
+  font-weight: 800;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;    /* 자간 간격 */
+  color: #0c1c3e;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
+
+.j_title_icon {
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  margin-right: -4px;
+}
+
 .jc_subtitle {
   font-size: 13px;
   color: #8a93a3;
@@ -162,7 +172,7 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   left: 0;
   width: 16px;
   height: 13px;
-  border: 1.5px solid #9099a8;
+  border: 1.5px solid #3f9a92;
   border-radius: 2px;
 }
 .jc_date_icon::after {
@@ -172,12 +182,12 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   left: 3px;
   width: 10px;
   height: 4px;
-  border-left: 1.5px solid #9099a8;
-  border-right: 1.5px solid #9099a8;
+  border-left: 1.5px solid #3f9a92;
+  border-right: 1.5px solid #3f9a92;
 }
 
 .g_form_input--date {
-  padding-left: 24px;
+  padding-left: 28px;
 }
 
 /* ============================================
@@ -194,7 +204,7 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   width: 50%;
 }
 .jc_field_half:first-child {
-  border-right: 1px solid #eceef1;
+  border-right: 1px solid #f0f2f4;
 }
 
 /* .jc_field_half .g_form_label {
@@ -222,9 +232,9 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   position: absolute;
   top: 1px;
   left: 1px;
-  width: 14px;
-  height: 14px;
-  border: 1.5px solid #9099a8;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #3f9a92;
   border-radius: 50%;
 }
 .jc_time_icon::after {
@@ -234,12 +244,12 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   left: 8px;
   width: 4px;
   height: 5px;
-  border-right: 1.5px solid #9099a8;
-  border-top: 1.5px solid #9099a8;
+  border-right: 1.5px solid #3f9a92;
+  border-top: 1.5px solid #3f9a92;
   transform: rotate(20deg);
 }
 .g_form_input--time {
-  padding-left: 24px;
+  padding-left: 28px;
 }
 
 /* ============================================
@@ -373,19 +383,34 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   justify-content: center;
   gap: 6px;
   width: 100%;
-  margin-top: 8px;
-  background: linear-gradient(135deg, #3f9a92, #0f6e56);
+  margin-top: 12px;
+  background: linear-gradient(135deg, #3f9a92 0%, #0f6e56 60%, #0c5a46 100%);
   color: #fff;
   padding: 14px;
-  border-radius: 12px;
+  border-radius: 14px;
   border: none;
   font-weight: 700;
   font-size: 15px;
+  letter-spacing: 0.3px;
   cursor: pointer;
-  transition: opacity 0.15s;
+  box-shadow: 0 4px 12px rgba(15, 110, 86, 0.25);
+  transition: box-shadow 0.15s, transform 0.15s, opacity 0.15s;
 }
 .jc_submit_bt:hover {
-  opacity: 0.9;
+  box-shadow: 0 8px 20px rgba(15, 110, 86, 0.32);
+  transform: translateY(-2px);
+}
+
+.jc_submit_bt:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(15, 110, 86, 0.25);
+}
+
+/* ===== jc_required_mark ===== */
+.jc_required_mark {
+  color: #ef4444;
+  font-weight: 700;
+  margin-left: 4px;
 }
 
 /* ============================================
