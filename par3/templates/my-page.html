@@ -2,45 +2,20 @@
 
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/my-page.css') }}">
-<style>
-    /* 프로필 박스 및 연필 버튼 정렬 */
-    .avatar-box {
-        position: relative;
-        width: 120px;
-        height: 120px;
-        margin: 0 auto 14px;
-    }
-    .avatar-box img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 3px solid #10b981;
-    }
-    .btn-avatar-edit {
-        position: absolute;
-        bottom: 2px;
-        right: 2px;
-        background: transparent !important;
-        border: none !important;
-        cursor: pointer !important;
-        font-size: 22px !important;
-        z-index: 99 !important;
-        line-height: 1;
-        padding: 2px;
-        user-select: none;
-    }
-    .btn-avatar-edit:hover {
-        transform: scale(1.2);
-    }
-</style>
+
+<!-- 1. 국가코드 검색용 TomSelect 라이브러리 추가 -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="naver-id-layout">
-    <!-- 전체를 하나의 FORM으로 감싸서 완벽 제출 -->
-    <form id="profile-form" action="/update-profile" method="POST" enctype="multipart/form-data" style="display: flex; width: 100%;">
+    <!-- 전체 사이드바와 메인 콘텐츠를 감싸는 FORM -->
+    <form id="profile-form" action="{{ url_for('mypage.update_profile') }}" method="POST" enctype="multipart/form-data">
         
+        <!-- 백엔드(update_profile) 전송용 이메일 숨김 필드 -->
+        <input type="hidden" id="email-full" name="email" value="{{ profile.email }}">
+
         <!-- 좌측 사이드바 영역 -->
         <aside class="sidebar">
             <div class="brand-logo">
@@ -50,22 +25,21 @@
             <!-- 프로필 사진 카드 -->
             <div class="profile-card">
                 <div class="avatar-box">
-                    <img id="profile-preview" src="{{ profile.profile_img }}" alt="프로필 사진">
-                    <!-- 연필 버튼 클릭 시 파일 창 열림 -->
+                    <img id="profile-preview" src="{{ profile.profile_img }}" alt="프로필 사진" onclick="openProfileImageModal(this.src)" title="사진 크게 보기">
                     <label for="avatar-input" class="btn-avatar-edit" title="사진 변경">✏️</label>
-                    <!-- 표준 파일 업로드 input (form 내부에 위치) - 선택 즉시 자동 업로드/저장됨 -->
                     <input type="file" id="avatar-input" name="avatar_file" accept="image/*" style="display: none;">
                 </div>
-                <button type="button" id="btn-reset-avatar" class="btn-avatar-reset">기본 이미지로 변경</button>
-                <h3 class="user-nickname">{{ profile.nickname }}</h3>
+                <p class="user-nickname">{{ profile.nickname }}</p>
             </div>
-
+            
             <!-- 최근 활동 내역 -->
             <div class="recent-activities-box">
                 <div class="recent-title">💬 최근 활동 내역</div>
                 <ul class="recent-activity-list">
                     {% for act in profile.recent_activities %}
                     <li>{{ act }}</li>
+                    {% else %}
+                    <li>최근 활동 내역이 없습니다.</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -82,6 +56,7 @@
 
         <!-- 우측 메인 콘텐츠 영역 -->
         <main class="content-area">
+            <!-- 내프로필 카드 -->
             <section id="sec-profile" class="clean-card">
                 <div class="card-header">
                     <h3>내프로필</h3>
@@ -89,40 +64,82 @@
                 <div class="card-body">
                     <div class="info-table">
                         
+                        <!-- 아이디 행 -->
                         <div class="info-row">
                             <div class="info-label">👤 아이디</div>
                             <div class="info-value">
-                                <input type="text" name="user_id" value="{{ profile.user_id }}" readonly class="gray-readonly-input">
+                                <input type="text" name="user_id" value="{{ profile.user_id }}" readonly class="id-readonly-input">
                             </div>
                         </div>
-                        
-                        <div class="info-row pw-row">
+
+                        <!-- 비밀번호 행 -->
+                        <div class="info-row">
                             <div class="info-label">🔒 비밀번호</div>
                             <div class="info-value pw-value-group">
                                 <input type="password" value="********" readonly class="gray-readonly-input">
-                                <div class="pw-btn-wrapper">
-                                    <a href="/reset-password" class="btn-pw-edit-green">수정</a>
+                                <a href="{{ url_for('mypage.reset_password') }}" class="btn-pw-edit-green">수정</a>
+                            </div>
+                        </div>
+
+                        <!-- 이메일 행 -->
+                        <div class="info-row">
+                            <div class="info-label">📧 이메일</div>
+                            <div class="info-value email-value-group">
+                                {% set email_parts = profile.email.split('@') if profile.email and '@' in profile.email else ['', ''] %}
+                                
+                                <input type="text" id="email-id" value="{{ email_parts[0] }}" placeholder="이메일 아이디">
+                                <span class="email-at">@</span>
+                                
+                                <!-- 포개기 콤보 박스 -->
+                                <div class="select-input-combo">
+                                    <input type="text" id="email-domain" value="{{ email_parts[1] }}" placeholder="도메인 입력">
+                                    <select id="email-domain-select">
+                                        <option value="">직접입력</option>
+                                        <option value="naver.com">naver.com</option>
+                                        <option value="gmail.com">gmail.com</option>
+                                        <option value="daum.net">daum.net</option>
+                                        <option value="kakao.com">kakao.com</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="info-row">
-                            <div class="info-label">✉️ 이메일</div>
-                            <div class="info-value"><input type="email" name="email" value="{{ profile.email }}"></div>
-                        </div>
+                        <!-- 닉네임 행 -->
                         <div class="info-row">
                             <div class="info-label">🏷️ 닉네임</div>
                             <div class="info-value"><input type="text" name="nickname" value="{{ profile.nickname }}"></div>
                         </div>
+
+                        <!-- 이름 행 -->
                         <div class="info-row">
                             <div class="info-label">📛 이름</div>
                             <div class="info-value"><input type="text" name="name" value="{{ profile.name }}"></div>
                         </div>
+
+                        <!-- 휴대전화 행 (id="user-phone" 추가) -->
                         <div class="info-row">
-                            <div class="info-label">📱 휴대전화</div>
-                            <div class="info-value"><input type="tel" name="phone" value="{{ profile.phone }}"></div>
+                            <div class="info-label">📱 전화번호</div>
+                            <div class="info-value phone-value-group">
+                                <!-- 국가코드 검색 드롭다운 -->
+                                <select id="phone-country-code" name="country_code">
+                                    <option value="" {% if not profile.country_code %}selected{% endif %} disabled hidden>국가선택</option>
+                                    <option value="+82" {% if profile.country_code == '+82' %}selected{% endif %}>대한민국 (+82)</option>
+                                    <option value="+1" {% if profile.country_code == '+1' %}selected{% endif %}>미국/캐나다 (+1)</option>
+                                    <option value="+81" {% if profile.country_code == '+81' %}selected{% endif %}>일본 (+81)</option>
+                                    <option value="+86" {% if profile.country_code == '+86' %}selected{% endif %}>중국 (+86)</option>
+                                    <option value="+44" {% if profile.country_code == '+44' %}selected{% endif %}>영국 (+44)</option>
+                                    <option value="+49" {% if profile.country_code == '+49' %}selected{% endif %}>독일 (+49)</option>
+                                    <option value="+33" {% if profile.country_code == '+33' %}selected{% endif %}>프랑스 (+33)</option>
+                                    <option value="+84" {% if profile.country_code == '+84' %}selected{% endif %}>베트남 (+84)</option>
+                                </select>
+                                
+                                <!-- 전화번호 입력창 -->
+                                <input type="text" id="user-phone" name="phone" placeholder="010-0000-0000" maxlength="13" value="{{ profile.phone if profile.phone else '' }}">
+                            </div>
                         </div>
                         
+
+                        <!-- 성별 행 -->
                         <div class="info-row">
                             <div class="info-label">🚻 성별</div>
                             <div class="info-value gender-select-box">
@@ -135,6 +152,7 @@
                             </div>
                         </div>
 
+                        <!-- 구력 행 -->
                         <div class="info-row">
                             <div class="info-label">⛳ 구력</div>
                             <div class="info-value">
@@ -146,7 +164,8 @@
                                 </select>
                             </div>
                         </div>
-                        
+
+                        <!-- 집 주소 행 -->
                         <div class="info-row">
                             <div class="info-label">🏠 집 주소</div>
                             <div class="info-value address-group">
@@ -154,7 +173,7 @@
                                 <button type="button" id="btn-search-address" class="btn-address-change">변경</button>
                             </div>
                         </div>
-                        
+
                         <div class="card-action-row">
                             <button type="submit" class="btn-save">수정 정보 저장</button>
                         </div>
@@ -162,7 +181,7 @@
                 </div>
             </section>
 
-            <!-- 장비추천(채추천) 카드 -->
+            <!-- 피팅결과 카드 -->
             <section id="sec-equipment" class="clean-card">
                 <div class="card-header">
                     <h3>피팅결과</h3>
@@ -200,49 +219,62 @@
                     <h3>이력관리</h3>
                 </div>
                 <div class="card-body">
-                    <div class="activity-list">
-                        <div class="act-row">
-                            <div class="act-title">📝 작성한 게시글</div>
-                            <div class="act-action">
-                                <span class="act-num">{{ activity.posts_count }}개</span>
-                                <button type="button" class="btn-sub btn-act-check" data-type="posts">확인</button>
+                    <div class="activity-card-grid">
+                        
+                        <!-- 1. 커뮤니티 게시글 카드 (블루 톤) -->
+                        <div class="act-group-card blue-card">
+                            <div class="act-group-left">
+                                <span class="act-group-total">{{ activity.posts_count }}</span>
+                                <span class="act-group-label">게시글</span>
+                            </div>
+                            <div class="act-group-right">
+                                <div class="act-item-row btn-act-check" data-type="posts">
+                                    <span class="act-item-title">📝 작성한 게시글</span>
+                                    <span class="act-item-num">{{ activity.posts_count }}개</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="act-row">
-                            <div class="act-title">⭐ 골프조인 찜내역</div>
-                            <div class="act-action">
-                                <span class="act-num">{{ activity.join_likes_count }}건</span>
-                                <button type="button" class="btn-sub btn-act-check" data-type="join_likes">확인</button>
+
+                        <!-- 2. 골프조인 카드 (그린 톤) -->
+                        <div class="act-group-card green-card">
+                            <div class="act-group-left">
+                                <span class="act-group-total">{{ activity.join_likes_count + activity.join_posts_count + activity.join_participate_count }}</span>
+                                <span class="act-group-label">골프조인</span>
+                            </div>
+                            <div class="act-group-right">
+                                <div class="act-item-row btn-act-check" data-type="join_likes">
+                                    <span class="act-item-title">⭐ 찜 내역</span>
+                                    <span class="act-item-num">{{ activity.join_likes_count }}건</span>
+                                </div>
+                                <div class="act-item-row btn-act-check" data-type="join_posts">
+                                    <span class="act-item-title">⛳ 글올리기</span>
+                                    <span class="act-item-num">{{ activity.join_posts_count }}건</span>
+                                </div>
+                                <div class="act-item-row btn-act-check" data-type="join_participate">
+                                    <span class="act-item-title">🤝 참여 내역</span>
+                                    <span class="act-item-num">{{ activity.join_participate_count }}건</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="act-row">
-                            <div class="act-title">⛳ 골프조인 글올리기</div>
-                            <div class="act-action">
-                                <span class="act-num">{{ activity.join_posts_count }}건</span>
-                                <button type="button" class="btn-sub btn-act-check" data-type="join_posts">확인</button>
+
+                        <!-- 3. 쇼핑 카드 (핑크/레드 톤) -->
+                        <div class="act-group-card pink-card">
+                            <div class="act-group-left">
+                                <span class="act-group-total">{{ activity.shop_likes_count + activity.shop_orders_count }}</span>
+                                <span class="act-group-label">쇼핑</span>
+                            </div>
+                            <div class="act-group-right">
+                                <div class="act-item-row btn-act-check" data-type="shop_likes">
+                                    <span class="act-item-title">🛍️ 쇼핑 찜</span>
+                                    <span class="act-item-num">{{ activity.shop_likes_count }}개</span>
+                                </div>
+                                <div class="act-item-row btn-act-check" data-type="shop_orders">
+                                    <span class="act-item-title">📦 쇼핑 내역</span>
+                                    <span class="act-item-num">{{ activity.shop_orders_count }}회</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="act-row">
-                            <div class="act-title">🤝 골프조인 참여내역</div>
-                            <div class="act-action">
-                                <span class="act-num">{{ activity.join_participate_count }}건</span>
-                                <button type="button" class="btn-sub btn-act-check" data-type="join_participate">확인</button>
-                            </div>
-                        </div>
-                        <div class="act-row">
-                            <div class="act-title">🛍️ 쇼핑 찜</div>
-                            <div class="act-action">
-                                <span class="act-num">{{ activity.shop_likes_count }}개</span>
-                                <button type="button" class="btn-sub btn-act-check" data-type="shop_likes">확인</button>
-                            </div>
-                        </div>
-                        <div class="act-row">
-                            <div class="act-title">📦 쇼핑 내역</div>
-                            <div class="act-action">
-                                <span class="act-num">{{ activity.shop_orders_count }}회</span>
-                                <button type="button" class="btn-sub btn-act-check" data-type="shop_orders">확인</button>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </section>
@@ -252,11 +284,25 @@
 </div>
 
 <!-- 상세 모달 팝업 -->
-<div id="detail-modal" class="modal-overlay">
+<!-- <div id="detail-modal" class="modal-overlay">
     <div class="modal-content">
         <h4 id="modal-title">상세 이력 내용</h4>
         <div id="modal-body" class="modal-body-list"></div>
         <button id="btn-modal-close" class="btn-save btn-modal-close">닫기</button>
+    </div>
+</div> -->
+
+<!-- 프로필 이미지 확대 팝업 -->
+<div id="image-view-modal" class="profile-image-modal" onclick="closeProfileImageModal()">
+    <div class="profile-image-modal-content" onclick="event.stopPropagation()">
+        <img id="enlarged-profile-img" src="" alt="프로필 원본 사진">
+
+        <button
+            type="button"
+            class="profile-image-modal-close"
+            onclick="closeProfileImageModal()">
+            ✕
+        </button>
     </div>
 </div>
 {% endblock %}
@@ -265,22 +311,41 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="{{ url_for('static', filename='js/my-page.js') }}"></script>
 <script>
-    // 프로필 사진은 선택 즉시 서버에 업로드해서 바로 저장한다 (정보 수정 저장 버튼과 무관)
-    document.getElementById('avatar-input').addEventListener('change', function () {
-        const file = this.files && this.files[0];
-        if (!file) return;
+    // 프로필 사진 크게 보기 모달
+    function openProfileImageModal(imgSrc) {
+        const modal = document.getElementById('image-view-modal');
+        const modalImg = document.getElementById('enlarged-profile-img');
+        if (modal && modalImg) {
+            modalImg.src = imgSrc;
+            modal.style.display = 'flex';
+        }
+    }
 
-        const preview = document.getElementById('profile-preview');
-        const previousSrc = preview.src;
-        preview.src = window.URL.createObjectURL(file);
+    function closeProfileImageModal() {
+        const modal = document.getElementById('image-view-modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
 
-        const formData = new FormData();
-        formData.append('avatar_file', file);
+    // 프로필 비동기 이미지 업로드
+    const avatarInput = document.getElementById('avatar-input');
+    if (avatarInput) {
+        avatarInput.addEventListener('change', function () {
+            const file = this.files && this.files[0];
+            if (!file) return;
 
-        fetch("{{ url_for('mypage.update_avatar') }}", {
-            method: 'POST',
-            body: formData,
-        })
+            const preview = document.getElementById('profile-preview');
+            const previousSrc = preview.src;
+            preview.src = window.URL.createObjectURL(file);
+
+            const formData = new FormData();
+            formData.append('avatar_file', file);
+
+            fetch("{{ url_for('mypage.update_avatar') }}", {
+                method: 'POST',
+                body: formData,
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
@@ -297,22 +362,7 @@
             .finally(() => {
                 document.getElementById('avatar-input').value = '';
             });
-    });
-
-    // 기본 이미지로 되돌리기
-    document.getElementById('btn-reset-avatar').addEventListener('click', function () {
-        if (!confirm('프로필 사진을 기본 이미지로 되돌릴까요?')) return;
-
-        fetch("{{ url_for('mypage.reset_avatar') }}", { method: 'POST' })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('profile-preview').src = data.profile_img;
-                } else {
-                    alert(data.message || '기본 이미지로 변경하지 못했습니다.');
-                }
-            })
-            .catch(() => alert('처리 중 오류가 발생했습니다.'));
-    });
+        });
+    }
 </script>
 {% endblock %}
