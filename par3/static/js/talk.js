@@ -11,7 +11,6 @@ function goDetail(id) {
 ========================================= */
 function checkSearch(form) {
 
-    // 공백만 입력했거나 아무것도 입력 안 했을 때 검사
     if (!form.keyword.value.trim()) {
         alert('검색어를 입력해 주세요');
         form.keyword.focus();
@@ -23,7 +22,7 @@ function checkSearch(form) {
 
 
 /* =========================================
-   3. 오른쪽 KLPGA / KPGA 사이드바 따라오기
+   3. TALK 고정영역 + 오른쪽 사이드바
 ========================================= */
 (function () {
 
@@ -31,11 +30,12 @@ function checkSearch(form) {
     const sidebar = document.querySelector('.right-sidebar');
     const stickyHeader = document.querySelector('.talk-sticky-header');
 
-    // 필요한 요소가 없으면 실행하지 않음
-    if (!wrapper || !sidebar) return;
+    /* 팀장님 헤더 안의 nav */
+    const mainNav = document.querySelector('.h_nav');
+
+    if (!wrapper || !sidebar || !stickyHeader) return;
 
 
-    /* 따라오는 움직임 속도 */
     const EASE = 0.08;
 
     let current = 0;
@@ -43,26 +43,72 @@ function checkSearch(form) {
 
 
     /* =========================================
-       상단 고정 영역의 실제 높이 계산
+       메인 검은색 헤더의 실제 아래 위치 찾기
     ========================================= */
-    function getTopGap() {
+    function getMainHeaderBottom() {
 
-    if (!stickyHeader) {
-        return 90;
+        if (!mainNav) {
+            return 0;
+        }
+
+        let element = mainNav;
+        let headerBottom = mainNav.getBoundingClientRect().bottom;
+
+
+        /*
+         h_nav의 부모들을 위로 올라가면서
+         fixed / sticky 요소가 있으면
+         그 요소의 실제 아래 위치를 사용
+        */
+        while (
+            element &&
+            element !== document.body
+        ) {
+
+            const style =
+                window.getComputedStyle(element);
+
+            const rect =
+                element.getBoundingClientRect();
+
+
+            if (
+                style.position === 'fixed' ||
+                style.position === 'sticky'
+            ) {
+
+                headerBottom =
+                    Math.max(
+                        headerBottom,
+                        rect.bottom
+                    );
+            }
+
+            element = element.parentElement;
+        }
+
+
+        return Math.max(headerBottom, 0);
     }
-
-    // talk-sticky-header의 top 값(메인 헤더 높이)까지 자동 계산
-    const stickyTop =
-        parseFloat(
-            window.getComputedStyle(stickyHeader).top
-        ) || 0;
-
-    return stickyTop + stickyHeader.offsetHeight + 10;
-}
 
 
     /* =========================================
-       992px 이하인지 확인
+       TALK 고정영역을 메인 헤더 바로 아래에 배치
+    ========================================= */
+    function syncTalkHeaderPosition() {
+
+        const headerBottom =
+            getMainHeaderBottom();
+
+        stickyHeader.style.top =
+            `${headerBottom}px`;
+
+        return headerBottom;
+    }
+
+
+    /* =========================================
+       화면 크기 확인
     ========================================= */
     function isMobile() {
         return window.innerWidth <= 992;
@@ -70,23 +116,45 @@ function checkSearch(form) {
 
 
     /* =========================================
-       사이드바가 이동할 목표 위치 계산
+       오른쪽 사이드바 목표 위치 계산
     ========================================= */
     function getTarget() {
 
         const wrapperTop =
-            wrapper.getBoundingClientRect().top + window.scrollY;
+            wrapper.getBoundingClientRect().top
+            + window.scrollY;
+
 
         const maxTranslate =
             Math.max(
-                wrapper.offsetHeight - sidebar.offsetHeight,
+                wrapper.offsetHeight
+                - sidebar.offsetHeight,
                 0
             );
 
-        const topGap = getTopGap();
+
+        /*
+         실제 메인 헤더 높이
+         +
+         TALK 고정영역 높이
+         +
+         10px 여백
+        */
+        const mainHeaderBottom =
+            syncTalkHeaderPosition();
+
+
+        const topGap =
+            mainHeaderBottom
+            + stickyHeader.offsetHeight
+            + 10;
+
 
         let target =
-            window.scrollY - wrapperTop + topGap;
+            window.scrollY
+            - wrapperTop
+            + topGap;
+
 
         return Math.max(
             0,
@@ -96,11 +164,15 @@ function checkSearch(form) {
 
 
     /* =========================================
-       사이드바 부드럽게 이동
+       오른쪽 사이드바 부드럽게 이동
     ========================================= */
     function tick() {
 
-        // 992px 이하에서는 따라다니기 해제
+        /* TALK 위치도 항상 다시 계산 */
+        syncTalkHeaderPosition();
+
+
+        /* 992px 이하에서는 사이드바 이동 해제 */
         if (isMobile()) {
 
             sidebar.style.transform = 'none';
@@ -114,12 +186,14 @@ function checkSearch(form) {
 
         const target = getTarget();
 
-        // 부드럽게 목표 위치로 이동
-        current += (target - current) * EASE;
+
+        current +=
+            (target - current) * EASE;
 
 
-        // 목표 위치에 거의 도착하면 정확하게 맞춤
-        if (Math.abs(target - current) < 0.5) {
+        if (
+            Math.abs(target - current) < 0.5
+        ) {
             current = target;
         }
 
@@ -128,10 +202,12 @@ function checkSearch(form) {
             `translateY(${current}px)`;
 
 
-        // 아직 목표 위치에 도착하지 않았다면 계속 이동
-        if (Math.abs(target - current) > 0.5) {
+        if (
+            Math.abs(target - current) > 0.5
+        ) {
 
-            raf = requestAnimationFrame(tick);
+            raf =
+                requestAnimationFrame(tick);
 
         } else {
 
@@ -140,19 +216,17 @@ function checkSearch(form) {
     }
 
 
-    /* =========================================
-       애니메이션 실행 요청
-    ========================================= */
     function requestTick() {
 
         if (!raf) {
-            raf = requestAnimationFrame(tick);
+            raf =
+                requestAnimationFrame(tick);
         }
     }
 
 
     /* =========================================
-       스크롤할 때 실행
+       스크롤
     ========================================= */
     window.addEventListener(
         'scroll',
@@ -162,13 +236,14 @@ function checkSearch(form) {
 
 
     /* =========================================
-       화면 크기가 변경될 때 실행
+       화면 크기 변경
     ========================================= */
     window.addEventListener(
         'resize',
         function () {
 
-            // 992px 이하가 되면 이동 위치 초기화
+            syncTalkHeaderPosition();
+
             if (isMobile()) {
 
                 sidebar.style.transform = 'none';
@@ -180,7 +255,8 @@ function checkSearch(form) {
     );
 
 
-    /* 처음 페이지를 열었을 때 한 번 실행 */
+    /* 처음 페이지 열었을 때 */
+    syncTalkHeaderPosition();
     requestTick();
 
 })();

@@ -157,33 +157,56 @@
 
 
 /* =========================
-   4. 좋아요
-   ========================= */
+   4. 좋아요 / 게시글 하단 버튼
+========================= */
 
 .like-section {
     display: flex;
-    justify-content: center;
-
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 10px;
     margin: 45px 0 35px;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+
+/* 좋아요는 왼쪽 / 나머지는 오른쪽 */
+.like-section #like-btn {
+    margin-left: 0 !important;
+    margin-right: auto !important;
 }
 
 
-#like-btn {
-    min-width: 130px;
+/* 좋아요 / 수정 / 삭제 / 목록 공통 */
+.like-section #like-btn,
+.like-section .like-style-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-    padding: 12px 24px;
+    height: 48px;
+    min-width: 110px;
+
+    padding: 0 18px;
+    margin: 0;
 
     background-color: #ffffff;
 
-    border: 1px solid #d1d5db;
-    border-radius: 30px;
+    border: 1px solid #10B981;
+    border-radius: 999px;
 
     color: #374151;
 
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
+    line-height: 1;
+
+    text-decoration: none;
 
     cursor: pointer;
+    box-sizing: border-box;
+    font-family: inherit;
 
     transition:
         background-color 0.2s ease,
@@ -194,12 +217,18 @@
 }
 
 
-#like-btn:hover {
+/* 목록으로 돌아가기 버튼만 조금 넓게 */
+/* .like-section .like-style-btn:last-child {
+    min-width: 170px;
+} */
+
+
+/* hover */
+/* 좋아요 버튼만 hover 효과 */
+.like-section #like-btn:hover {
     border-color: #10b981;
-
-    color: #059669;
-
     background-color: #ecfdf5;
+    color: #059669;
 
     transform: translateY(-2px);
 
@@ -207,8 +236,21 @@
 }
 
 
+/* 수정 / 삭제 / 목록은 색상 변화 없이 살짝 올라가기만 */
+.like-section .like-style-btn:hover {
+    background-color: #ffffff;
+    border-color: #10B981;
+    color: #374151;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+}
+
+
+/* 좋아요 숫자 */
 #like-count {
-    margin-left: 3px;
+    margin-left: 5px;
 
     color: #10b981;
 
@@ -216,15 +258,13 @@
 }
 
 
-/* 좋아요를 눌렀을 때 JS에서 붙일 예정 */
-
+/* 좋아요 클릭 후 */
 #like-btn.active {
     background-color: #10b981;
     border-color: #10b981;
 
     color: #ffffff;
 }
-
 
 #like-btn.active #like-count {
     color: #ffffff;
@@ -279,7 +319,7 @@
 
     background-color: #ffffff;
 
-    border: 1px solid #d1d5db;
+    border: 1px solid #10B981;
     border-radius: 8px;
 
     outline: none;
@@ -367,17 +407,13 @@
 
 /* 댓글 상단 작성자 + 날짜 */
 
-#comment-list li > div:first-child {
+.comment-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     gap: 10px;
-
     margin-bottom: 8px;
-
     color: #9ca3af;
-
     font-size: 12px;
 }
 
@@ -392,7 +428,7 @@
 
 /* 댓글 내용 */
 
-#comment-list li > div:last-child {
+.comment-content  {
     color: #4b5563;
 
     font-size: 14px;
@@ -446,7 +482,7 @@
 
     background-color: #ffffff;
 
-    border: 1px solid #d1d5db;
+    border: 1px solid #10B981;
     border-radius: 8px;
 
     color: #374151;
@@ -516,7 +552,7 @@
     }
 
 
-    #comment-list li > div:first-child {
+    .comment-meta  {
         align-items: flex-start;
         flex-direction: column;
 
@@ -532,4 +568,63 @@
     .detail-list-btn {
         width: 100%;
     }
+}
+
+/* =========================================
+   댓글 버튼
+   답글 / 수정 / 삭제
+========================================= */
+
+.comment-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;  /* 오른쪽 정렬 */
+
+    gap: 6px;
+
+    margin-top: 10px;
+}
+
+
+/* 답글 / 수정 / 삭제 공통 */
+.comment-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 32px;
+    min-width: 52px;
+    padding: 0 12px;
+
+    background-color: #111827;
+
+    border: 1px solid #111827;
+    border-radius: 7px;
+
+    color: #ffffff;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    font-family: inherit;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* hover */
+.comment-action-btn:hover {
+    background-color: #1f2937;
+    border-color: #1f2937;
+
+    transform: translateY(-1px);
 }

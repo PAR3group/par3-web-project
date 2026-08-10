@@ -17,15 +17,15 @@ body {
 .container {
     width: 100%;
     max-width: 1160px;
-    background-color: #fff;
-    border: 2px solid #fff;
+    /* background-color: #fff; */
+    /* border: 2px solid #fff; */
     min-height: 100vh;
     margin: 0 auto;
 }
 
 /* 메인 레이아웃 */
 .main-wrapper {
-    padding: 20px;
+    padding: 0 20px 20px;
 }
 
 .talk-header h2,
@@ -56,14 +56,103 @@ body {
 }
 
 /* TALK 제목부터 검색/글쓰기까지 전체 고정 */
+/* =========================================
+   TALK 전체 고정 헤더
+   - 화면 가로 전체에 배경사진
+   - TALK + 설명 + 검색/버튼 라인까지 포함
+========================================= */
 .talk-sticky-header {
     position: sticky;
     top: 0;
     z-index: 1000;
 
-    background-color: #ffffff;
+    /* 전체폭 배경을 만들기 위한 기준 */
+    position: sticky;
+    isolation: isolate;
 
-    padding-top: 10px;
+    padding: 28px 20px 20px;
+}
+
+
+/* 화면 전체 폭 배경사진 */
+.talk-sticky-header::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+
+    /* 현재 콘텐츠 폭을 벗어나 화면 전체로 확장 */
+    left: 50%;
+    width: 100vw;
+
+    transform: translateX(-50%);
+
+    background-image:
+        linear-gradient(
+            rgba(0, 0, 0, 0.30),
+            rgba(0, 0, 0, 0.30)
+        ),
+        url("../img/talk-header.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    z-index: -1;
+}
+
+
+/* TALK 제목 */
+.talk-sticky-header .talk-header h2 {
+    color: #ffffff;
+}
+
+
+/* 설명 */
+.talk-sticky-header .talk-header p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+
+/* =========================================
+   검색/카테고리/글쓰기 라인도
+   사진 배경 위에 놓이도록
+========================================= */
+.talk-sticky-header .action-bar {
+    background: transparent;
+    padding: 12px 0 0;
+}
+
+
+/* 카테고리 버튼 */
+.talk-sticky-header .tab-item {
+    background-color: rgba(255, 255, 255, 0.92);
+    color: #222222;
+    border-color: rgba(255, 255, 255, 0.9);
+}
+
+
+/* 선택된 카테고리 */
+.talk-sticky-header .tab-item.active {
+    background-color: #2f5d45;
+    color: #ffffff;
+    border-color: #2f5d45;
+}
+
+
+/* 검색창 */
+.talk-sticky-header .search-bar {
+    background-color: rgba(255, 255, 255, 0.94);
+}
+
+
+/* 글쓰기 버튼 */
+.talk-sticky-header .btn-write {
+    background-color: rgba(255, 255, 255, 0.92);
+    color: #222222;
+    border-color: rgba(255, 255, 255, 0.9);
 }
 
 .tabs {
@@ -88,9 +177,9 @@ body {
 }
 
 .tab-item.active {
-    background-color: #16a34a;
+    background-color: #2F5D45;
     color: #fff;
-    border-color: #16a34a;
+    border-color: #2F5D45;
 }
 
 .sorts {
@@ -161,6 +250,7 @@ body {
     font-size: 14px;
     border-radius: 10px;
     color: #333;
+    width: 100%;
 }
 
 /* 본문 영역과 사이드바 레이아웃 */
@@ -181,19 +271,11 @@ body {
     margin-bottom: 25px;
 }
 
-/* 게시글 3개씩 배치 */
-.post-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 18px;
-    width: 100%;
-}
-
 .left-content .post-box {
     position: relative;
     padding: 20px;
     background-color: #ffffff;
-    border: 1px solid #e2e8f0;
+    /* border: 1px solid #D6DDD8; */
     border-radius: 12px;
     margin-bottom: 0;
     width: 100%;
@@ -203,7 +285,7 @@ body {
 /* 1. 카테고리 뱃지 (사진 오른쪽 상단에 인라인 배치) */
 .badge {
     display: inline-block;
-    background-color: #16a34a;
+    background-color: #2F5D45;
     color: #fff;
     padding: 3px 10px;
     border-radius: 12px;
@@ -226,12 +308,12 @@ body {
 /* 3열 게시글 그리드 */
 .post-grid {
     display: grid;
-
     /* 한 줄에 3개 */
     grid-template-columns: repeat(3, minmax(0, 1fr));
-
     gap: 18px;
     width: 100%;
+    /* 헤더와 게시글 사이 여백 */
+    padding-top: 10px;
 }
 
 
@@ -241,7 +323,7 @@ body {
 
     background-color: #ffffff;
 
-    border: 1px solid #e2e8f0;
+    border: 2px solid #527A62;
     border-radius: 14px;
 
     overflow: hidden;
@@ -259,7 +341,7 @@ body {
 .left-content .post-box:hover {
     transform: translateY(-3px);
 
-    border-color: #cbd5e1;
+    border-color: #2F5D45;
 
     box-shadow:
         0 8px 24px rgba(0, 0, 0, 0.06);
@@ -464,33 +546,80 @@ body {
 /* 반응형 대응 */
 @media (max-width: 992px) {
 
-     /* 게시글 3개 → 2개 */
+    /* 게시글 3개 → 2개 */
     .post-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    /* 상단 메뉴 */
+    /* 상단 메뉴 반응형 */
     .action-bar {
         display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 15px;
+
+        /* 검색창 + 글쓰기 버튼 */
+        grid-template-columns: minmax(0, 1fr) auto;
+
+        column-gap: 12px;
+        row-gap: 12px;
+
+        align-items: center;
+
+        /* ★ 전체 너비 고정 */
+        width: 100%;
+        max-width: 100%;
+
+        padding: 0;
+        margin-left: 0;
+        margin-right: 0;
     }
 
-    .tabs {
-        grid-column: 1;
+    /* 1줄째: 탭 전체 */
+     .tabs {
+        grid-column: 1 / -1;
         grid-row: 1;
+
+        display: grid;
+
+        /* ★ 6개 버튼이 한 줄 전체를 정확하게 나눠 사용 */
+        grid-template-columns: repeat(6, 1fr);
+
+        gap: 6px;
+
+        width: 100%;
+
+        overflow: visible;
     }
 
+    .tabs .tab-item {
+        width: 100%;
+        text-align: center;
+        padding-left: 8px;
+        padding-right: 8px;
+        white-space: nowrap;
+    }
+
+    /* 2줄째 왼쪽: 검색창 */
+    .search-bar {
+        grid-column: 1;
+        grid-row: 2;
+
+        width: 100%;
+        min-width: 0;
+
+        margin: 0;
+    }
+
+    /* 2줄째 오른쪽: 글쓰기 */
     .btn-write-link {
         grid-column: 2;
-        grid-row: 1;
-    }
-
-    .search-bar {
-        grid-column: 1 / span 2;
         grid-row: 2;
-        width: 100%;
+
+        margin: 0;
+
+        justify-self: stretch;
     }
+    
+
+    /* 오른쪽 뉴스 */
     .right-sidebar {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -502,8 +631,6 @@ body {
         min-height: 160px;
     }
 
-
-    /* 본문 + 사이드바 세로 배치 */
     .content-body-wrapper {
         flex-direction: column;
     }

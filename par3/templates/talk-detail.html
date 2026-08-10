@@ -36,7 +36,7 @@
             <span>|</span>
 
             <span>
-                작성일: {{ post.created_at }}
+                작성일: {{ post.created_at|timeago }}
             </span>
 
             <span>|</span>
@@ -109,11 +109,34 @@
             onclick="likePost('{{ post.id }}')"
         >
             👍 좋아요
-
-            <span id="like-count">
-                {{ post.likes }}
-            </span>
+            <span id="like-count">{{ post.likes }}</span>
         </button>
+
+        {% if g.user and post.author == g.user.nickname %}
+
+            <a
+                href="{{ url_for('talk.edit_post', id=post.id) }}"
+                class="like-style-btn"
+            >
+                수정
+            </a>
+
+            <button
+                type="button"
+                class="like-style-btn"
+                onclick="deletePost('{{ post.id }}')"
+            >
+                삭제
+            </button>
+
+        {% endif %}
+
+        <a
+            href="{{ url_for('talk.list') }}"
+            class="like-style-btn"
+        >
+            PAR3 TALK
+        </a>
 
     </div>
 
@@ -156,6 +179,7 @@
             >
                 등록
             </button>
+            
 
         </div>
 
@@ -177,7 +201,7 @@
                         </strong>
 
                         <span>
-                            {{ comment.created_at }}
+                            {{ comment.created_at|timeago }}
                         </span>
 
                     </div>
@@ -186,8 +210,115 @@
                     <!-- 댓글 내용 -->
                     <div class="comment-content">
                         {{ comment.content }}
-                    </div>
 
+                        <div class="comment-actions">
+
+                            <!-- 답글은 누구나 누를 수 있음 -->
+                            <button
+                                type="button"
+                                class="comment-action-btn"
+                                disabled
+                                title="답글 기능은 준비 중입니다."
+                            >
+                                답글
+                            </button>
+
+                            <!-- 수정/삭제는 작성자 본인만 -->
+                            {% if g.user and comment.author == g.user.nickname %}
+
+                                <button
+                                    type="button"
+                                    class="comment-action-btn"
+                                    onclick="editComment('{{ comment.id }}')"
+                                >
+                                    수정
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="comment-action-btn"
+                                    onclick="deleteComment('{{ comment.id }}')"
+                                >
+                                    삭제
+                                </button>
+
+
+                            {% endif %}
+                        </div>
+
+
+                        <!-- 대댓글 작성창 -->
+                        <div
+                            id="reply-form-{{ comment.id }}"
+                            class="reply-write-box"
+                            style="display: none;"
+                        >
+                            <input
+                                type="text"
+                                id="reply-input-{{ comment.id }}"
+                                placeholder="답글을 작성해 주세요."
+                            >
+
+                            <button
+                                type="button"
+                                onclick="addReply('{{ post.id }}', '{{ comment.id }}')"
+                            >
+                                등록
+                            </button>
+
+                            <button
+                                type="button"
+                                onclick="hideReplyForm('{{ comment.id }}')"
+                            >
+                                취소
+                            </button>
+                        </div>
+
+
+                        <!-- 대댓글 목록 -->
+                        {% for reply in comment.replies %}
+
+                            <div class="reply-item">
+
+                                <div class="reply-meta">
+                                    <strong>{{ reply.author }}</strong>
+                                    <span>{{ reply.created_at }}</span>
+                                </div>
+
+                                <div class="reply-content">
+                                    {{ reply.content }}
+                                </div>
+
+
+                                <!-- 대댓글 수정/삭제는 작성자 본인만 -->
+                                {% if g.user and reply.author == g.user.nickname %}
+
+                                    <div class="reply-actions">
+
+                                        <button
+                                            type="button"
+                                            onclick="editComment('{{ reply.id }}', '{{ reply.content|e }}')"
+                                        >
+                                            수정
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            onclick="deleteComment('{{ reply.id }}')"
+                                        >
+                                            삭제
+                                        </button>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+                    
                 </li>
 
 
@@ -203,22 +334,7 @@
 
         </ul>
 
-    </div>
-
-
-    <!-- ========================================
-         5. 하단 버튼
-    ========================================= -->
-    <div class="detail-bottom-actions">
-
-        <a
-            href="{{ url_for('talk.list') }}"
-            class="detail-list-btn"
-        >
-            목록으로 돌아가기
-        </a>
-
-    </div>
+    </div>  
 
 
 </div>
