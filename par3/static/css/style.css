@@ -46,42 +46,79 @@ header {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #333;
+    background-color: #fff;
     transition: top 0.3s ease-in-out; /* 부드럽게 움직이는 효과 */
     z-index: 1000;
 }
 
 /* 헤더를 숨길 때 적용할 클래스 */
 header.hide {
-    top: -70px;
+    top: -73px;
 }
 
 .header_container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 1300px;
+    width: 100%;
     height: 70px;
-    color: #fff;
+    color: #333;
     white-space: nowrap;
+    font-weight: 650;
 }
 
 .h_logo {
     margin-right: 25px;
-    margin-left: 40px;
+    margin-left: 70px;
 }
 
 .h_nav_list {
     display: flex;
-    gap: 50px;
+    width: 640px;
     font-size: 14px;
+}
+
+.h_nav_lists {
+    flex: 1;
+    text-align: center;
+}
+
+.h_nav_list a {
+    display: block;
+    position: relative;
+}
+
+.h_nav_list a.active {
+    color: #3ba935;
+    font-weight: 700;
+}
+
+.h_nav_list a.active::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -14px;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #3ba935;
+}
+
+.h_nav_list a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -26px;
+    height: 2px;
+    background-color: #3ba935;
 }
 
 .h_auth_bt {
     display: flex;
     justify-content: center;
     gap: 25px;
-    margin-right: 40px;
+    margin-right: 70px;
 }
 
 .h_login_bt {
@@ -155,5 +192,8 @@ footer{
     font-size: 14px;
 }
 
-/* 모바일: 햄버거메뉴 */
-/* @media (max-width: 860px){ } */
+@media (max-width: 992px){
+    
+}
+
+@media (max-width: 600px)
