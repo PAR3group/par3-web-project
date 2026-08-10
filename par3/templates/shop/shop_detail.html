@@ -247,21 +247,48 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 20px;
-      font-size: 15px;
-      font-weight: 600;
-      color: #555;
+      padding: 10px 20px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 999px;
+      color: #333;
+      font-size: 14px;
+      font-weight: 500;
       cursor: pointer;
+      margin-bottom: 20px;
+      text-decoration: none;
+      transition: background-color 0.2s, border-color 0.2s, color 0.2s;
     }
 
     .back-bt:hover {
-      color: #111;
+      background-color: #1b4332;
+      border-color: #1b4332;
+      color: #fff;
     }
+
+    /* 좌우 세로 브랜드 텍스트 */
+    .side-brand-text { position: absolute; top: 50vh; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 5; }
+    .side-brand-text .side-brand-line { width: 2px; height: 40px; background-color: #00ce7c; flex-shrink: 0; }
+    .side-brand-text .side-brand-label { writing-mode: vertical-rl; white-space: nowrap; font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #999; }
+    .side-brand-text--left { left: 20px; }
+    .side-brand-text--right { right: 20px; }
+    @media (max-width: 1300px) { .side-brand-text { display: none; } }
   </style>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
+
+  <div class="side-brand-text side-brand-text--left">
+    <span class="side-brand-line"></span>
+    <span class="side-brand-label">GOLF SHOP</span>
+    <span class="side-brand-line"></span>
+  </div>
+  <div class="side-brand-text side-brand-text--right">
+    <span class="side-brand-line"></span>
+    <span class="side-brand-label">GOLF SHOP</span>
+    <span class="side-brand-line"></span>
+  </div>
 
   {% include 'header.html' %}
 
@@ -319,6 +346,7 @@
   {% include 'footer.html' %}
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/side_brand.js') }}"></script>
 
   <!-- 1. data.js 파일 불러오기 -->
   <script>
@@ -461,7 +489,6 @@
       alert('상품 정보를 찾을 수 없습니다.');
     }
   </script>
-  <script src="{{ url_for('static', filename='js/shop_side_banner.js') }}"></script>
 
 </body>
 

@@ -62,9 +62,28 @@
         @media (max-width: 768px) {
             .checkout-layout { grid-template-columns: 1fr; }
         }
+
+        /* 좌우 세로 브랜드 텍스트 */
+        .side-brand-text { position: absolute; top: 50vh; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 5; }
+        .side-brand-text .side-brand-line { width: 2px; height: 40px; background-color: #00ce7c; flex-shrink: 0; }
+        .side-brand-text .side-brand-label { writing-mode: vertical-rl; white-space: nowrap; font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #999; }
+        .side-brand-text--left { left: 20px; }
+        .side-brand-text--right { right: 20px; }
+        @media (max-width: 1300px) { .side-brand-text { display: none; } }
     </style>
 </head>
 <body>
+    <div class="side-brand-text side-brand-text--left">
+        <span class="side-brand-line"></span>
+        <span class="side-brand-label">GOLF SHOP</span>
+        <span class="side-brand-line"></span>
+    </div>
+    <div class="side-brand-text side-brand-text--right">
+        <span class="side-brand-line"></span>
+        <span class="side-brand-label">GOLF SHOP</span>
+        <span class="side-brand-line"></span>
+    </div>
+
     <div class="container">
         <header>
     <a href="{{ url_for('shop.main') }}" id="logoContainer" style="text-decoration: none; display: inline-block;"></a>
@@ -202,8 +221,8 @@
             window.location.href = "{{ url_for('shop.main') }}";
         });
 
-        // ★ 로고 파일(main1111.html) 불러와서 삽입 ★
-        fetch('/static/logo/main1111.html')
+        // ★ 로고 파일(shop_logo.html) 불러와서 삽입 ★
+        fetch('/static/logo/shop_logo.html')
             .then(response => response.text())
             .then(data => {
                 const logoContainer = document.getElementById('logoContainer');
@@ -211,5 +230,6 @@
             })
             .catch(error => console.error('로고 로드 오류:', error));
     </script>
+    <script src="{{ url_for('static', filename='js/side_brand.js') }}"></script>
 </body>
 </html>
