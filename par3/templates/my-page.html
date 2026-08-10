@@ -29,8 +29,9 @@
                     <label for="avatar-input" class="btn-avatar-edit" title="사진 변경">✏️</label>
                     <input type="file" id="avatar-input" name="avatar_file" accept="image/*" style="display: none;">
                 </div>
+                <p class="user-nickname">{{ profile.nickname }}</p>
             </div>
-
+            
             <!-- 최근 활동 내역 -->
             <div class="recent-activities-box">
                 <div class="recent-title">💬 최근 활동 내역</div>
@@ -289,15 +290,21 @@
         <div id="modal-body" class="modal-body-list"></div>
         <button id="btn-modal-close" class="btn-save btn-modal-close">닫기</button>
     </div>
-</div>
+</div> -->
 
 <!-- 프로필 이미지 확대 팝업 -->
-<div id="image-view-modal" class="modal-overlay" onclick="closeProfileImageModal()">
-    <div class="image-modal-content" onclick="event.stopPropagation()">
+<div id="image-view-modal" class="profile-image-modal" onclick="closeProfileImageModal()">
+    <div class="profile-image-modal-content" onclick="event.stopPropagation()">
         <img id="enlarged-profile-img" src="" alt="프로필 원본 사진">
-        <button type="button" class="btn-img-modal-close" onclick="closeProfileImageModal()">✕</button>
+
+        <button
+            type="button"
+            class="profile-image-modal-close"
+            onclick="closeProfileImageModal()">
+            ✕
+        </button>
     </div>
-</div> -->
+</div>
 {% endblock %}
 
 {% block js %}

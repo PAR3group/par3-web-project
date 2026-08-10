@@ -876,18 +876,63 @@ input.gray-readonly-input {
     }
 
     /* 화면 폭이 좁아지는 구간 반응형 보완 */
-
-    @media (max-width: 768px) {
-        .activity-card-grid {
-            grid-template-columns: 1fr; /* 모바일에서는 카드 1개씩 세로로 배치 */
-        }
-        
-        .act-group-card {
-            padding: 16px 18px;
-        }
-        
-        .act-group-left {
-            width: 75px;
-        }
+    .activity-card-grid {
+        grid-template-columns: 1fr;
     }
+
+    .act-group-card {
+        padding: 16px 18px;
+    }
+
+    .act-group-left {
+        width: 75px;
+    }
+}
+
+/* ==========================================================
+   프로필 사진 원본 보기 모달
+   ========================================================== */
+.profile-image-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background-color: rgba(0, 0, 0, 0.7);
+
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-image-modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.profile-image-modal-content img {
+    display: block;
+    max-width: 90vw;
+    max-height: 90vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+.profile-image-modal-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+
+    background-color: #ffffff;
+    color: #0f172a;
+    font-size: 18px;
+    font-weight: bold;
+
+    cursor: pointer;
 }
