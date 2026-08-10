@@ -197,8 +197,8 @@
             window.location.href = "{{ url_for('shop.main') }}";
         });
 
-        // ★ 로고 파일(main1111.html) 불러와서 삽입 ★
-        fetch('/static/logo/main1111.html')
+        // ★ 로고 파일(shop_logo.html) 불러와서 삽입 ★
+        fetch('/static/logo/shop_logo.html')
             .then(response => response.text())
             .then(data => {
                 const logoContainer = document.getElementById('logoContainer');
@@ -206,5 +206,6 @@
             })
             .catch(error => console.error('로고 로드 오류:', error));
     </script>
+    <script src="{{ url_for('static', filename='js/shop_side_banner.js') }}"></script>
 </body>
 </html>

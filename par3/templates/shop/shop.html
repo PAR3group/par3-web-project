@@ -309,6 +309,40 @@
             gap: 3px;
         }
 
+        /* 브랜드/카테고리 선택(active) */
+        .brand-item,
+        .category-item {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .brand-item:hover .brand-img,
+        .category-item:hover .category-img {
+            transform: translateY(-3px);
+            border-color: #1b4332;
+        }
+
+        .brand-item.active .brand-img {
+            border: 2.5px solid #00ce7c !important;
+            box-shadow: 0 4px 14px rgba(103, 181, 151, 0.25);
+            transform: translateY(-4px) scale(1.02);
+        }
+
+        .brand-item.active .brand-name {
+            color: #1b4332;
+            font-weight: 800;
+        }
+
+        .category-item.active .category-img {
+            border: 2.5px solid #000000 !important;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.25), 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: scale(1.08);
+        }
+
+        .category-item.active .category-name {
+            color: #1b4332;
+            font-weight: 800;
+        }
+
         /* 반응형 */
         @media (max-width: 768px) {
 
@@ -421,8 +455,6 @@
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
         const sortSelect = document.getElementById('sortSelect');
-        const logoContainer = document.getElementById('logoContainer');
-        const btnHome = document.getElementById('btnHome');
 
         let currentList = [...products];
 
@@ -509,6 +541,8 @@
 
         // 검색 함수
         function performSearch() {
+            document.querySelectorAll('.brand-item, .category-item').forEach(el => el.classList.remove('active'));
+
             const keyword = searchInput.value.trim().toLowerCase();
 
             currentList = products.filter(product => {
@@ -520,20 +554,42 @@
             applySort();
         }
 
-        // 브랜드 클릭 이벤트
+        // 브랜드 클릭 이벤트 (다시 누르면 선택 해제 후 전체 목록으로 복귀)
         document.querySelectorAll('.brand-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
+
+                if (item.classList.contains('active')) {
+                    item.classList.remove('active');
+                    currentList = [...products];
+                    applySort();
+                    return;
+                }
+
+                document.querySelectorAll('.brand-item, .category-item').forEach(el => el.classList.remove('active'));
+                item.classList.add('active');
+
                 const selectedBrand = item.getAttribute('data-brand').toLowerCase();
                 currentList = products.filter(product => product.brand.toLowerCase() === selectedBrand);
                 applySort();
             });
         });
 
-        // 카테고리 클릭 이벤트
+        // 카테고리 클릭 이벤트 (다시 누르면 선택 해제 후 전체 목록으로 복귀)
         document.querySelectorAll('.category-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
+
+                if (item.classList.contains('active')) {
+                    item.classList.remove('active');
+                    currentList = [...products];
+                    applySort();
+                    return;
+                }
+
+                document.querySelectorAll('.brand-item, .category-item').forEach(el => el.classList.remove('active'));
+                item.classList.add('active');
+
                 const category = item.getAttribute('data-category');
 
                 currentList = products.filter(product => {
@@ -553,31 +609,11 @@
         // 정렬 select 이벤트
         sortSelect.addEventListener('change', applySort);
 
-        // 홈/로고 클릭 초기화
-        function resetToHome(e) {
-            e.preventDefault();
-            searchInput.value = '';
-            sortSelect.value = 'latest';
-            currentList = [...products];
-            applySort();
-        }
-
-        if (logoContainer) logoContainer.addEventListener('click', resetToHome);
-        if (btnHome) btnHome.addEventListener('click', resetToHome);
-
         // 검색 이벤트
         searchBtn.addEventListener('click', performSearch);
         searchInput.addEventListener('keyup', (e) => {
             if (e.key === 'Enter') performSearch();
         });
-
-        // 로고 외부 파일 로드
-        fetch('/static/logo/main1111.html')
-            .then(response => response.text())
-            .then(data => {
-                if (logoContainer) logoContainer.innerHTML = data;
-            })
-            .catch(error => console.error('로고를 불러오는 중 오류 발생:', error));
 
         productGrid.addEventListener('click', (e) => {
             const target = e.target.closest('.btn-action');
@@ -615,6 +651,7 @@
         // 초기 실행
         applySort();
     </script>
+    <script src="{{ url_for('static', filename='js/shop_side_banner.js') }}"></script>
 </body>
 
 </html>
