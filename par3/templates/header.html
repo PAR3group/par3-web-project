@@ -2,7 +2,7 @@
     <div class="header_container">
         <a class="h_logo" href="{{url_for('main.inter_par3')}}">par3</a>
 
-        <nav class="h_nav">
+        <nav class="h_nav" id="h_nav">
             <ul class="h_nav_list">
                 <li class="h_nav_lists">
                     <a href="{{url_for('main.index')}}" class="h_nav_info{{ ' active' if request.blueprint == 'main' else '' }}">INTRO</a>
@@ -21,6 +21,10 @@
                 </li>
             </ul>
         </nav>
+
+        <button type="button" class="h_menu_toggle" aria-label="메뉴 열기" aria-expanded="false" aria-controls="h_nav">
+            <img src="{{url_for('static', filename='icon/h_menu_icon.png')}}" alt="" class="h_menu_icon">
+        </button>
 
         <div class="h_auth_bt">
             {% if g.user %}
