@@ -5,19 +5,19 @@
         <nav class="h_nav">
             <ul class="h_nav_list">
                 <li class="h_nav_lists">
-                    <a href="{{url_for('main.index')}}" class="h_nav_info">intro</a>
+                    <a href="{{url_for('main.index')}}" class="h_nav_info{{ ' active' if request.blueprint == 'main' else '' }}">INTRO</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="{{url_for('talk.list')}}" class="h_nav_community">talk</a>
+                    <a href="{{url_for('talk.list')}}" class="h_nav_community{{ ' active' if request.blueprint == 'talk' else '' }}">TALK</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="{{url_for('join.join_list')}}" class="h_nav_join">golf join</a>
+                    <a href="{{url_for('join.join_list')}}" class="h_nav_join{{ ' active' if request.blueprint == 'join' else '' }}">JOIN</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="{{url_for('shop.main')}}" class="h_nav_shop">par3 shop</a>
+                    <a href="{{url_for('shop.main')}}" class="h_nav_shop{{ ' active' if request.blueprint == 'shop' else '' }}">SHOP</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="{{url_for('recommend.shaft')}}" class="h_nav_membership">recommend shaft</a>
+                    <a href="{{url_for('recommend.shaft')}}" class="h_nav_membership{{ ' active' if request.blueprint == 'recommend' else '' }}">RECOMMEND</a>
                 </li>
             </ul>
         </nav>
@@ -33,9 +33,9 @@
                     {% if g.user.is_admin %}
                     <a href="{{url_for('admin.dashboard')}}" class="h_user_dropdown_item">관리자 페이지</a>
                     {% endif %}
+                    <a href="{{url_for('auth.logout')}}" class="h_user_dropdown_item">로그아웃</a>
                 </div>
             </div>
-            <a href="{{url_for('auth.logout')}}" class="h_logout_bt">logout</a>
             {% else %}
             <a href="{{url_for('auth.login')}}" class="h_login_bt">LOGIN</a>
             {% endif %}
