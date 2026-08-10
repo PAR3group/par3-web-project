@@ -20,3 +20,20 @@ window.addEventListener('scroll', function() {
     
     lastScrollTop = currentScroll;
 });
+
+// 반응형 헤더: 햄버거 버튼으로 nav 드롭다운 열고 닫기
+const menuToggle = document.querySelector('.h_menu_toggle');
+
+if (menuToggle) {
+    menuToggle.addEventListener('click', function() {
+        const isOpen = header.classList.toggle('h_nav_open');
+        menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    window.addEventListener('resize', function() {
+        if (window.innerWidth > 992) {
+            header.classList.remove('h_nav_open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+}
