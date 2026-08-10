@@ -1,0 +1,535 @@
+/* ==================================================
+   TALK 상세페이지
+   ================================================== */
+
+
+/* =========================
+   1. 전체 상세페이지 영역
+   ========================= */
+
+.talk-detail-container {
+    max-width: 1000px;
+    margin: 50px auto 80px;
+    padding: 40px 45px;
+
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   2. 게시글 상단 헤더
+   ========================= */
+
+.detail-header {
+    padding-bottom: 5px;
+}
+
+
+/* 카테고리 배지 */
+
+.detail-header .badge {
+    display: inline-block;
+
+    padding: 6px 12px;
+    margin-bottom: 14px;
+
+    background-color: #ecfdf5;
+    color: #059669;
+
+    border: 1px solid #a7f3d0;
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* 게시글 제목 */
+
+.detail-title {
+    margin: 0 0 16px;
+
+    color: #111827;
+
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.35;
+
+    word-break: keep-all;
+}
+
+
+/* 작성자 / 날짜 / 조회수 */
+
+.detail-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    gap: 7px;
+
+    color: #9ca3af;
+
+    font-size: 13px;
+}
+
+
+.detail-meta strong {
+    color: #4b5563;
+    font-weight: 700;
+}
+
+
+/* =========================
+   3. 본문 영역
+   ========================= */
+
+.detail-content {
+    min-height: 250px;
+
+    padding: 15px 0 30px;
+}
+
+
+/* 이미지 / 영상 영역 */
+
+.detail-img-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+
+/* 이미지 */
+
+.detail-img-box img {
+    display: block;
+
+    max-width: 100%;
+    max-height: 700px;
+
+    object-fit: contain;
+
+    border-radius: 12px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+
+/* 동영상 */
+
+.detail-img-box video {
+    display: block;
+
+    width: 100%;
+    max-width: 850px;
+    max-height: 600px;
+
+    background-color: #000;
+
+    border-radius: 12px;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+
+/* 본문 글 */
+
+.content-text {
+    min-height: 150px;
+
+    color: #374151;
+
+    font-size: 16px;
+    line-height: 1.9;
+
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+
+/* =========================
+   4. 좋아요
+   ========================= */
+
+.like-section {
+    display: flex;
+    justify-content: center;
+
+    margin: 45px 0 35px;
+}
+
+
+#like-btn {
+    min-width: 130px;
+
+    padding: 12px 24px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #d1d5db;
+    border-radius: 30px;
+
+    color: #374151;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+#like-btn:hover {
+    border-color: #10b981;
+
+    color: #059669;
+
+    background-color: #ecfdf5;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 5px 14px rgba(16, 185, 129, 0.15);
+}
+
+
+#like-count {
+    margin-left: 3px;
+
+    color: #10b981;
+
+    font-weight: 800;
+}
+
+
+/* 좋아요를 눌렀을 때 JS에서 붙일 예정 */
+
+#like-btn.active {
+    background-color: #10b981;
+    border-color: #10b981;
+
+    color: #ffffff;
+}
+
+
+#like-btn.active #like-count {
+    color: #ffffff;
+}
+
+
+/* =========================
+   5. 댓글 전체
+   ========================= */
+
+.comments-section {
+    margin-top: 35px;
+}
+
+
+.comments-section h3 {
+    margin: 0 0 20px;
+
+    color: #111827;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+
+/* =========================
+   6. 댓글 작성
+   ========================= */
+
+.comment-write-box {
+    display: flex;
+
+    gap: 10px;
+
+    margin: 20px 0 30px;
+
+    padding: 16px;
+
+    background-color: #f9fafb;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+}
+
+
+#comment-input {
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 13px 15px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    outline: none;
+
+    color: #374151;
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+#comment-input::placeholder {
+    color: #9ca3af;
+}
+
+
+#comment-input:focus {
+    border-color: #10b981;
+
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+
+/* 댓글 등록 버튼 */
+
+.comment-write-box button {
+    flex-shrink: 0;
+
+    padding: 12px 24px;
+
+    background-color: #111827;
+
+    border: none;
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.comment-write-box button:hover {
+    background-color: #10b981;
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   7. 댓글 목록
+   ========================= */
+
+#comment-list {
+    margin: 0;
+
+    padding: 0;
+
+    list-style: none;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+
+#comment-list li {
+    padding: 20px 5px;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+
+#comment-list li:hover {
+    background-color: #fafafa;
+}
+
+
+/* 댓글 상단 작성자 + 날짜 */
+
+#comment-list li > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 8px;
+
+    color: #9ca3af;
+
+    font-size: 12px;
+}
+
+
+#comment-list li strong {
+    color: #374151;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/* 댓글 내용 */
+
+#comment-list li > div:last-child {
+    color: #4b5563;
+
+    font-size: 14px;
+    line-height: 1.7;
+
+    word-break: break-word;
+}
+
+
+/* 댓글이 없을 때 */
+
+#no-comment {
+    padding: 40px 10px !important;
+
+    color: #9ca3af !important;
+
+    text-align: center;
+}
+
+
+/* =========================
+   8. 구분선
+   ========================= */
+
+.talk-detail-container hr {
+    margin: 25px 0 !important;
+
+    border: 0 !important;
+    border-top: 1px solid #e5e7eb !important;
+}
+
+
+/* =========================
+   9. 목록으로 돌아가기
+   ========================= */
+
+.detail-bottom-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 40px;
+}
+
+
+.detail-list-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 20px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+
+    color: #374151;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.detail-list-btn:hover {
+    background-color: #ecfdf5;
+    border-color: #10b981;
+
+    color: #059669;
+}
+
+
+/* =========================
+   10. 반응형
+   ========================= */
+
+@media (max-width: 768px) {
+
+    .talk-detail-container {
+        width: calc(100% - 30px);
+
+        margin: 25px auto 50px;
+        padding: 25px 20px;
+
+        border-radius: 12px;
+    }
+
+
+    .detail-title {
+        font-size: 24px;
+    }
+
+
+    .detail-meta {
+        font-size: 12px;
+        line-height: 1.7;
+    }
+
+
+    .content-text {
+        font-size: 15px;
+        line-height: 1.8;
+    }
+
+
+    .comment-write-box {
+        flex-direction: column;
+
+        padding: 12px;
+    }
+
+
+    .comment-write-box button {
+        width: 100%;
+    }
+
+
+    #comment-list li > div:first-child {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 3px;
+    }
+
+
+    .detail-bottom-actions {
+        justify-content: center;
+    }
+
+
+    .detail-list-btn {
+        width: 100%;
+    }
+}

@@ -1,131 +1,230 @@
 {% extends 'base.html' %}
 
-{% block extra_css %}
-<!-- static/talk-detail.css 파일 연결 -->
-<link rel="stylesheet" href="{{ url_for('static', filename='talk-detail.css') }}">
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/talk-detail.css') }}">
 {% endblock %}
 
+
 {% block content %}
-<div class="container">
-    <div class="main-wrapper">
-        
-        <!-- 1. 상세페이지 상단 헤더 (카테고리, 제목, 작성정보) -->
-        <div class="detail-header">
-            <span class="badge">{{ post.category }}</span>
-            <h2 class="detail-title">{{ post.title }}</h2>
-            <div class="detail-meta">
-                <span>작성자: <strong>{{ post.author }}</strong></span> | 
-                <span>작성일: {{ post.created_at }}</span> | 
-                <span>조회수 🔎 {{ post.views }}</span>
-            </div>
-        </div>
 
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+<div class="talk-detail-container">
 
-        <!-- 2. 본문 내용 및 미디어(이미지/동영상) 영역 -->
-        <div class="detail-content">
-            {% if post.image_url %}
-                <div class="detail-img-box" style="margin-bottom: 25px;">
-                    <!-- 🎥 동영상 확장자 체크 (.mp4, .webm, .ogg, .mov, .m4v, .avi) -->
-                    {% if post.image_url.lower().endswith(('.mp4', '.webm', '.ogg', '.mov', '.m4v', '.avi')) %}
-                        <video controls style="max-width: 100%; max-height: 500px; width: auto; border-radius: 8px;">
-                            <source src="{{ post.image_url }}">
-                            브라우저가 동영상 재생을 지원하지 않습니다.
-                        </video>
-                    {% else %}
-                        <img src="{{ post.image_url }}" alt="첨부 이미지" style="max-width: 100%; height: auto; border-radius: 8px;">
-                    {% endif %}
-                </div>
-            {% endif %}
-            
-            <div class="content-text" style="white-space: pre-wrap; line-height: 1.7; font-size: 16px; color: #333;">
-                {{ post.content }}
-            </div>
-        </div>
+    <!-- ========================================
+         1. 게시글 상단
+         카테고리 / 제목 / 작성자 / 작성일 / 조회수
+    ========================================= -->
+    <div class="detail-header">
 
-        <!-- 3. 좋아요 버튼 영역 -->
-        <div class="like-section" style="text-align: center; margin: 40px 0;">
-            <button type="button" id="like-btn" onclick="likePost('{{ post.id }}')" style="padding: 12px 24px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 30px; border: 1px solid #ddd; background-color: #ffffff; transition: all 0.2s;">
-                👍 좋아요 <span id="like-count" style="color: #2db400;">{{ post.likes }}</span>
-            </button>
-        </div>
+        <!-- 카테고리 -->
+        <span class="badge">
+            {{ post.category }}
+        </span>
 
-        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+        <!-- 게시글 제목 -->
+        <h2 class="detail-title">
+            {{ post.title }}
+        </h2>
 
-        <!-- 4. 댓글 영역 -->
-        <div class="comments-section" style="margin-top: 30px;">
-            <h3>💬 댓글 (<span id="comment-count">{{ post.comments_list|length }}</span>)</h3>
+        <!-- 게시글 정보 -->
+        <div class="detail-meta">
+            <span>
+                작성자:
+                <strong>{{ post.author }}</strong>
+            </span>
 
-            <!-- 댓글 작성 Input (엔터키 작성 연동 추가) -->
-            <div class="comment-write-box" style="display: flex; gap: 10px; margin: 20px 0;">
-                <input type="text" id="comment-input" placeholder="댓글을 자유롭게 작성해 보세요." onkeydown="if(event.key === 'Enter') addComment('{{ post.id }}')" style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
-                <button type="button" onclick="addComment('{{ post.id }}')" style="padding: 12px 24px; background-color: #000; color: #fff; font-weight: bold; border: none; border-radius: 6px; cursor: pointer;">
-                    등록
-                </button>
-            </div>
+            <span>|</span>
 
-            <!-- 댓글 목록 -->
-            <ul id="comment-list" style="list-style: none; padding: 0;">
-                {% for comment in post.comments_list %}
-                    <li style="padding: 15px 0; border-bottom: 1px solid #f2f2f2;">
-                        <div style="display: flex; justify-content: space-between; font-size: 13px; color: #888; margin-bottom: 6px;">
-                            <strong style="color: #333; font-size: 14px;">{{ comment.author }}</strong>
-                            <span>{{ comment.created_at }}</span>
-                        </div>
-                        <div style="font-size: 15px; color: #444;">{{ comment.content }}</div>
-                    </li>
-                {% else %}
-                    <li id="no-comment" style="color: #999; padding: 30px 0; text-align: center;">등록된 댓글이 없습니다. 첫 번째 댓글을 작성해 보세요!</li>
-                {% endfor %}
-            </ul>
-        </div>
+            <span>
+                작성일: {{ post.created_at }}
+            </span>
 
-        <!-- 하단 목록으로 이동 버튼 -->
-        <div style="margin-top: 40px; text-align: right;">
-            <a href="{{ url_for('talk.list') }}" style="text-decoration: none; display: inline-block; padding: 10px 20px; background: #f8f9fa; color: #333; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">목록으로 돌아가기</a>
+            <span>|</span>
+
+            <span>
+                조회수 🔎 {{ post.views }}
+            </span>
         </div>
 
     </div>
+
+
+    <!-- 구분선 -->
+    <hr>
+
+
+    <!-- ========================================
+         2. 게시글 본문
+         이미지 / 동영상 / 글 내용
+    ========================================= -->
+    <div class="detail-content">
+
+        <!-- 첨부파일이 있을 경우 -->
+        {% if post.image_url %}
+
+            <div class="detail-img-box">
+
+                <!-- 동영상 파일일 경우 -->
+                {% if post.image_url.lower().endswith(
+                    ('.mp4', '.webm', '.ogg', '.mov', '.m4v', '.avi')
+                ) %}
+
+                    <video controls>
+                        <source src="{{ post.image_url }}">
+
+                        브라우저가 동영상 재생을 지원하지 않습니다.
+                    </video>
+
+                <!-- 이미지 파일일 경우 -->
+                {% else %}
+
+                    <img
+                        src="{{ post.image_url }}"
+                        alt="첨부 이미지"
+                    >
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- 게시글 내용 -->
+        <div class="content-text">
+            {{ post.content }}
+        </div>
+
+    </div>
+
+
+    <!-- ========================================
+         3. 좋아요
+    ========================================= -->
+    <div class="like-section">
+
+        <button
+            type="button"
+            id="like-btn"
+            onclick="likePost('{{ post.id }}')"
+        >
+            👍 좋아요
+
+            <span id="like-count">
+                {{ post.likes }}
+            </span>
+        </button>
+
+    </div>
+
+
+    <!-- 구분선 -->
+    <hr>
+
+
+    <!-- ========================================
+         4. 댓글 영역
+    ========================================= -->
+    <div class="comments-section">
+
+        <!-- 댓글 개수 -->
+        <h3>
+            💬 댓글
+            (<span id="comment-count">{{ post.comments_list|length }}</span>)
+        </h3>
+
+
+        <!-- ====================================
+             댓글 작성
+        ===================================== -->
+        <div class="comment-write-box">
+
+            <input
+                type="text"
+                id="comment-input"
+                placeholder="댓글을 자유롭게 작성해 보세요."
+                onkeydown="
+                    if(event.key === 'Enter') {
+                        addComment('{{ post.id }}')
+                    }
+                "
+            >
+
+            <button
+                type="button"
+                onclick="addComment('{{ post.id }}')"
+            >
+                등록
+            </button>
+
+        </div>
+
+
+        <!-- ====================================
+             댓글 목록
+        ===================================== -->
+        <ul id="comment-list">
+
+            {% for comment in post.comments_list %}
+
+                <li>
+
+                    <!-- 댓글 작성자 / 작성일 -->
+                    <div class="comment-meta">
+
+                        <strong>
+                            {{ comment.author }}
+                        </strong>
+
+                        <span>
+                            {{ comment.created_at }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- 댓글 내용 -->
+                    <div class="comment-content">
+                        {{ comment.content }}
+                    </div>
+
+                </li>
+
+
+            {% else %}
+
+                <!-- 댓글이 하나도 없을 때 -->
+                <li id="no-comment">
+                    등록된 댓글이 없습니다.
+                    첫 번째 댓글을 작성해 보세요!
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+
+    <!-- ========================================
+         5. 하단 버튼
+    ========================================= -->
+    <div class="detail-bottom-actions">
+
+        <a
+            href="{{ url_for('talk.list') }}"
+            class="detail-list-btn"
+        >
+            목록으로 돌아가기
+        </a>
+
+    </div>
+
+
 </div>
+{% endblock %}
 
-<!-- 5. 비동기 처리 스크립트 (좋아요 / 댓글 등록) -->
-<script>
-// 좋아요 클릭 함수
-function likePost(postId) {
-    fetch(`/api/talk/${postId}/like`, { method: 'POST' })
-    .then(res => res.json())
-    .then(data => {
-        if(data.success) {
-            document.getElementById('like-count').innerText = data.likes;
-        } else {
-            alert('좋아요 처리 실패');
-        }
-    });
-}
 
-// 댓글 작성 함수
-function addComment(postId) {
-    const input = document.getElementById('comment-input');
-    const content = input.value.trim();
-    
-    if(!content) {
-        alert('댓글 내용을 입력해 주세요.');
-        return;
-    }
-
-    fetch(`/api/talk/${postId}/comment`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: content, author: '골프인' })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if(data.success) {
-            location.reload();
-        } else {
-            alert('댓글 등록 실패');
-        }
-    });
-}
-</script>
+{% block js %}
+<script src="{{ url_for('static', filename='js/talk-detail.js') }}"></script>
 {% endblock %}
