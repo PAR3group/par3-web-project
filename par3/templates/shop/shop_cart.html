@@ -124,6 +124,76 @@
         </div>
     </div>
 
+    <script src="data.js"></script>
+<script>
+    // 1) localStorage에서 장바구니 데이터 안전하게 불러오기
+    function getCartList() {
+        try {
+            const raw = localStorage.getItem('cartList');
+            const cart = raw ? JSON.parse(raw) : [];
+            return Array.isArray(cart) ? cart : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    // 2) localStorage에 저장하기
+    function saveCartList(cart) {
+        localStorage.setItem('cartList', JSON.stringify(cart));
+    }
+
+    // 3) 장바구니 그려주기
+    function renderCart() {
+        const cartList = getCartList();
+        const cartTableBody = document.getElementById('cartList');
+        
+        if (!cartTableBody) return;
+
+        // 비어있는 경우
+        if (cartList.length === 0) {
+            cartTableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align:center; padding: 50px; color:#888;">
+                        장바구니가 비어 있습니다.
+                    </td>
+                </tr>
+            `;
+            if(document.getElementById('subTotal')) document.getElementById('subTotal').innerText = '0 원';
+            if(document.getElementById('shippingFee')) document.getElementById('shippingFee').innerText = '0 원';
+            if(document.getElementById('grandTotal')) document.getElementById('grandTotal').innerText = '0 원';
+            return;
+        }
+
+        let subTotal = 0;
+        let html = '';
+
+        cartList.forEach((item, index) => {
+            const itemTotal = item.price * item.qty;
+            subTotal += itemTotal;
+
+            html += `
+                <tr>
+                    <td>
+                        <div class="product-info">
+                            <img src="${item.mainImg}" alt="${item.title}">
+                            <div>
+                                <div class="product-brand">${item.brand}</div>
+                                <div class="product-name">${item.title}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="qty-box">
+                            <button type="button" onclick="changeQty(${index}, -1)">-</button>
+                            <input type="text" value="${item.qty}" readonly>
+                            <button type="button" onclick="changeQty(${index}, 1)">+</button>
+                        </div>
+                    </td>
+                    <td class="price">${itemTotal.toLocaleString()} 원</td>
+                    <td><button type="button" class="btn-delete" onclick="removeItem(${index})">✕</button></td>
+                </tr>
+            `;
+        });
     <script>
         const cartList = document.getElementById('cartList');
 
@@ -209,7 +279,55 @@
         document.getElementById('btnOrder').addEventListener('click', () => {
             if (currentRows().length === 0) return;
             window.location.href = '/shop/buy';
+        cartTableBody.innerHTML = html;
+
+        // 배송비 계산
+        const shipping = subTotal >= 200000 ? 0 : 3000;
+        const grandTotal = subTotal + shipping;
+
+        if(document.getElementById('subTotal')) document.getElementById('subTotal').innerText = subTotal.toLocaleString() + ' 원';
+        if(document.getElementById('shippingFee')) document.getElementById('shippingFee').innerText = shipping === 0 ? '무료배송' : shipping.toLocaleString() + ' 원';
+        if(document.getElementById('grandTotal')) document.getElementById('grandTotal').innerText = grandTotal.toLocaleString() + ' 원';
+    }
+
+    // 수량 변경
+    function changeQty(index, delta) {
+        let cartList = getCartList();
+        if (cartList[index] && (cartList[index].qty + delta >= 1)) {
+            cartList[index].qty += delta;
+            saveCartList(cartList);
+            renderCart();
+        }
+    }
+
+    // 상품 삭제
+    function removeItem(index) {
+        if (confirm('선택하신 상품을 장바구니에서 삭제하시겠습니까?')) {
+            let cartList = getCartList();
+            cartList.splice(index, 1);
+            saveCartList(cartList);
+            renderCart();
+        }
+    }
+
+    // 주문하기 버튼
+    const btnOrder = document.getElementById('btnOrder');
+    if(btnOrder) {
+        btnOrder.addEventListener('click', () => {
+            const cartList = getCartList();
+            if (cartList.length === 0) {
+                alert('장바구니에 담긴 상품이 없습니다.');
+                return;
+            }
+            window.location.href = 'buy.html';
         });
+    }
+
+    // 화면 초기 로드
+    renderCart();
+</script>
+
+<script src="script.js"></script>
 
         recalcTotals();
 

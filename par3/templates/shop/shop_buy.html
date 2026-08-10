@@ -134,6 +134,7 @@
         </div>
     </div>
 
+<<<<<<< HEAD:par3/templates/shop/shop_buy.html
     <script>
         const orderItems = {{ order_items|tojson }};
         const shippingInfo = {{ shipping_info|tojson }};
@@ -160,12 +161,30 @@
                 <div class="item-price">${(item.price * item.quantity).toLocaleString()} 원</div>
             </div>
         `).join('');
+=======
+<script src="data.js"></script>
+    <script>
+        // 스타일 주입
+        const fixStyle = document.createElement('style');
+        fixStyle.innerHTML = `
+            #orderItemBox {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            .summary-card, [class*="summary"], [class*="checkout"], [class*="price-box"] {
+                word-break: keep-all !important;
+                white-space: normal !important;
+            }
+        `;
+        document.head.appendChild(fixStyle);
+>>>>>>> e12c9f7d270ea3ba69ef1766936cd673097e282e:p3shop/buy.html
 
-        // 금액 표시
-        document.getElementById('buySubTotal').innerText = itemTotal.toLocaleString() + ' 원';
-        document.getElementById('buyShipping').innerText = shipping === 0 ? '무료배송' : shipping.toLocaleString() + ' 원';
-        document.getElementById('buyGrandTotal').innerText = grandTotal.toLocaleString() + ' 원';
+        const urlParams = new URLSearchParams(window.location.search);
+        const directId = urlParams.get('id');
+        const directQty = parseInt(urlParams.get('qty')) || 1;
 
+<<<<<<< HEAD:par3/templates/shop/shop_buy.html
         // 회원 정보로 배송지 자동입력
         const btnAutofill = document.getElementById('btnAutofill');
         if (btnAutofill && shippingInfo) {
@@ -199,6 +218,119 @@
 
         // ★ 로고 파일(main1111.html) 불러와서 삽입 ★
         fetch('/static/logo/main1111.html')
+=======
+        let orderItems = [];
+        let isDirectBuy = false;
+
+        // ★ [핵심] URL에 id가 있으면 '바로구매', 없으면 '장바구니 주문'으로 처리
+        if (directId) {
+            isDirectBuy = true;
+            const productId = parseInt(directId);
+            const product = (typeof products !== 'undefined') ? products.find(p => p.id === productId) : null;
+            if (product) {
+                orderItems.push({
+                    id: product.id,
+                    brand: product.brand,
+                    title: product.title,
+                    price: product.price,
+                    mainImg: product.mainImg,
+                    qty: directQty
+                });
+            }
+        } else {
+            // 장바구니 데이터 가져오기
+            try {
+                const raw = localStorage.getItem('cartList');
+                const cart = raw ? JSON.parse(raw) : [];
+                orderItems = Array.isArray(cart) ? cart : [];
+            } catch (e) {
+                orderItems = [];
+            }
+        }
+
+        function saveCartList(cart) {
+            localStorage.setItem('cartList', JSON.stringify(cart));
+        }
+
+        function renderOrderPage() {
+            let subTotal = 0;
+            let orderItemHTML = '';
+
+            if (orderItems.length > 0) {
+                orderItems.forEach((item, index) => {
+                    const itemTotal = item.price * item.qty;
+                    subTotal += itemTotal;
+
+                    orderItemHTML += `
+                        <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 15px; background: #fff; border: 1px solid #eee; border-radius: 8px; width: 100%;">
+                            <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                                <img src="${item.mainImg}" alt="${item.title}" style="width: 70px; height: 70px; object-fit: contain; border: 1px solid #eee; border-radius: 6px; padding: 4px; background: #fff; flex-shrink: 0;">
+                                <div style="flex: 1;">
+                                    <div style="font-size: 12px; color: #888; font-weight: bold; margin-bottom: 2px;">${item.brand}</div>
+                                    <div style="font-size: 15px; font-weight: bold; color: #333; margin-bottom: 4px;">${item.title}</div>
+                                    <div style="font-size: 13px; color: #666;">수량: ${item.qty}개</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="font-weight: bold; font-size: 16px; color: #111; white-space: nowrap;">${itemTotal.toLocaleString()} 원</div>
+                                ${!isDirectBuy ? `<button type="button" onclick="removeOrderItem(${index})" style="background: none; border: none; color: #999; cursor: pointer; font-size: 18px; padding: 5px;" title="상품 삭제">✕</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                orderItemHTML = `<div style="text-align: center; color: #888; padding: 30px;">주문할 상품이 없습니다. <a href="shop.html" style="color: #1b4332; text-decoration: underline; margin-left: 5px;">쇼핑하러 가기</a></div>`;
+            }
+
+            const shipping = (orderItems.length > 0 && subTotal < 200000) ? 3000 : 0;
+            const grandTotal = subTotal + shipping;
+
+            document.getElementById('orderItemBox').innerHTML = orderItemHTML;
+            if(document.getElementById('buySubTotal')) document.getElementById('buySubTotal').innerText = subTotal.toLocaleString() + ' 원';
+            if(document.getElementById('buyShipping')) document.getElementById('buyShipping').innerText = shipping === 0 ? '무료배송' : shipping.toLocaleString() + ' 원';
+            if(document.getElementById('buyGrandTotal')) document.getElementById('buyGrandTotal').innerText = grandTotal.toLocaleString() + ' 원';
+        }
+
+        window.removeOrderItem = function(index) {
+            if (confirm('이 상품을 주문 목록에서 제외하시겠습니까?')) {
+                orderItems.splice(index, 1);
+                saveCartList(orderItems);
+                renderOrderPage();
+            }
+        };
+
+        window.selectPay = function(element) {
+            document.querySelectorAll('.pay-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+        };
+
+        const btnSubmitPay = document.getElementById('btnSubmitPay');
+        if (btnSubmitPay) {
+            btnSubmitPay.addEventListener('click', () => {
+                if (orderItems.length === 0) {
+                    alert('주문할 상품이 없습니다.');
+                    return;
+                }
+
+                const subTotal = orderItems.reduce((acc, item) => acc + (item.price * item.qty), 0);
+                const shipping = subTotal >= 200000 ? 0 : 3000;
+                const grandTotal = subTotal + shipping;
+
+                alert(`${grandTotal.toLocaleString()}원 결제가 완료되었습니다. 주문해 주셔서 감사합니다!`);
+                
+                // 장바구니 주문이었을 때만 장바구니 비우기 (바로구매는 장바구니에 영향 없음)
+                if (!isDirectBuy) {
+                    localStorage.setItem('cartList', JSON.stringify([])); 
+                }
+
+                window.location.href = 'shop.html';
+            });
+        }
+
+        renderOrderPage();
+
+        fetch('main1111.html')
+>>>>>>> e12c9f7d270ea3ba69ef1766936cd673097e282e:p3shop/buy.html
             .then(response => response.text())
             .then(data => {
                 const logoContainer = document.getElementById('logoContainer');
@@ -206,5 +338,6 @@
             })
             .catch(error => console.error('로고 로드 오류:', error));
     </script>
+    <script src="script.js"></script>
 </body>
 </html>
