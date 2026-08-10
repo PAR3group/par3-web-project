@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - 상품 수정
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/shop_add.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="sa_wrap">
+    <div class="sa_head">
+        <h1 class="sa_title">상품 수정</h1>
+        <p class="sa_subtitle">상품 정보를 수정하세요.</p>
+    </div>
+
+    <form class="sa_form" action="{{ url_for('shop.edit_product', id=product.id) }}" method="POST" enctype="multipart/form-data">
+        <div class="sa_form_row">
+            <label class="sa_form_label" for="brand">브랜드</label>
+            <input class="sa_form_input" type="text" id="brand" name="brand" value="{{ product.brand }}" required>
+        </div>
+
+        <div class="sa_form_row">
+            <label class="sa_form_label" for="title">상품명</label>
+            <input class="sa_form_input" type="text" id="title" name="title" value="{{ product.title }}" required>
+        </div>
+
+        <div class="sa_form_row">
+            <label class="sa_form_label" for="price">가격</label>
+            <input class="sa_form_input" type="number" id="price" name="price" value="{{ product.price }}" min="0" required>
+        </div>
+
+        <div class="sa_form_row">
+            <label class="sa_form_label" for="main_img">대표 이미지</label>
+            {% if product.mainImg %}
+            <img src="{{ product.mainImg }}" alt="현재 대표 이미지" class="sa_detail_existing_img">
+            <p class="sa_detail_hint">새 이미지를 선택하면 기존 이미지가 교체됩니다.</p>
+            {% endif %}
+            <input class="sa_form_input" type="file" id="main_img" name="main_img" accept="image/*">
+        </div>
+
+        <div class="sa_form_row">
+            <label class="sa_form_label">상세 설명 (샵 상세페이지 하단에 순서대로 표시됩니다)</label>
+            <div id="detailBlocks" class="sa_detail_blocks"></div>
+            <script id="existingBlocksData" type="application/json">{{ product.detailBlocks | tojson }}</script>
+            <div class="sa_detail_add_bts">
+                <button type="button" id="addTextBlockBt" class="sa_detail_add_bt">+ 텍스트 추가</button>
+                <button type="button" id="addImageBlockBt" class="sa_detail_add_bt">+ 이미지 추가</button>
+            </div>
+        </div>
+
+        <button type="submit" class="sa_submit_bt">저장하기</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/shop_admin_form.js') }}"></script>
+{% endblock %}

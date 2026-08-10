@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - 조인 관리
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="a_wrap">
+    <div class="a_head">
+        <h1 class="a_title">조인 관리</h1>
+        <p class="a_subtitle">골프 조인 게시글을 관리합니다. (총 {{ joins|length }}건)</p>
+    </div>
+
+    {% set active = 'joins' %}
+    {% include 'admin/_nav.html' %}
+
+    <form action="{{ url_for('admin.joins') }}" method="GET" class="a_search_form">
+        <input type="text" name="q" value="{{ q }}" placeholder="제목, 골프장명, 지역, 작성자 닉네임 검색" class="a_search_input">
+        <button type="submit" class="a_search_bt">검색</button>
+        {% if q %}
+        <a href="{{ url_for('admin.joins') }}" class="a_search_reset">초기화</a>
+        {% endif %}
+    </form>
+
+    <div class="a_card">
+        <table class="a_table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>제목</th>
+                    <th>골프장</th>
+                    <th>지역</th>
+                    <th>라운드 날짜</th>
+                    <th>작성자</th>
+                    <th>모집 현황</th>
+                    <th>등록일</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for j in joins %}
+                <tr>
+                    <td>{{ j.id }}</td>
+                    <td>{{ j.title }}</td>
+                    <td>{{ j.course_name }}</td>
+                    <td>{{ j.region }}</td>
+                    <td>{{ j.round_date }}</td>
+                    <td>{{ j.writer_nickname }}</td>
+                    <td>{{ j.filled_count }} / {{ j.recruit_count }}</td>
+                    <td>{{ j.create_date|datetime }}</td>
+                    <td>
+                        <form action="{{ url_for('admin.delete_join', id=j.id) }}" method="POST" class="a_inline_form" onsubmit="return confirm('이 조인 게시글을 삭제하시겠습니까? (신청 내역도 함께 삭제됩니다)');">
+                            <button type="submit" class="a_bt_sm a_bt_sm_danger">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="9" class="a_table_empty">{{ '검색 결과가 없습니다.' if q else '등록된 조인 게시글이 없습니다.' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

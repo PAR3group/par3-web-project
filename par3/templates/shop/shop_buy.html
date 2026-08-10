@@ -29,13 +29,19 @@
         .form-row { display: flex; gap: 10px; }
 
         /* Order Product Item */
-        .order-item { display: flex; align-items: center; gap: 15px; padding: 10px 0; }
+        .order-item { display: flex; align-items: center; gap: 15px; padding: 10px 0; border-bottom: 1px solid #f5f5f5; }
+        .order-item:last-child { border-bottom: none; }
         .order-item img { width: 70px; height: 70px; object-fit: contain; border: 1px solid #eee; border-radius: 6px; }
         .item-details { flex-grow: 1; }
         .item-brand { font-size: 11px; color: #888; font-weight: bold; }
         .item-title { font-size: 14px; font-weight: bold; }
         .item-qty { font-size: 13px; color: #666; margin-top: 3px; }
         .item-price { font-weight: bold; font-size: 15px; }
+
+        .btn-autofill { padding: 8px 14px; background: #fff; color: #1b4332; border: 1px solid #1b4332; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .btn-autofill:hover { background-color: #e8f5e9; }
+        .section-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
+        .section-title-row .section-title { margin-bottom: 0; border-bottom: none; padding-bottom: 0; }
 
         /* Payment Options */
         .pay-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -67,30 +73,30 @@
             <div>
                 <!-- Shipping Info -->
                 <div class="section-card">
-                    <div class="section-title">배송지 정보</div>
+                    <div class="section-title-row">
+                        <div class="section-title">배송지 정보</div>
+                        {% if shipping_info %}
+                        <button type="button" class="btn-autofill" id="btnAutofill">회원 정보로 자동입력</button>
+                        {% endif %}
+                    </div>
                     <div class="form-group">
                         <label>받는 사람</label>
-                        <input type="text" placeholder="이름을 입력하세요" value="홍길동">
+                        <input type="text" id="recipientName" placeholder="이름을 입력하세요">
                     </div>
                     <div class="form-group">
                         <label>연락처</label>
-                        <input type="text" placeholder="010-0000-0000" value="010-1234-5678">
+                        <input type="text" id="recipientPhone" placeholder="010-0000-0000">
                     </div>
                     <div class="form-group">
                         <label>주소</label>
-                        <div class="form-row" style="margin-bottom: 8px;">
-                            <input type="text" placeholder="우편번호" value="06123" style="width: 120px;">
-                            <button style="padding: 0 15px; background: #333; color: #fff; border: none; border-radius: 4px; cursor: pointer;">주소 검색</button>
-                        </div>
-                        <input type="text" placeholder="기본 주소" value="서울특별시 강남구 테헤란로 123" style="margin-bottom: 8px;">
-                        <input type="text" placeholder="상세 주소" value="PAR3 타워 5층">
+                        <input type="text" id="addressBase" placeholder="배송받으실 주소를 입력하세요">
                     </div>
                 </div>
 
                 <!-- Product Info Summary -->
                 <div class="section-card">
-                    <div class="section-title">주문 상품 정보</div>
-                    <div class="order-item" id="orderItemBox">
+                    <div class="section-title">주문 상품 정보 (<span id="orderItemCount">0</span>개)</div>
+                    <div id="orderItemBox">
                         <!-- Dynamic Order Product -->
                     </div>
                 </div>
@@ -129,26 +135,46 @@
     </div>
 
     <script>
-        const product = {{ product|tojson }};
-        const urlParams = new URLSearchParams(window.location.search);
-        const qty = parseInt(urlParams.get('qty')) || 1;
+        const orderItems = {{ order_items|tojson }};
+        const shippingInfo = {{ shipping_info|tojson }};
 
+        if (!orderItems || orderItems.length === 0) {
+            alert('주문할 상품 정보를 찾을 수 없습니다.');
+            window.location.href = "{{ url_for('shop.main') }}";
+        }
 
-        // 상품 표시
-        document.getElementById('orderItemBox').innerHTML = `
-            <img src="${product.mainImg}" alt="${product.title}">
-            <div class="item-details">
-                <div class="item-brand">${product.brand}</div>
-                <div class="item-title">${product.title}</div>
-                <div class="item-qty">수량: ${qty}개</div>
+        const itemTotal = orderItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        const shipping = itemTotal > 0 ? (itemTotal >= 200000 ? 0 : 3000) : 0;
+        const grandTotal = itemTotal + shipping;
+
+        // 상품 표시 (여러 개인 경우 각각 한 줄씩)
+        document.getElementById('orderItemCount').innerText = orderItems.length;
+        document.getElementById('orderItemBox').innerHTML = orderItems.map(item => `
+            <div class="order-item">
+                <img src="${item.mainImg}" alt="${item.title}">
+                <div class="item-details">
+                    <div class="item-brand">${item.brand}</div>
+                    <div class="item-title">${item.title}</div>
+                    <div class="item-qty">수량: ${item.quantity}개</div>
+                </div>
+                <div class="item-price">${(item.price * item.quantity).toLocaleString()} 원</div>
             </div>
-            <div class="item-price">${itemTotal.toLocaleString()} 원</div>
-        `;
+        `).join('');
 
         // 금액 표시
         document.getElementById('buySubTotal').innerText = itemTotal.toLocaleString() + ' 원';
         document.getElementById('buyShipping').innerText = shipping === 0 ? '무료배송' : shipping.toLocaleString() + ' 원';
         document.getElementById('buyGrandTotal').innerText = grandTotal.toLocaleString() + ' 원';
+
+        // 회원 정보로 배송지 자동입력
+        const btnAutofill = document.getElementById('btnAutofill');
+        if (btnAutofill && shippingInfo) {
+            btnAutofill.addEventListener('click', () => {
+                document.getElementById('recipientName').value = shippingInfo.name || '';
+                document.getElementById('recipientPhone').value = shippingInfo.phone || '';
+                document.getElementById('addressBase').value = shippingInfo.address || '';
+            });
+        }
 
         // 결제 버튼 선택
         function selectPay(element) {
@@ -156,14 +182,23 @@
             element.classList.add('active');
         }
 
-        // 결제완료 처리
-        document.getElementById('btnSubmitPay').addEventListener('click', () => {
+        // 결제완료 처리 - 장바구니에서 넘어온 주문이면 결제 완료 후 담았던 항목을 비운다
+        document.getElementById('btnSubmitPay').addEventListener('click', async () => {
+            const cartItemIds = orderItems.map(item => item.cartItemId).filter(Boolean);
+            await Promise.all(cartItemIds.map(cartItemId =>
+                fetch('/shop/cart/remove', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cart_item_id: cartItemId })
+                })
+            ));
+
             alert(`${grandTotal.toLocaleString()}원 결제가 완료되었습니다. 주문해 주셔서 감사합니다!`);
             window.location.href = "{{ url_for('shop.main') }}";
         });
 
         // ★ 로고 파일(main1111.html) 불러와서 삽입 ★
-        fetch('/static/shop/main1111.html')
+        fetch('/static/logo/main1111.html')
             .then(response => response.text())
             .then(data => {
                 const logoContainer = document.getElementById('logoContainer');

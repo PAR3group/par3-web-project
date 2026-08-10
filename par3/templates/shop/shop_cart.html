@@ -8,7 +8,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8f9fa; color: #333; }
         .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-        
+
         /* Header */
         header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 20px; border-bottom: 2px solid #1b4332; margin-bottom: 30px; }
         .logo { font-size: 24px; font-weight: 800; color: #1b4332; text-decoration: none; }
@@ -16,7 +16,7 @@
 
         /* Cart Layout */
         .cart-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
-        
+
         /* Table */
         .cart-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
         .cart-table th { background: #fafafa; padding: 15px; font-size: 14px; color: #666; border-bottom: 1px solid #eee; text-align: left; }
@@ -35,6 +35,8 @@
         .btn-delete { background: none; border: none; color: #999; cursor: pointer; font-size: 18px; }
         .btn-delete:hover { color: #e63946; }
 
+        .empty-cart { text-align: center; padding: 60px 0; color: #888; }
+
         /* Order Summary Box */
         .summary-card { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); height: fit-content; position: sticky; top: 20px; }
         .summary-title { font-size: 18px; font-weight: bold; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
@@ -43,6 +45,7 @@
 
         .btn-checkout { width: 100%; padding: 15px; background-color: #1b4332; color: #fff; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background 0.2s; }
         .btn-checkout:hover { background-color: #2d6a4f; }
+        .btn-checkout:disabled { background-color: #ccc; cursor: not-allowed; }
         .btn-continue { width: 100%; padding: 12px; background: #fff; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; margin-top: 8px; cursor: pointer; text-align: center; text-decoration: none; display: block; color: #333; }
 
         @media (max-width: 768px) {
@@ -70,7 +73,32 @@
                         </tr>
                     </thead>
                     <tbody id="cartList">
-                        <!-- Dynamic Cart Item -->
+                        {% for item in cart_items %}
+                        <tr data-cart-item-id="{{ item.cartItemId }}" data-price="{{ item.price }}" data-qty="{{ item.quantity }}">
+                            <td>
+                                <div class="product-info">
+                                    <img src="{{ item.mainImg }}" alt="{{ item.title }}">
+                                    <div>
+                                        <div class="product-brand">{{ item.brand }}</div>
+                                        <div class="product-name">{{ item.title }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="qty-box">
+                                    <button class="btn-qty-minus" type="button">-</button>
+                                    <input type="text" class="qty-input" value="{{ item.quantity }}" readonly>
+                                    <button class="btn-qty-plus" type="button">+</button>
+                                </div>
+                            </td>
+                            <td class="price item-total">{{ '{:,}'.format(item.price * item.quantity) }} 원</td>
+                            <td><button class="btn-delete" type="button">✕</button></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="empty-cart">장바구니가 비어 있습니다.</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -97,76 +125,96 @@
     </div>
 
     <script>
-        const product = {{ product|tojson }};
-        const urlParams = new URLSearchParams(window.location.search);
-        const initialQty = parseInt(urlParams.get('qty')) || 1;
+        const cartList = document.getElementById('cartList');
 
-        let currentQty = initialQty;
+        function currentRows() {
+            return Array.from(cartList.querySelectorAll('tr[data-cart-item-id]'));
+        }
 
-        function renderCart() {
-            const cartList = document.getElementById('cartList');
-            const itemTotal = product.price * currentQty;
+        function recalcTotals() {
+            const rows = currentRows();
+            const itemTotal = rows.reduce((sum, row) => sum + Number(row.dataset.price) * Number(row.dataset.qty), 0);
             const shipping = itemTotal > 0 ? (itemTotal >= 200000 ? 0 : 3000) : 0;
             const total = itemTotal + shipping;
-
-            cartList.innerHTML = `
-                <tr>
-                    <td>
-                        <div class="product-info">
-                            <img src="${product.mainImg}" alt="${product.title}">
-                            <div>
-                                <div class="product-brand">${product.brand}</div>
-                                <div class="product-name">${product.title}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="qty-box">
-                            <button onclick="changeQty(-1)">-</button>
-                            <input type="text" value="${currentQty}" readonly>
-                            <button onclick="changeQty(1)">+</button>
-                        </div>
-                    </td>
-                    <td class="price">${itemTotal.toLocaleString()} 원</td>
-                    <td><button class="btn-delete" onclick="removeItem()">✕</button></td>
-                </tr>
-            `;
 
             document.getElementById('subTotal').innerText = itemTotal.toLocaleString() + ' 원';
             document.getElementById('shippingFee').innerText = shipping === 0 ? '무료배송' : shipping.toLocaleString() + ' 원';
             document.getElementById('grandTotal').innerText = total.toLocaleString() + ' 원';
-        }
 
-        function changeQty(delta) {
-            if (currentQty + delta >= 1) {
-                currentQty += delta;
-                renderCart();
+            document.getElementById('btnOrder').disabled = rows.length === 0;
+
+            if (rows.length === 0) {
+                cartList.innerHTML = `<tr><td colspan="4" class="empty-cart">장바구니가 비어 있습니다.</td></tr>`;
             }
         }
 
-        function removeItem() {
-            if (confirm('상품을 장바구니에서 삭제하시겠습니까?')) {
-                document.getElementById('cartList').innerHTML = `
-                    <tr>
-                        <td colspan="4" style="text-align:center; padding: 50px; color:#888;">
-                            장바구니가 비어 있습니다.
-                        </td>
-                    </tr>
-                `;
-                document.getElementById('subTotal').innerText = '0 원';
-                document.getElementById('shippingFee').innerText = '0 원';
-                document.getElementById('grandTotal').innerText = '0 원';
+        async function updateQuantity(row, quantity) {
+            const cartItemId = row.dataset.cartItemId;
+            const res = await fetch('/shop/cart/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cart_item_id: Number(cartItemId), quantity })
+            });
+            if (res.status === 401) {
+                window.location.href = `/auth/login?next=${encodeURIComponent(location.pathname)}`;
+                return;
+            }
+            const data = await res.json();
+            if (!data.success) return;
+
+            if (quantity < 1) {
+                row.remove();
+            } else {
+                row.dataset.qty = quantity;
+                row.querySelector('.qty-input').value = quantity;
+                row.querySelector('.item-total').innerText = (Number(row.dataset.price) * quantity).toLocaleString() + ' 원';
+            }
+            recalcTotals();
+        }
+
+        async function removeItem(row) {
+            const cartItemId = row.dataset.cartItemId;
+            const res = await fetch('/shop/cart/remove', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ cart_item_id: Number(cartItemId) })
+            });
+            if (res.status === 401) {
+                window.location.href = `/auth/login?next=${encodeURIComponent(location.pathname)}`;
+                return;
+            }
+            const data = await res.json();
+            if (data.success) {
+                row.remove();
+                recalcTotals();
             }
         }
 
-        document.getElementById('btnOrder').addEventListener('click', () => {
-            window.location.href = `/shop/buy?id=${product.id}&qty=${currentQty}`;
+        cartList.addEventListener('click', (e) => {
+            const row = e.target.closest('tr[data-cart-item-id]');
+            if (!row) return;
+
+            if (e.target.classList.contains('btn-qty-plus')) {
+                updateQuantity(row, Number(row.dataset.qty) + 1);
+            } else if (e.target.classList.contains('btn-qty-minus')) {
+                if (Number(row.dataset.qty) - 1 < 1) return;
+                updateQuantity(row, Number(row.dataset.qty) - 1);
+            } else if (e.target.classList.contains('btn-delete')) {
+                if (confirm('상품을 장바구니에서 삭제하시겠습니까?')) {
+                    removeItem(row);
+                }
+            }
         });
 
-        renderCart();
+        document.getElementById('btnOrder').addEventListener('click', () => {
+            if (currentRows().length === 0) return;
+            window.location.href = '/shop/buy';
+        });
+
+        recalcTotals();
 
         // ★ 로고 파일(main1111.html) 불러와서 삽입 ★
-        fetch('/static/shop/main1111.html')
+        fetch('/static/logo/main1111.html')
             .then(response => response.text())
             .then(data => {
                 const logoContainer = document.getElementById('logoContainer');

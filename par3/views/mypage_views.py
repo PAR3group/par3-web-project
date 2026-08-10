@@ -124,6 +124,7 @@ def mypage():
 @bp.route('/update-profile', methods=['POST'])
 @login_required
 def update_profile():
+    # 1. 기존 편지 내용(이름, 이메일 등) 읽기
     user = g.user
 
     email = request.form.get('email')

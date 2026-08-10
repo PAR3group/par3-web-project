@@ -42,6 +42,7 @@ def signup():
         user.experience_years = form.experience_years.data
         user.password = generate_password_hash(form.password1.data)
         user.phonenumber = phonenumber
+        user.home_address = form.home_address.data or None
 
         db.session.add(user)
         db.session.commit()
@@ -62,6 +63,12 @@ def login():
             return render_template('auth/login.html', form=form)
         elif not check_password_hash(user.password, form.password.data):
             form.password.errors.append("비밀번호가 올바르지 않습니다.")
+            return render_template('auth/login.html', form=form)
+        elif user.is_withdrawn:
+            form.user_id.errors.append("탈퇴 처리된 계정입니다.")
+            return render_template('auth/login.html', form=form)
+        elif user.is_suspended:
+            form.user_id.errors.append("정지된 계정입니다. 관리자에게 문의해주세요.")
             return render_template('auth/login.html', form=form)
         if error is None:
             session.clear()

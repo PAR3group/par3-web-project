@@ -10,9 +10,14 @@ class User(db.Model):
     username = db.Column(db.String(20), nullable=False)
     phonenumber = db.Column(db.String(20), unique=True, nullable=False)
     user_sex = db.Column(db.String(1), nullable=False)
+    
     experience_years = db.Column(db.Integer, nullable=False)
     # 관리자 여부 추가
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    # 정지 여부 (관리자가 회원을 일시 정지시킬 때 사용)
+    is_suspended = db.Column(db.Boolean, default=False, nullable=False)
+    # 강제 탈퇴 여부 (관리자가 회원을 강제 탈퇴시킬 때 사용)
+    is_withdrawn = db.Column(db.Boolean, default=False, nullable=False)
     profile_img = db.Column(db.Text)
     home_address = db.Column(db.String(255))
     golf_experience = db.Column(db.String(50))
@@ -47,6 +52,24 @@ class ShopProduct(db.Model):
     origin = db.Column(db.String(100))
     created_at = db.Column(db.DateTime, default=datetime.now)
     reviews = db.relationship('ProductReview', backref='product')
+    detail_blocks = db.relationship(
+        'ProductDetailBlock',
+        backref='product',
+        order_by='ProductDetailBlock.sort_order',
+        cascade='all, delete-orphan',
+    )
+
+
+# 상품 상세설명 영역 (샵 상세페이지 하단) - 관리자가 텍스트/이미지를 순서대로 추가
+class ProductDetailBlock(db.Model):
+    __tablename__ = 'product_detail_block'
+
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('shop_product.id'), nullable=False)
+    sort_order = db.Column(db.Integer, default=0, nullable=False)
+    block_type = db.Column(db.String(10), nullable=False)  # 'text' 또는 'image'
+    text_content = db.Column(db.Text)
+    image_url = db.Column(db.String(500))
 
 
 class ProductReview(db.Model):
@@ -58,6 +81,18 @@ class ProductReview(db.Model):
     content = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Float, nullable=True)  # 리뷰별 평점 넣을 수 있게
     created_at = db.Column(db.DateTime, default=datetime.now)
+
+class CartItem(db.Model):
+    __tablename__ = 'cart_item'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('shop_product.id'), nullable=False)
+    quantity = db.Column(db.Integer, default=1, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+
+    product = db.relationship('ShopProduct')
+
 
 class Post(db.Model):
     __tablename__ = 'post'
@@ -117,11 +152,21 @@ class Join(db.Model):
     gender_condition = db.Column(db.String(20))                         # 성별 조건
     title = db.Column(db.String(200))                                    # 제목
     content = db.Column(db.Text)                                          # 상세 내용
-    thumb_img = db.Column(db.String(200), default='no_image.png')         # 썸네일 이미지 파일명
+    thumb_img = db.Column(db.String(200), default='golf_replace.png')  # 이미지 없을 때 기본 이미지         # 썸네일 이미지 파일명
     create_date = db.Column(db.DateTime, default=datetime.now)
 
 
-# 조인페이지 - 조인참여하기 
+# 관리자 페이지 - 접속 시간대 통계용 방문 로그
+class PageVisit(db.Model):
+    __tablename__ = 'page_visit'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    path = db.Column(db.String(255))
+    created_at = db.Column(db.DateTime, default=datetime.now)
+
+
+# 조인페이지 - 조인참여하기
 class JoinApply(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     join_id = db.Column(
@@ -136,6 +181,6 @@ class JoinApply(db.Model):
     )
     applicant_name = db.Column(db.String(50))
     applicant_phone = db.Column(db.String(20))
-    golf_experience = db.Column(db.String(20))
+    experience_years = db.Column(db.String(20))
     handicap = db.Column(db.String(20))
     create_date = db.Column(db.DateTime, default=datetime.now)

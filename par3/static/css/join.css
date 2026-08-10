@@ -15,13 +15,22 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   margin-bottom: 24px;
 }
 .j_title {
-  font-size: 26px;
-  font-weight: 700;
-  color: #16233f;
+  font-size: 28px;
+  font-weight: 800;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 1px;    /* 자간 간격 */
+  color: #0c1c3e;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
+
+.j_title_icon {
+  width: 26px;
+  height: 26px;
+  vertical-align: middle;
+}
+
 .j_subtitle {
   font-size: 13px;
   color: #8a93a3;
@@ -461,6 +470,8 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 .jt_join_bt {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  width: 100px;
   gap: 6px;
   background: linear-gradient(135deg, #3f9a92, #0f6e56);
   color: #fff;
@@ -474,6 +485,35 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 }
 .jt_join_bt:hover { opacity: 0.9; }
 .jt_join_bt_arrow { font-size: 14px; }
+
+
+/* ===== 참여중 (본인 작성 글 또는 이미 신청함) - 회색 비활성화 ===== */
+.jt_join_bt--applied {
+  background: #e4e6ea;
+  color: #9099a8;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.jt_join_bt--applied:hover {
+  opacity: 1;   /* 기존 hover 시 opacity 효과 무효화 */
+}
+
+/* ===== 마감 - 빨간색 비활성화 ===== */
+.jt_join_bt--full {
+  background: #ef4444;
+  color: #fff;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.jt_join_bt--full:hover {
+  opacity: 1;
+}
+
+/* button 태그 기본 스타일 초기화 (기존 a 태그와 동일한 모양 유지) */
+.jt_join_bt {
+  border: none;
+  font-family: inherit;
+}
 
 /* ============================================
    반응형
@@ -514,6 +554,11 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 @media (max-width: 480px) {
   .jt_row { padding: 12px 14px; }
   .jt_thumb { width: 72px; height: 72px; }
+  .jt_join_bt {
+    width: 84px;      /* 모바일에서는 살짝 줄임 */
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 }
 
 /* ===== 더 많은 조인 글 보기 (페이지네이션/더보기, 추후 기능 연결 예정) ===== */

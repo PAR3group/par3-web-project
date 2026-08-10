@@ -53,6 +53,10 @@ class UserCreateForm(FlaskForm):
         ('2', '2년 ~ 5년'),
         ('3', '5년 이상')
     ], validators=[DataRequired('구력을 선택해주세요.')])
+    home_address = StringField('주소', validators=[
+        Optional(),
+        Length(max=255, message='255자 이내로 입력해주세요.')
+    ])
     agree_all = BooleanField('전체 약관 동의하기')  # JS로만 동작 (DB 저장 X)
     agree_service = BooleanField(
         '[필수] 서비스 이용약관 동의',

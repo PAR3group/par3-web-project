@@ -5,7 +5,7 @@
 # 연결 템플릿: templates/join.html
 # ============================================
 
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, redirect, render_template, request, url_for,g
 from par3.models import Join, JoinApply, User
 from par3 import db
 from datetime import date, datetime
@@ -21,7 +21,7 @@ bp = Blueprint('join', __name__, url_prefix='/join')
 # ------------------------------------------------
 @bp.route('/')
 def join_list():
-    joins = Join.query.order_by(Join.round_date.asc()).all()
+    joins = Join.query.order_by(Join.create_date.desc()).all()
 
     today = date.today()
     weekday_kr = ['월', '화', '수', '목', '금', '토', '일']
@@ -33,6 +33,20 @@ def join_list():
         # 이 조인 글에 실제로 신청한 사람들 목록 조회 (JoinApply 테이블에서)
         applies = JoinApply.query.filter_by(join_id=j.id).all()
         j.applicant_initials = [a.applicant_name[0].upper() for a in applies if a.applicant_name]
+        # ------------------------------------------------
+        # 참여하기 버튼 상태 계산
+        # is_owner   : 로그인한 사용자가 이 글의 작성자인지
+        # is_applied : 로그인한 사용자가 이미 신청했는지
+        # is_full    : 정원이 다 찼는지
+        # ------------------------------------------------
+        if g.user is not None:
+            j.is_owner = (j.writer_id == g.user.id)
+            j.is_applied = JoinApply.query.filter_by(join_id=j.id, applicant_id=g.user.id).first() is not None
+        else:
+            j.is_owner = False
+            j.is_applied = False
+
+        j.is_full = j.filled_count >= j.recruit_count
 
     return render_template('join/join.html', joins=joins)
 
@@ -42,13 +56,12 @@ def join_list():
 # ------------------------------------------------
 @bp.route('/create', methods=['GET', 'POST'])
 def join_create():
-    if request.method == 'POST':
-        # ⚠️ TODO: 로그인 기능 연동 후 session에서 실제 로그인한 사용자 id 가져오기
-        # 지금은 임시로 첫 번째 회원(id=1)을 작성자로 고정
-        temp_user = User.query.first()
+    if g.user is None:
+        return redirect(url_for('auth.login', next=request.path))
 
+    if request.method == 'POST':
         new_join = Join(
-            writer_id=temp_user.id if temp_user else 1,
+            writer_id=g.user.id,
             course_name=request.form['course_name'],
             region=request.form.get('region', '기타'),
             round_date=datetime.strptime(request.form['round_date'], '%Y-%m-%d').date(),
@@ -60,8 +73,21 @@ def join_create():
             title=request.form['title'],
             content=request.form['content'],
             filled_count=1,
+            thumb_img=request.form.get('thumb_img_url') or 'golf_replace.png',
         )
         db.session.add(new_join)
+        db.session.flush()
+
+        writer_apply = JoinApply(
+            join_id=new_join.id,
+            applicant_id=g.user.id,
+            applicant_name=g.user.nickname,
+            applicant_phone=g.user.phonenumber,
+            experience_years=g.user.experience_years or '',
+            handicap='',
+        )
+        db.session.add(writer_apply)
+
         db.session.commit()
         return redirect(url_for('join.join_list'))
 
@@ -75,18 +101,26 @@ def join_create():
 # ------------------------------------------------
 @bp.route('/apply/<int:join_id>', methods=['GET', 'POST'])
 def join_apply(join_id):
-    join = Join.query.get_or_404(join_id)
+    if g.user is None:
+        return redirect(url_for('auth.login', next=request.path))
 
-    # ⚠️ TODO: 로그인 기능 연동 후 session에서 실제 로그인 사용자로 교체
-    applicant = User.query.first()
+    join = Join.query.get_or_404(join_id)
+    applicant = g.user   # ← 실제 로그인한 사용자
+    # 본인 글이거나 이미 신청했으면 리스트로 돌려보냄
+    if join.writer_id == applicant.id:
+        return redirect(url_for('join.join_list'))
+
+    already_applied = JoinApply.query.filter_by(join_id=join.id, applicant_id=applicant.id).first()
+    if already_applied:
+        return redirect(url_for('join.join_list'))
 
     if request.method == 'POST':
         new_apply = JoinApply(
             join_id=join.id,
-            applicant_id=applicant.id if applicant else 1,
-            applicant_name=applicant.nickname if applicant else '',
-            applicant_phone=applicant.phonenumber if applicant else '',
-            golf_experience=request.form.get('golf_experience', ''),
+            applicant_id=applicant.id,
+            applicant_name=applicant.nickname,
+            applicant_phone=applicant.phonenumber,
+            experience_years=request.form.get('experience_years', ''),
             handicap=request.form.get('handicap', ''),
         )
         db.session.add(new_apply)

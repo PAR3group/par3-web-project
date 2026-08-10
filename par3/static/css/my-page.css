@@ -2,6 +2,9 @@
    1. 기본 레이아웃 (전체 큰 프레임)
    ========================================================== */
 .naver-id-layout {
+    display: flex;
+    flex-wrap: wrap; /* ⭕ [핵심!] 공간 부족 시 우측 카드가 자동으로 아래로 내려감 */
+    max-width: 1160px;
     width: 100%;
     max-width: 1160px;
     margin: 30px auto;
@@ -206,7 +209,10 @@
     border-radius: 14px;
     border: 1px solid #e2e8f0;
     overflow: hidden;
+    width: 100%; /* ⭕ 가로폭 100% 보장 */
+    box-sizing: border-box;
 }
+
 
 .clean-card .card-header {
     background: #ffffff;
@@ -235,6 +241,7 @@
 
 .info-row {
     display: flex;
+    flex-wrap: wrap; /* ⭕ [핵심!] 좁은 화면에서 라벨과 입력창이 위아래로 자연스럽게 전환 */
     align-items: center;
     padding: 14px 0;
     border-bottom: 1px solid #f1f5f9;
@@ -249,9 +256,10 @@
 }
 
 .info-value {
-    flex: 1;
+    flex: 1 1 200px; /* ⭕ 입력창 영역 최소 폭 설정 */
     display: flex;
     align-items: center;
+    min-width: 0;
     min-width: 0;
 }
 
@@ -835,8 +843,13 @@ input.gray-readonly-input {
         padding: 10px 6px;
         font-size: 13px;
         margin-bottom: 0;
+        color: #475569;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: all 0.2s ease-in-out;
     }
 
+    /* ⭕ [핵심] 오른쪽 영역이 밖으로 튕겨 나가지 않도록 100% 가로 폭 지정 */
     .content-area {
         width: 100%;
         padding: 0;

@@ -1,0 +1,142 @@
+/* shop_add.css - 관리자 상품 등록 폼 (join_create.css 톤과 통일) */
+
+.sa_wrap {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+}
+
+.sa_head {
+    margin-bottom: 24px;
+}
+
+.sa_title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #16233f;
+}
+
+.sa_subtitle {
+    font-size: 13px;
+    color: #8a93a3;
+    margin-top: 6px;
+}
+
+.sa_form {
+    background: #ffffff;
+    border: 1px solid #eceef1;
+    border-radius: 14px;
+    box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
+    padding: 24px;
+}
+
+.sa_form_row {
+    margin-bottom: 18px;
+}
+
+.sa_form_label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #16233f;
+    margin-bottom: 6px;
+}
+
+.sa_form_input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dfe3ea;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.sa_submit_bt {
+    width: 100%;
+    background: #0f6e56;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.sa_submit_bt:hover {
+    background: #0c5a46;
+}
+
+.sa_detail_blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.sa_detail_block {
+    border: 1px solid #dfe3ea;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fafbfc;
+}
+
+.sa_detail_block_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.sa_detail_block_label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f6e56;
+}
+
+.sa_block_remove_bt {
+    background: none;
+    border: none;
+    color: #e63946;
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.sa_detail_textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.sa_detail_existing_img {
+    max-width: 100%;
+    max-height: 160px;
+    display: block;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.sa_detail_hint {
+    font-size: 12px;
+    color: #8a93a3;
+    margin-bottom: 8px;
+}
+
+.sa_detail_add_bts {
+    display: flex;
+    gap: 8px;
+}
+
+.sa_detail_add_bt {
+    background: #eef2f6;
+    border: 1px solid #dfe3ea;
+    color: #16233f;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.sa_detail_add_bt:hover {
+    background: #e2e7ed;
+}
