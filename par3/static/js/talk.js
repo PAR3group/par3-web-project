@@ -260,3 +260,11 @@ function checkSearch(form) {
     requestTick();
 
 })();
+
+const upIcon = document.querySelector('.up_icon');
+
+if (upIcon) {
+    upIcon.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
