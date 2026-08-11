@@ -51,7 +51,7 @@ header {
     background-color: #fff;
     transition: top 0.3s ease-in-out;
     /* 부드럽게 움직이는 효과 */
-    z-index: 1000;
+    z-index: 5000;
 }
 
 /* 헤더를 숨길 때 적용할 클래스 */
@@ -75,6 +75,10 @@ header.hide {
 .h_logo {
     margin-right: 25px;
     margin-left: 70px;
+}
+.h_logo > img{
+    display: inline-block;
+    height: 90px;
 }
 
 .h_menu_toggle {

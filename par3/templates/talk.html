@@ -8,55 +8,47 @@
 {% block content %}
 <div class="container">
     <div class="main-wrapper">
-        <div class="talk-sticky-header">            
+        <div class="talk-sticky-header">
             <div class="talk-header">
                 <h2>💬 TALK</h2>
                 <p>자유로운 노하우와 이야기를 나누는 공간</p>
             </div>
+        </div>
+        <section class="talk_main_container">
             <div class="action-bar">
 
                 <div class="tabs">
                     <a href="?sort=latest"
-                    class="tab-item {% if not current_category or current_category == '전체' %}active{% endif %}">
+                        class="tab-item {% if not current_category or current_category == '전체' %}active{% endif %}">
                         최신순
                     </a>
 
-                    <a href="?sort=popular"
-                    class="tab-item {% if current_sort == 'popular' %}active{% endif %}">
+                    <a href="?sort=popular" class="tab-item {% if current_sort == 'popular' %}active{% endif %}">
                         인기순
                     </a>
 
-                    <a href="?category=필드후기"
-                    class="tab-item {% if current_category == '필드후기' %}active{% endif %}">
+                    <a href="?category=필드후기" class="tab-item {% if current_category == '필드후기' %}active{% endif %}">
                         필드후기
                     </a>
 
-                    <a href="?category=장비추천"
-                    class="tab-item {% if current_category == '장비추천' %}active{% endif %}">
+                    <a href="?category=장비추천" class="tab-item {% if current_category == '장비추천' %}active{% endif %}">
                         장비추천
                     </a>
 
-                    <a href="?category=골프팁"
-                    class="tab-item {% if current_category == '골프팁' %}active{% endif %}">
+                    <a href="?category=골프팁" class="tab-item {% if current_category == '골프팁' %}active{% endif %}">
                         골프팁
                     </a>
 
-                    <a href="?category=자유톡"
-                    class="tab-item {% if current_category == '자유톡' %}active{% endif %}">
+                    <a href="?category=자유톡" class="tab-item {% if current_category == '자유톡' %}active{% endif %}">
                         자유톡
                     </a>
                 </div>
 
-                <form action="{{ url_for('talk.list') }}"
-                    method="GET"
-                    class="search-bar"
+                <form action="{{ url_for('talk.list') }}" method="GET" class="search-bar"
                     onsubmit="return checkSearch(this)">
 
-                    <input type="text"
-                        placeholder="PAR3 TALK SEARCH"
-                        name="keyword"
-                        value="{{ request.args.get('keyword', '') }}"
-                        autocomplete="off">
+                    <input type="text" placeholder="PAR3 TALK SEARCH" name="keyword"
+                        value="{{ request.args.get('keyword', '') }}" autocomplete="off">
 
                     <button type="submit" class="search_btn">🔍</button>
                 </form>
@@ -66,17 +58,15 @@
                 </a>
 
             </div>
-        </div>
-        <div class="content-body-wrapper">
-            <main class="left-content">
 
-                <div class="post-grid">
+            <div class="content-body-wrapper">
+                <main class="left-content">
 
-                    {% for post in posts %}
+                    <div class="post-grid">
 
-                        <div class="post-box"
-                            onclick="goDetail('{{ post.id }}')"
-                            style="cursor: pointer;">
+                        {% for post in posts %}
+
+                        <div class="post-box" onclick="goDetail('{{ post.id }}')" style="cursor: pointer;">
 
                             <!-- 1. 카테고리 -->
                             <div class="post-category">
@@ -87,23 +77,16 @@
                             <div class="post-img">
                                 {% if post.image_url %}
 
-                                    {% if post.is_video %}
-                                        <video
-                                            src="{{ post.image_url }}"
-                                            muted
-                                            autoplay
-                                            loop
-                                            playsinline>
-                                        </video>
-                                    {% else %}
-                                        <img
-                                            src="{{ post.image_url }}"
-                                            alt="첨부 이미지">
-                                    {% endif %}
+                                {% if post.is_video %}
+                                <video src="{{ post.image_url }}" muted autoplay loop playsinline>
+                                </video>
+                                {% else %}
+                                <img src="{{ post.image_url }}" alt="첨부 이미지">
+                                {% endif %}
 
                                 {% else %}
 
-                                    <div class="default-img"></div>
+                                <div class="default-img"></div>
 
                                 {% endif %}
                             </div>
@@ -117,9 +100,9 @@
 
                                 <p class="post-content">
                                     {% if post.content|length > 45 %}
-                                        {{ post.content[:45] }}...
+                                    {{ post.content[:45] }}...
                                     {% else %}
-                                        {{ post.content }}
+                                    {{ post.content }}
                                     {% endif %}
                                 </p>
 
@@ -153,20 +136,22 @@
 
                         </div>
 
-                    {% else %}
+                        {% else %}
 
                         <div class="no-post">
                             <p>등록된 게시글이 없습니다.</p>
                         </div>
 
-                    {% endfor %}
+                        {% endfor %}
 
-                </div>
+                    </div>
 
-            </main>
+                </main>
 
-            <!-- {% include 'side_news.html' %} -->
-        </div>
+                <!-- {% include 'side_news.html' %} -->
+            </div>
+        </section>
+        <div class="up_icon"><img src="../static/icon/up_icon.png" alt="최상단으로 가기"></div>
     </div>
 </div>
 
