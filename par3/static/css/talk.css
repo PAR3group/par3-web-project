@@ -16,7 +16,7 @@ body {
 /* 1. 전체 컨테이너 */
 .container {
     width: 100%;
-    max-width: 1160px;
+    max-width: 1300px;
     /* background-color: #fff; */
     /* border: 2px solid #fff; */
     min-height: 100vh;
@@ -90,10 +90,10 @@ body {
     transform: translateX(-50%);
 
     background-image:
-        linear-gradient(
+        /* linear-gradient(
             rgba(0, 0, 0, 0.30),
             rgba(0, 0, 0, 0.30)
-        ),
+        ), */
         url("../img/talk-header.png");
 
     background-size: cover;
@@ -309,7 +309,7 @@ body {
 .post-grid {
     display: grid;
     /* 한 줄에 3개 */
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 18px;
     width: 100%;
     /* 헤더와 게시글 사이 여백 */
