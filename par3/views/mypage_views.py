@@ -2,8 +2,11 @@ import re
 from flask import Blueprint, g, jsonify, render_template, request, session, url_for
 
 from par3 import db, storage
-from par3.models import Join, JoinApply, Post, ShaftRecommend
+from par3.models import Join, JoinApply, Post, ShaftRecommend, CartItem
 from par3.views.auth_views import login_required
+from werkzeug.security import generate_password_hash, check_password_hash
+from par3.forms import ChangePasswordForm
+
 
 bp = Blueprint('mypage', __name__)
 
@@ -101,11 +104,27 @@ def build_profile(user):
 
 def build_activity_data(user):
     return {
-        "posts_count": Post.query.filter_by(author=user.nickname).count(),
-        "join_posts_count": Join.query.filter_by(writer_id=user.id).count(),
-        "join_participate_count": JoinApply.query.filter_by(applicant_id=user.id).count(),
+        "posts_count": Post.query.filter_by(
+            author=user.nickname
+        ).count(),
+
+        "join_posts_count": Join.query.filter_by(
+            writer_id=user.id
+        ).count(),
+
+        "join_participate_count": JoinApply.query.filter_by(
+            applicant_id=user.id
+        ).count(),
+
+        # 현재 JOIN에는 찜 저장 기능이 아직 없음
         "join_likes_count": 0,
-        "shop_likes_count": 0,
+
+        # 현재 SHOP에서 사용자별로 저장되는 것은 CartItem
+        "shop_likes_count": CartItem.query.filter_by(
+            user_id=user.id
+        ).count(),
+
+        # 현재 SHOP에는 주문 완료 데이터를 저장하는 모델이 없음
         "shop_orders_count": 0,
     }
 
@@ -118,9 +137,54 @@ def mypage():
     activity_data = build_activity_data(user)
     equipments = get_recommended_equipments(user)
 
-    return render_template('my-page.html', profile=profile, activity=activity_data, equipments=equipments)
+    # 내 장바구니 목록
+    my_cart_items = CartItem.query.filter_by(
+        user_id=user.id
+        ).all()    
 
+     # 내가 작성한 게시글 목록
+    my_posts = Post.query.filter_by(
+        author=user.nickname
+    ).order_by(
+        Post.created_at.desc()
+    ).all()
 
+     # 내가 작성한 골프조인 글 목록
+    my_join_posts = Join.query.filter_by(
+        writer_id=user.id
+    ).order_by(
+        Join.create_date.desc()
+    ).all()
+
+    # 내가 참여한 골프조인 내역
+    my_join_applies = JoinApply.query.filter_by(
+        applicant_id=user.id
+    ).order_by(
+        JoinApply.create_date.desc()
+    ).all()
+    
+    my_join_participates = []
+
+    for apply in my_join_applies:
+        joined = Join.query.get(apply.join_id)
+
+        if joined:
+            my_join_participates.append(joined)
+
+    
+
+    return render_template(
+        'my-page.html',
+        profile=profile,
+        activity=activity_data,
+        equipments=equipments,
+        my_posts=my_posts,
+        my_join_posts=my_join_posts,
+        my_join_participates=my_join_participates,
+        my_cart_items=my_cart_items
+    )
+
+    
 @bp.route('/update-profile', methods=['POST'])
 @login_required
 def update_profile():
@@ -198,10 +262,51 @@ def reset_avatar():
     return jsonify({'success': True, 'profile_img': DEFAULT_PROFILE_IMG})
 
 
-@bp.route('/reset-password')
+@bp.route('/reset-password', methods=['GET', 'POST'])
 @login_required
 def reset_password():
-    return f"<h2>비밀번호 수정 페이지입니다.</h2><a href='{url_for('mypage.mypage')}'>마이페이지로 돌아가기</a>"
+    form = ChangePasswordForm()
+    user = g.user
+
+    if form.validate_on_submit():
+
+        # 1. 현재 비밀번호 확인
+        if not check_password_hash(
+            user.password,
+            form.current_password.data
+        ):
+            form.current_password.errors.append(
+                '현재 비밀번호가 올바르지 않습니다.'
+            )
+
+        # 2. 현재 비밀번호와 새 비밀번호가 같은지 확인
+        elif check_password_hash(
+            user.password,
+            form.new_password.data
+        ):
+            form.new_password.errors.append(
+                '현재 비밀번호와 다른 비밀번호를 입력해주세요.'
+            )
+
+        else:
+            # 3. 새 비밀번호 암호화 저장
+            user.password = generate_password_hash(
+                form.new_password.data
+            )
+
+            db.session.commit()
+
+            return f"""
+            <script>
+                alert('비밀번호가 성공적으로 변경되었습니다.');
+                location.href='{url_for('mypage.mypage')}';
+            </script>
+            """
+
+    return render_template(
+        'reset-password.html',
+        form=form
+    )
 
 
 @bp.route('/delete-account', methods=['POST'])
