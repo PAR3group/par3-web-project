@@ -24,32 +24,44 @@ def api_login_required(view):
 
 @bp.route('/')
 def list():
-    # [참고] 정렬/카테고리/검색 조건 처리
+    # [참고] 정렬/카테고리/검색 조건 처리 (카테고리는 다중 선택 가능)
     sort = request.args.get('sort', 'latest')
-    category = request.args.get('category')
+    categories = [c for c in request.args.getlist('category') if c and c != '전체']
     keyword = request.args.get('keyword')
 
     query = Post.query
 
-    if category and category != '전체':
-        query = query.filter_by(category=category)
+    if categories:
+        query = query.filter(Post.category.in_(categories))
 
     if keyword:
         query = query.filter(Post.title.contains(keyword) | Post.content.contains(keyword))
 
     if sort == 'popular':
         query = query.order_by(Post.likes.desc())
+    elif sort == 'views':
+        query = query.order_by(Post.views.desc())
     else:
         query = query.order_by(Post.created_at.desc())
 
     posts = query.all()
+
+    # [추가] 필터(카테고리/정렬/검색) 변경 시 fetch로 목록만 갱신 - 페이지 전체 새로고침 없이 처리
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return render_template(
+            'talk_results.html',
+            posts=posts,
+            current_sort=sort,
+            current_categories=categories
+        )
+
     prize_top3, kpga_top3 = get_golf_news_top3()
 
     return render_template(
         'talk.html',
         posts=posts,
         current_sort=sort,
-        current_category=category,
+        current_categories=categories,
         prize_top3=prize_top3,
         kpga_top3=kpga_top3
     )

@@ -1,0 +1,117 @@
+{% set has_category_filter = current_categories|length > 0 %}
+
+<div class="j_selected_tags_row{% if has_category_filter %} j_selected_tags_row--visible{% endif %}">
+    <div class="j_selected_tags">
+        {% for cat in current_categories %}
+        <span class="j_tag">
+            {{ cat }}<span class="j_tag_remove" data-remove-category="{{ cat }}">×</span>
+        </span>
+        {% endfor %}
+    </div>
+    <a class="j_reset_bt" href="{{ url_for('talk.list') }}"><span class="j_reset_icon">↺</span>필터 초기화</a>
+</div>
+
+{% set keyword = request.args.get('keyword') %}
+{% set sort_link_args = {'category': current_categories} %}
+{% if keyword %}{% set _ = sort_link_args.update({'keyword': keyword}) %}{% endif %}
+
+<div class="j_sort_tabs">
+    <a class="j_sort_tab {% if not current_sort or current_sort == 'latest' %}j_sort_tab--active{% endif %}"
+        href="{{ url_for('talk.list', sort='latest', **sort_link_args) }}">최신순</a>
+    <a class="j_sort_tab {% if current_sort == 'popular' %}j_sort_tab--active{% endif %}"
+        href="{{ url_for('talk.list', sort='popular', **sort_link_args) }}">인기순</a>
+    <a class="j_sort_tab {% if current_sort == 'views' %}j_sort_tab--active{% endif %}"
+        href="{{ url_for('talk.list', sort='views', **sort_link_args) }}">조회수순</a>
+</div>
+
+<div class="content-body-wrapper">
+    <main class="left-content">
+
+        <div class="post-grid">
+
+            {% for post in posts %}
+
+            <div class="post-box" onclick="goDetail('{{ post.id }}')" style="cursor: pointer;">
+
+                <!-- 1. 카테고리 -->
+                <div class="post-category">
+                    <span class="badge">{{ post.category }}</span>
+                </div>
+
+                <!-- 2. 사진 -->
+                <div class="post-img">
+                    {% if post.image_url %}
+
+                    {% if post.is_video %}
+                    <video src="{{ post.image_url }}" muted autoplay loop playsinline>
+                    </video>
+                    {% else %}
+                    <img src="{{ post.image_url }}" alt="첨부 이미지">
+                    {% endif %}
+
+                    {% else %}
+
+                    <div class="default-img"></div>
+
+                    {% endif %}
+                </div>
+
+                <!-- 3. 게시글 내용 -->
+                <div class="post-info">
+
+                    <h3 class="post-title">
+                        {{ post.title }}
+                    </h3>
+
+                    <p class="post-content">
+                        {% if post.content|length > 45 %}
+                        {{ post.content[:45] }}...
+                        {% else %}
+                        {{ post.content }}
+                        {% endif %}
+                    </p>
+
+                </div>
+
+                <!-- 4. 작성자 + 조회수 + 댓글 + 좋아요 -->
+                <div class="post-footer">
+
+                    <div class="author-info">
+                        {{ post.author }} |
+                        {{ post.created_at|timeago }}
+                    </div>
+
+                    <div class="post-stats">
+
+                        <span class="stat-badge">
+                            🔎 {{ post.views }}
+                        </span>
+
+                        <span class="stat-badge">
+                            💬 {{ post.comments_count }}
+                        </span>
+
+                        <span class="stat-badge">
+                            👍 {{ post.likes }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="no-post">
+                <p>등록된 게시글이 없습니다.</p>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+    <!-- {% include 'side_news.html' %} -->
+</div>

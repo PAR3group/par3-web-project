@@ -10,6 +10,8 @@ from par3 import db
 
 bp = Blueprint('chat', __name__, url_prefix='/join')
 
+DEFAULT_PROFILE_IMG = "https://raw.githubusercontent.com/feathericons/feather/master/icons/user.svg"
+
 
 def _check_participant(join_id):
     """로그인 + 해당 join 참여자(작성자 포함) 여부 확인"""
@@ -73,6 +75,7 @@ def chat_messages(join_id):
     return jsonify([{
         'sender_id': m.sender_id,
         'sender_nickname': m.sender.nickname,
+        'sender_profile_img': m.sender.profile_img or DEFAULT_PROFILE_IMG,
         'message': m.message,
         'created_at': m.created_at.strftime('%H:%M'),
     } for m in messages])
