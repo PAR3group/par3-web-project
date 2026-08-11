@@ -12,16 +12,18 @@ PAR3 - JOIN
 <div class="p_join">
 
   <div class="j_head">
-    <div class="j_head_left">
-      <h1 class="j_title">
-        <img src="{{ url_for('static', filename='img/join_imgs/join_icon.svg') }}" alt="" class="j_title_icon">
-        Join
-      </h1>
-      <p class="j_subtitle">함께 라운딩할 멤버를 찾아보세요.</p>
+    <div class="j_head_inner">
+      <div class="j_head_left">
+        <h1 class="j_title">
+          <!-- <img src="{{ url_for('static', filename='img/join_imgs/join_icon.svg') }}" alt="" class="j_title_icon"> -->
+          <img src="{{ url_for('static', filename='img/join_imgs/join_logo.png') }}" alt="Join" class="j_title_text_img">
+          <!-- Join -->
+        </h1>
+        <p class="j_subtitle">함께 라운딩할 멤버를 찾아보세요.</p>
+      </div>
+      <!-- <span class="j_live_status"><span class="j_live_dot"></span>실시간 골프 조인 현황</span> -->
     </div>
-    <span class="j_live_status"><span class="j_live_dot"></span>실시간 골프 조인 현황</span>
   </div>
-
   <div class="j_filter_bar">
 
     <div class="j_dropdown" id="j_dropdown_region">
