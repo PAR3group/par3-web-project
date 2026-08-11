@@ -32,6 +32,9 @@ async function likePost(postId) {
 
             alert('로그인이 필요한 기능입니다.');
 
+            window.location.href =
+            `/auth/login/?next=${encodeURIComponent(window.location.pathname)}`;
+
             return;
         }
 
@@ -88,8 +91,6 @@ async function likePost(postId) {
     }
 
 }
-
-
 
 /* ======================================================
    2. 댓글 등록
@@ -166,6 +167,8 @@ async function addComment(postId) {
             alert(
                 '로그인이 필요한 기능입니다.'
             );
+            window.location.href =
+            `/auth/login/?next=${encodeURIComponent(window.location.pathname)}`;
 
             return;
         }
