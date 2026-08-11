@@ -27,29 +27,6 @@
             margin-top: 70px;
         }
 
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-            color: #1b4332;
-            text-decoration: none;
-        }
-
-        .logo span {
-            color: #2d6a4f;
-        }
-
-        .header-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
         .btn-nav {
             padding: 8px 16px;
             background-color: #f1f3f5;
@@ -68,7 +45,7 @@
         /* 검색 영역 */
         .search-bar-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             margin: 25px 0;
         }
@@ -143,12 +120,12 @@
         }
 
         .brand-item:hover .brand-img {
-            border-color: #2d6a4f;
-            box-shadow: 0 0 0 1px #2d6a4f;
+            border-color: #00ce7c;
+            box-shadow: 0 0 0 1px #00ce7c;
         }
 
         .brand-item:hover .brand-name {
-            color: #2d6a4f;
+            color: #00ce7c;
         }
 
         /* 카테고리 섹션 */
@@ -182,12 +159,12 @@
         }
 
         .category-item:hover .category-img {
-            border-color: #2d6a4f;
-            box-shadow: 0 0 0 1px #2d6a4f;
+            border-color: #000;
+            box-shadow: 0 0 0 1px #000;
         }
 
         .category-item:hover .category-name {
-            color: #2d6a4f;
+            color: #000;
         }
 
         .category-section .category-item:first-child .category-img {
@@ -403,6 +380,8 @@
 
 <body>
 
+    <!-- 사이드 브랜드 텍스트 -->
+
     <div class="side-brand-text side-brand-text--left">
         <span class="side-brand-line"></span>
         <span class="side-brand-label">GOLF SHOP</span>
@@ -419,7 +398,6 @@
     <div class="container">
         <!-- 검색창 -->
         <div class="search-bar-container">
-            <a href="javascript:void(0)" id="logoContainer" class="shop-logo"></a>
             <div class="search-bar-right">
                 {% if g.user and g.user.is_admin %}
                 <a href="{{ url_for('shop.manage_products') }}" class="btn-nav" style="margin-right: 10px;">상품 관리</a>
@@ -629,11 +607,11 @@
 
                 currentList = products.filter(product => {
                     const title = product.title;
-                    if (category === '골프채') return /아이언|드라이버|IRON|DRIVER|웨지/.test(title);
+                    if (category === '골프채') return /아이언|드라이버|IRON|DRIVER|웨지|Hybrid/.test(title);
                     if (category === '골프백') return /백|스탠드백|캐디백|카트백/.test(title);
-                    if (category === '골프 웨어') return /티셔츠|블루종|큐롯/.test(title);
+                    if (category === '골프 웨어') return /티셔츠|블루종|큐롯|팬츠/.test(title);
                     if (category === '골프화') return /골프화|신발/.test(title);
-                    if (category === '기타용품') return /골프공|버킷햇/.test(title);
+                    if (category === '기타용품') return /골프공|버킷햇|우산/.test(title);
                     return true;
                 });
 

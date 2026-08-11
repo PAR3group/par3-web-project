@@ -282,6 +282,15 @@ body {
   gap: 8px;
 }
 
+.c_msg_avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #eceef1;
+}
+
 .c_msg_bubble {
   background: #ffffff;
   border: 1px solid #e4e6ea;

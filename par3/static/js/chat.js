@@ -24,9 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function appendMessage({ sender_id, sender_nickname, message, created_at }) {
+    function appendMessage({ sender_id, sender_nickname, sender_profile_img, message, created_at }) {
+        const isMine = sender_id === myUserId;
         const div = document.createElement('div');
-        div.className = 'c_msg' + (sender_id === myUserId ? ' c_msg--mine' : '');
+        div.className = 'c_msg' + (isMine ? ' c_msg--mine' : '');
 
         const nick = document.createElement('span');
         nick.className = 'c_msg_nick';
@@ -42,6 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const time = document.createElement('span');
         time.className = 'c_msg_time';
         time.textContent = created_at;
+
+        if (!isMine) {
+            const avatar = document.createElement('img');
+            avatar.className = 'c_msg_avatar';
+            avatar.src = sender_profile_img || 'https://raw.githubusercontent.com/feathericons/feather/master/icons/user.svg';
+            avatar.alt = sender_nickname;
+            row.appendChild(avatar);
+        }
 
         row.appendChild(bubble);
         row.appendChild(time);
