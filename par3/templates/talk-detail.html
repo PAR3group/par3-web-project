@@ -28,24 +28,39 @@
 
         <!-- 게시글 정보 -->
         <div class="detail-meta">
-            <span>
-                작성자:
-                <strong>{{ post.author }}</strong>
-            </span>
+            <div class="detail-author-profile">
 
-            <span>|</span>
+                {% if post.profile_img %}
+                    <img
+                        src="{{ post.profile_img }}"
+                        alt="{{ post.author }} 프로필"
+                        class="detail-author-img"
+                    >
+                {% else %}
+                    <div class="detail-author-default">
+                        👤
+                    </div>
+                {% endif %}
+
+                <span class="detail-author-name">
+                    {{ post.author }}
+                </span>
+
+            </div>
+
+            <span class="detail-meta-divider">|</span>
 
             <span>
                 작성일: {{ post.created_at|timeago }}
             </span>
 
-            <span>|</span>
+            <span class="detail-meta-divider">|</span>
 
             <span>
                 조회수 🔎 {{ post.views }}
             </span>
-        </div>
 
+        </div>
     </div>
 
 
@@ -236,8 +251,7 @@
                                 <button
                                     type="button"
                                     class="comment-action-btn"
-                                    disabled
-                                    title="답글 기능은 준비 중입니다."
+                                    onclick="showReplyForm('{{ comment.id }}')"
                                 >
                                     답글
                                 </button>

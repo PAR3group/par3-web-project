@@ -388,6 +388,19 @@
                 </div>
             </section>
 
+            <!-- 회원탈퇴 -->
+            <div class="mypage-withdraw-wrap">
+                <button
+                    type="submit"
+                    class="mypage-withdraw-link"
+                    formaction="{{ url_for('mypage.delete_account') }}"
+                    formmethod="POST"
+                    onclick="return confirm('정말 회원탈퇴 하시겠습니까?\n탈퇴 후에는 계정 정보를 복구할 수 없습니다.');"
+                >
+                    회원탈퇴
+                </button>
+            </div>
+
         </main>
     </form>
 </div>
@@ -428,11 +441,12 @@
     {% endfor %}
 </div>
 
-<!-- 내가 작성한 골프조인 글 실제 데이터 -->
-<div id="my-join-posts-data" style="display: none;">
-    {% for join in my_join_posts %}
+
+<!-- 내가 찜한 골프조인 실제 데이터 -->
+<div id="my-join-likes-data" style="display: none;">
+    {% for join in my_join_likes %}
     <div
-        class="my-join-post-data"
+        class="my-join-like-data"
         data-id="{{ join.id }}"
         data-title="{{ join.title }}"
         data-course="{{ join.course_name }}"
@@ -442,15 +456,29 @@
     {% endfor %}
 </div>
 
-<!-- 내가 참여한 골프조인 실제 데이터 -->
-<div id="my-join-participates-data" style="display: none;">
-    {% for join in my_join_participates %}
+
+<!-- 내가 작성한 게시글 실제 데이터 -->
+<div id="my-posts-data" style="display: none;">
+    {% for post in my_posts %}
     <div
-        class="my-join-participate-data"
+        class="my-post-data"
+        data-id="{{ post.id }}"
+        data-title="{{ post.title }}"        
+        data-content="{{ post.content[:35] }}{% if post.content|length > 35 %}...{% endif %}"
+        data-date="{{ post.created_at.strftime('%Y.%m.%d') }}"
+    ></div>    
+    {% endfor %}
+</div>
+
+<!-- 내가 작성한 골프조인 글 실제 데이터 -->
+<div id="my-join-posts-data" style="display: none;">
+    {% for join in my_join_posts %}
+    <div
+        class="my-join-post-data"
         data-id="{{ join.id }}"
         data-title="{{ join.title }}"
         data-course="{{ join.course_name }}"
-        data-date="{{ join.round_date }}"
+        data-date="{{ join.round_date.strftime('%Y-%m-%d') }}"
         data-time="{{ join.tee_time }}"
     ></div>
     {% endfor %}

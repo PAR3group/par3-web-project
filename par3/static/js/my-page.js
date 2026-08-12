@@ -297,7 +297,22 @@ document.addEventListener("DOMContentLoaded", () => {
         id: post.dataset.id,
         title: post.dataset.title,
         content: post.dataset.content,
-        date: post.dataset.date        
+        date: post.dataset.date
+    }));
+
+
+    // ------------------------------------------------------
+    // 실제 내가 찜한 골프조인
+    // ------------------------------------------------------
+
+    const myJoinLikeItems = Array.from(
+        document.querySelectorAll('.my-join-like-data')
+    ).map(join => ({
+        id: join.dataset.id,
+        title: join.dataset.title,
+        course: join.dataset.course,
+        date: join.dataset.date,
+        time: join.dataset.time
     }));
 
 
@@ -330,7 +345,11 @@ document.addEventListener("DOMContentLoaded", () => {
         time: join.dataset.time,
     }));
 
-    // 실제 장바구니 데이터 읽기
+
+    // ------------------------------------------------------
+    // 실제 장바구니 데이터
+    // ------------------------------------------------------
+
     const myCartItems = Array.from(
         document.querySelectorAll('.my-cart-item-data')
     ).map(item => ({
@@ -352,10 +371,9 @@ document.addEventListener("DOMContentLoaded", () => {
             items: myPostItems
         },
 
-        // 아직 실제 찜 저장 기능 연결 전
         join_likes: {
             title: "골프조인 찜내역",
-            items: ["제주도 골프투어", "강원도 조인"]
+            items: myJoinLikeItems
         },
 
         join_posts: {
@@ -368,7 +386,6 @@ document.addEventListener("DOMContentLoaded", () => {
             items: myJoinParticipateItems
         },
 
-        // 이후 실제 장바구니 DB로 변경 예정
         shop_likes: {
             title: "장바구니",
             items: myCartItems
@@ -427,6 +444,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             // ==================================================
+            // 내가 찜한 골프조인
+            // ==================================================
+
+            } else if (type === 'join_likes') {
+
+                if (data.items.length === 0) {
+
+                    modalBody.innerHTML = `
+                        <div class="modal-item">
+                            찜한 골프조인이 없습니다.
+                        </div>
+                    `;
+
+                } else {
+
+                    modalBody.innerHTML = data.items.map(item => `
+                        <div
+                            class="modal-item modal-post-item"
+                            onclick="goMyJoinLike(${item.id})"
+                        >
+                            <strong>${item.title || '제목 없음'}</strong>
+
+                            <div>
+                                ${item.date || ''} · ${item.course || ''} · 티오프 ${item.time || ''}
+                            </div>
+                        </div>
+                    `).join("");
+                }
+
+
+            // ==================================================
             // 내가 작성한 골프조인
             // ==================================================
 
@@ -454,8 +502,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     `).join("");
                 }
-                
-            
+
 
             // ==================================================
             // 내가 참여한 골프조인
@@ -474,14 +521,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
 
                     modalBody.innerHTML = data.items.map(item => `
-                        <div 
+                        <div
                             class="modal-item modal-post-item"
                             onclick="goMyJoinPost(${item.id})"
                         >
                             <strong>${item.title || '제목 없음'}</strong>
 
                             <div>
-                                ${item.date || ''} · ${item.course || ''} · 티오프 ${item.time || ''} 
+                                ${item.date || ''} · ${item.course || ''} · 티오프 ${item.time || ''}
                             </div>
                         </div>
                     `).join("");
@@ -490,8 +537,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             // ==================================================
-            // 나머지 이력
+            // 장바구니
             // ==================================================
+
             } else if (type === 'shop_likes') {
 
                 if (data.items.length === 0) {
@@ -512,6 +560,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     `).join("");
                 }
+
+
+            // ==================================================
+            // 나머지 이력
+            // ==================================================
 
             } else {
 
@@ -553,6 +606,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+
     // ======================================================
     // 7. 비밀번호 변경 모달
     // ======================================================
@@ -561,6 +615,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const openPasswordBtn = document.getElementById('btn-open-password');
     const closePasswordBtn = document.getElementById('btn-close-password');
 
+
     // 비밀번호 수정 버튼 → 모달 열기
     if (openPasswordBtn && passwordModal) {
         openPasswordBtn.addEventListener('click', function () {
@@ -568,12 +623,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+
     // X 버튼 → 모달 닫기
     if (closePasswordBtn && passwordModal) {
         closePasswordBtn.addEventListener('click', function () {
             passwordModal.classList.remove('show');
 
-            const passwordInputs = passwordModal.querySelectorAll('.password-input');
+            const passwordInputs =
+                passwordModal.querySelectorAll('.password-input');
 
             passwordInputs.forEach(input => {
                 input.value = '';
@@ -581,7 +638,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-  
+
 }); // DOMContentLoaded 끝
 
 
@@ -589,11 +646,16 @@ document.addEventListener("DOMContentLoaded", () => {
 // 이력관리 상세페이지 이동
 // ==========================================================
 
+
 // TALK 작성 게시글 → 해당 게시글 상세페이지
 function goMyPostDetail(postId) {
     window.location.href = `/talk/${postId}`;
 }
 
+// 찜한 골프조인 → 마이페이지 찜 상세보기
+function goMyJoinLike(joinId) {
+    window.location.href = `/join/apply/${joinId}`;
+}
 
 // 골프조인 작성글 / 참여내역 → 해당 조인 채팅방
 function goMyJoinPost(joinId) {
@@ -603,7 +665,8 @@ function goMyJoinPost(joinId) {
 // 장바구니 상품 → 상품 상세페이지
 function goMyCartProduct(productId) {
     window.location.href = `/shop/${productId}`;
-};
+}
+
 
 function goMyCart() {
     window.location.href = '/shop/cart';
