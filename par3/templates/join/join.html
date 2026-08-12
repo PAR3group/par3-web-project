@@ -26,6 +26,24 @@ PAR3 - JOIN
     </div>
   </div>
   <div class="j_filter_bar">
+    <!-- 전체 초록알약 -->
+    {% if g.user %}
+    <div class="j_my_filter" id="j_my_filter">
+      <button type="button" class="j_my_filter_bt" id="j_my_filter_bt">
+        <span id="j_my_filter_bt_text">전체</span>
+        <span class="j_filter_select_icon"></span>
+      </button>
+      <div class="j_my_filter_panel">
+        <label class="j_my_filter_option"><input type="radio" name="my_filter" value="all" checked> 전체</label>
+        <label class="j_my_filter_option"><input type="radio" name="my_filter" value="applied"> 참여중</label>
+        <label class="j_my_filter_option"><input type="radio" name="my_filter" value="owner"> 내모집</label>
+        <label class="j_my_filter_option"><input type="radio" name="my_filter" value="liked"> 관심글</label>
+        <label class="j_my_filter_option"><input type="radio" name="my_filter" value="available"> 참여가능</label>
+      </div>
+    </div>
+    {% endif %}
+    
+    <!-- 지역별/ 조건별/ 시간대별 드롭다운 -->
     <div class="j_dropdown" id="j_dropdown_region">
       <button type="button" class="j_dropdown_bt">
         지역별<span class="j_filter_select_icon"></span>
@@ -116,7 +134,11 @@ PAR3 - JOIN
     <div class="jt_row" data-date="{{ join.round_date }}" data-price="{{ join.cost }}"
       data-filled="{{ join.filled_count }}" data-total="{{ join.recruit_count }}" data-region="{{ join.region }}"
       data-condition="{{ join.gender_condition }}" data-timeslot="오전"
-      data-keyword="{{ join.course_name }} {{ join.course_info }} {{ join.writer_nickname }}" data-liked="{{ 'true' if join.is_liked else 'false' }}" data-join-id="{{ join.id }}">
+      data-keyword="{{ join.course_name }} {{ join.course_info }} {{ join.writer_nickname }}"
+      data-liked="{{ 'true' if join.is_liked else 'false' }}" data-join-id="{{ join.id }}"
+      data-is-applied="{{ 'true' if join.is_applied else 'false' }}"
+      data-is-owner="{{ 'true' if join.is_owner else 'false' }}"
+      data-is-full="{{ 'true' if join.is_full else 'false' }}">
 
       <div class="jt_date">
         <div class="jt_date_num">{{ join.round_date.strftime('%m.%d') }}</div>

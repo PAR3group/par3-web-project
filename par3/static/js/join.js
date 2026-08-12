@@ -11,11 +11,19 @@ document.addEventListener('DOMContentLoaded', function () {
   const searchInput = document.querySelector('.j_filter_search');
   const resetBt = document.getElementById('j_reset_bt');
 
+  const myFilterBt = document.getElementById('j_my_filter_bt');
+  const myFilterBtText = document.getElementById('j_my_filter_bt_text');
+  const myFilterEl = document.getElementById('j_my_filter');
+  let myFilterValue = 'all';
+
   const originalRows = Array.from(tableBody.querySelectorAll('.jt_row'));
 
   let currentSort = 'all';
   const selectedFilters = { region: [], condition: [], time: [] };
 
+  // ------------------------------------------------
+  // 하트(좋아요) 클릭 - 서버 API 연동
+  // ------------------------------------------------
   originalRows.forEach(function (row) {
     const heart = row.querySelector('.jt_heart_bt');
     const joinId = row.dataset.joinId;
@@ -25,24 +33,26 @@ document.addEventListener('DOMContentLoaded', function () {
       e.stopPropagation();
 
       fetch('/join/api/toggle_like/' + joinId, {
-      method: 'POST',
-    })
-      .then(function (res) {
-        if (res.status === 401) {
-          // 로그인 안 된 상태 → 로그인 페이지로 이동 (현재 페이지로 돌아올 수 있게 next 파라미터 전달)
-          window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
-          return null;
-        }
-        return res.json();
+        method: 'POST',
       })
-      .then(function (data) {
-        if (data) {
-          row.dataset.liked = data.liked ? 'true' : 'false';
-        }
-      });
+        .then(function (res) {
+          if (res.status === 401) {
+            window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
+            return null;
+          }
+          return res.json();
+        })
+        .then(function (data) {
+          if (data) {
+            row.dataset.liked = data.liked ? 'true' : 'false';
+          }
+        });
+    });
   });
-});
 
+  // ------------------------------------------------
+  // 지역/조건/시간대 드롭다운
+  // ------------------------------------------------
   document.querySelectorAll('.j_dropdown').forEach(function (dropdown) {
     const btn = dropdown.querySelector('.j_dropdown_bt');
 
@@ -61,6 +71,9 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.j_dropdown').forEach(function (d) {
       d.classList.remove('j_dropdown--open');
     });
+    if (myFilterEl) {
+      myFilterEl.classList.remove('j_my_filter--open');
+    }
   });
 
   function bindDropdownCheckboxes(dropdownId, filterKey) {
@@ -146,31 +159,67 @@ document.addEventListener('DOMContentLoaded', function () {
 
   searchInput.addEventListener('input', applyFilterAndSort);
 
-  function applyFilterAndSort() {
-    const keyword = searchInput.value.trim().toLowerCase();
-
-    let rows = originalRows.filter(function (row) {
-      if (selectedFilters.region.length > 0 && !selectedFilters.region.includes(row.dataset.region)) {
-        return false;
-      }
-      if (selectedFilters.condition.length > 0 && !selectedFilters.condition.includes(row.dataset.condition)) {
-        return false;
-      }
-      if (selectedFilters.time.length > 0 && !selectedFilters.time.includes(row.dataset.timeslot)) {
-        return false;
-      }
-      if (excludeFullCheckbox.checked && Number(row.dataset.filled) >= Number(row.dataset.total)) {
-        return false;
-      }
-      if (keyword && !row.dataset.keyword.toLowerCase().includes(keyword)) {
-        return false;
-      }
-      return true;
+  // ------------------------------------------------
+  // 참여중/내모집/관심글/참여가능 드롭다운
+  // ------------------------------------------------
+  if (myFilterBt) {
+    myFilterBt.addEventListener('click', function (e) {
+      e.stopPropagation();
+      myFilterEl.classList.toggle('j_my_filter--open');
     });
 
-    rows = sortRows(rows, currentSort);
-    renderRows(rows);
+    document.querySelectorAll('input[name="my_filter"]').forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        myFilterValue = radio.value;
+        myFilterBtText.textContent = radio.parentElement.textContent.trim();
+        myFilterEl.classList.remove('j_my_filter--open');
+        applyFilterAndSort();
+      });
+    });
   }
+
+  // ------------------------------------------------
+  // 필터 + 정렬 적용 (핵심 함수)
+  // ------------------------------------------------
+  function applyFilterAndSort() {
+  const keyword = searchInput.value.trim().toLowerCase();
+
+  let rows = originalRows.filter(function (row) {
+    if (selectedFilters.region.length > 0 && !selectedFilters.region.includes(row.dataset.region)) {
+      return false;
+    }
+    if (selectedFilters.condition.length > 0 && !selectedFilters.condition.includes(row.dataset.condition)) {
+      return false;
+    }
+    if (selectedFilters.time.length > 0 && !selectedFilters.time.includes(row.dataset.timeslot)) {
+      return false;
+    }
+    if (excludeFullCheckbox.checked && Number(row.dataset.filled) >= Number(row.dataset.total)) {
+      return false;
+    }
+
+    if (myFilterValue === 'applied' && (row.dataset.isApplied !== 'true' || row.dataset.isOwner === 'true')) {
+      return false;
+    }
+    if (myFilterValue === 'owner' && row.dataset.isOwner !== 'true') {
+      return false;
+    }
+    if (myFilterValue === 'liked' && row.dataset.liked !== 'true') {
+      return false;
+    }
+    if (myFilterValue === 'available' && (row.dataset.isFull === 'true' || row.dataset.isApplied === 'true' || row.dataset.isOwner === 'true')) {
+      return false;
+    }
+
+    if (keyword && !row.dataset.keyword.toLowerCase().includes(keyword)) {
+      return false;
+    }
+    return true;
+  });
+
+  rows = sortRows(rows, currentSort);
+  renderRows(rows);
+}
 
   function sortRows(rows, sortType) {
     const copied = rows.slice();
