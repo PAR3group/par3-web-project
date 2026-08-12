@@ -109,7 +109,7 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 .j_subtitle {
   font-size: 13px;
   font-weight: 500;
-  color: #000;
+  color: #031206;
   margin-top: 6px;
 }
 .j_live_status {
@@ -580,8 +580,18 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   white-space: nowrap;
   transition: opacity 0.15s;
 }
-.jt_join_bt:hover { opacity: 0.9; }
+.jt_join_bt:hover { opacity: 0.9; 
+  background-color: #16233f;}
 .jt_join_bt_arrow { font-size: 14px; }
+
+/*--수정하기버튼--*/
+.jt_join_bt--edit {
+  background: #16233f;
+  color: #fff;
+}
+.jt_join_bt--edit:hover {
+  background: #223258;
+}
 
 
 /* ===== 참여중 (본인 작성 글 또는 이미 신청함) - 회색 비활성화 ===== */

@@ -179,6 +179,12 @@ class Join(db.Model):
     thumb_img = db.Column(db.String(200), default='golf_replace.png')  # 이미지 없을 때 기본 이미지         # 썸네일 이미지 파일명
     create_date = db.Column(db.DateTime, default=datetime.now)
 
+class JoinLike(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    join_id = db.Column(db.Integer, db.ForeignKey("join.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    create_date = db.Column(db.DateTime, default=datetime.now)
+
 
 # 조인페이지 - 실시간 채팅 메시지
 class ChatMessage(db.Model):

@@ -6,9 +6,11 @@
 # ============================================
 
 from flask import Blueprint, redirect, render_template, request, url_for,g
-from par3.models import Join, JoinApply, User
+from par3.models import Join, JoinApply, User, JoinLike
 from par3 import db
 from datetime import date, datetime
+import random  #추가
+from par3.tour_api import search_golf_courses  #추가
 
 # 'join' 이라는 이름의 블루프린트 생성
 # url_prefix='/join' → 이 블루프린트 안의 모든 라우트는 앞에 자동으로 /join 이 붙음
@@ -42,9 +44,12 @@ def join_list():
         if g.user is not None:
             j.is_owner = (j.writer_id == g.user.id)
             j.is_applied = JoinApply.query.filter_by(join_id=j.id, applicant_id=g.user.id).first() is not None
+            # 추가: 로그인 사용자가 이 글에 좋아요를 눌렀는지 확인
+            j.is_liked = JoinLike.query.filter_by(join_id=j.id, user_id=g.user.id).first() is not None
         else:
             j.is_owner = False
             j.is_applied = False
+            j.is_liked = False
 
         j.is_full = j.filled_count >= j.recruit_count
 
@@ -186,3 +191,128 @@ def golf_courses():
     keyword = request.args.get('keyword', '').strip()
     results = search_golf_courses(region or None, keyword or None)
     return {'results': results}
+
+
+# ------------------------------------------------
+# 조인 글 수정 (작성자 전용)
+# GET  : 기존 값 그대로 불러와서 폼에 채워서 보여줌
+# POST : 수정 내용 저장
+# ------------------------------------------------
+@bp.route('/edit/<int:join_id>', methods=['GET', 'POST'])
+def join_edit(join_id):
+    if g.user is None:
+        return redirect(url_for('auth.login', next=request.path))
+
+    join = Join.query.get_or_404(join_id)
+
+    # 작성자 본인이 아니면 접근 불가
+    if join.writer_id != g.user.id:
+        return redirect(url_for('join.join_list'))
+
+    # 신청자 목록 (취소 버튼과 함께 화면에 표시)
+    applies = JoinApply.query.filter_by(join_id=join.id).all()
+
+    if request.method == 'POST':
+        new_recruit_count = int(request.form['recruit_count']) if request.form.get('recruit_count') else join.recruit_count
+
+        # 모집 인원을 이미 신청한 인원보다 적게 줄이는 것 방지
+        if new_recruit_count < join.filled_count:
+            return render_template(
+                'join/join_edit.html',
+                join=join,
+                applies=applies,
+                error='이미 신청한 인원(' + str(join.filled_count) + '명)보다 적게 설정할 수 없습니다.'
+            )
+
+        join.course_name = request.form['course_name']
+        join.region = request.form.get('region', join.region)
+        join.round_date = datetime.strptime(request.form['round_date'], '%Y-%m-%d').date()
+        join.tee_time = request.form['tee_time']
+        join.course_info = request.form['course_info']
+        join.cost = int(request.form['cost']) if request.form['cost'] else join.cost
+        join.recruit_count = new_recruit_count
+        join.gender_condition = request.form.get('gender_condition', join.gender_condition)
+        join.title = request.form['title']
+        join.content = request.form['content']
+
+        # 새 이미지를 다시 검색해서 선택한 경우에만 갱신 (안 바꿨으면 기존 유지)
+        new_thumb = request.form.get('thumb_img_url')
+        if new_thumb:
+            join.thumb_img = new_thumb
+
+        db.session.commit()
+        return redirect(url_for('join.join_list'))
+
+    return render_template('join/join_edit.html', join=join, applies=applies, error=None)
+
+
+# ------------------------------------------------
+# 조인 글 삭제 (작성자 전용, 신청자가 없을 때만 가능)
+# ------------------------------------------------
+@bp.route('/delete/<int:join_id>', methods=['POST'])
+def join_delete(join_id):
+    if g.user is None:
+        return redirect(url_for('auth.login', next=request.path))
+
+    join = Join.query.get_or_404(join_id)
+
+    if join.writer_id != g.user.id:
+        return redirect(url_for('join.join_list'))
+
+    applies_count = JoinApply.query.filter_by(join_id=join.id).count()
+    if applies_count > 0:
+        # 신청자가 있으면 삭제 불가 (화면에서도 버튼 비활성화하지만, 서버에서도 한 번 더 방어)
+        return redirect(url_for('join.join_edit', join_id=join.id))
+
+    db.session.delete(join)
+    db.session.commit()
+    return redirect(url_for('join.join_list'))
+
+
+# ------------------------------------------------
+# 신청자 개별 취소 (작성자 전용)
+# ------------------------------------------------
+@bp.route('/cancel_applicant/<int:apply_id>', methods=['POST'])
+def cancel_applicant(apply_id):
+    if g.user is None:
+        return redirect(url_for('auth.login', next=request.path))
+
+    apply_record = JoinApply.query.get_or_404(apply_id)
+    join = Join.query.get_or_404(apply_record.join_id)
+
+    # 이 조인 글의 작성자만 취소 가능
+    if join.writer_id != g.user.id:
+        return redirect(url_for('join.join_list'))
+
+    db.session.delete(apply_record)
+
+    # 참가자 수 다시 계산 (음수 방지)
+    if join.filled_count > 0:
+        join.filled_count -= 1
+
+    db.session.commit()
+    return redirect(url_for('join.join_edit', join_id=join.id))
+
+from par3.models import Join, User, JoinApply, JoinLike
+
+# ------------------------------------------------
+# 좋아요(관심목록) 토글 API
+# 접속 주소: POST /join/api/toggle_like/<join_id>
+# 이미 눌렀으면 취소(삭제), 안 눌렀으면 추가
+# ------------------------------------------------
+@bp.route('/api/toggle_like/<int:join_id>', methods=['POST'])
+def toggle_like(join_id):
+    if g.user is None:
+        return {'error': '로그인이 필요합니다.'}, 401
+
+    existing = JoinLike.query.filter_by(join_id=join_id, user_id=g.user.id).first()
+
+    if existing:
+        db.session.delete(existing)
+        db.session.commit()
+        return {'liked': False}
+    else:
+        new_like = JoinLike(join_id=join_id, user_id=g.user.id)
+        db.session.add(new_like)
+        db.session.commit()
+        return {'liked': True}

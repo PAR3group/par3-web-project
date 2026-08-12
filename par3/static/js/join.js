@@ -18,13 +18,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
   originalRows.forEach(function (row) {
     const heart = row.querySelector('.jt_heart_bt');
+    const joinId = row.dataset.joinId;
+
     heart.addEventListener('click', function (e) {
       e.preventDefault();
       e.stopPropagation();
-      const isLiked = row.dataset.liked === 'true';
-      row.dataset.liked = isLiked ? 'false' : 'true';
-    });
+
+      fetch('/join/api/toggle_like/' + joinId, {
+      method: 'POST',
+    })
+      .then(function (res) {
+        if (res.status === 401) {
+          // 로그인 안 된 상태 → 로그인 페이지로 이동 (현재 페이지로 돌아올 수 있게 next 파라미터 전달)
+          window.location.href = '/auth/login?next=' + encodeURIComponent(window.location.pathname);
+          return null;
+        }
+        return res.json();
+      })
+      .then(function (data) {
+        if (data) {
+          row.dataset.liked = data.liked ? 'true' : 'false';
+        }
+      });
   });
+});
 
   document.querySelectorAll('.j_dropdown').forEach(function (dropdown) {
     const btn = dropdown.querySelector('.j_dropdown_bt');
