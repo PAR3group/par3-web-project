@@ -1,12 +1,30 @@
 from functools import wraps
+from sqlalchemy import or_
 from flask import g, jsonify, render_template, flash, Blueprint, request
 from par3.views.auth_views import login_required
 from par3.forms import RecommendForm
-from par3.models import ShaftRecommend
+from par3.models import ShaftRecommend, ShopProduct
+from par3.views.shop_views import product_to_dict
 from par3 import db
 from par3.utils import *
 
 bp = Blueprint('recommend', __name__, url_prefix='/recommend')
+
+# 샵 상품 중 클럽 구매 카드에 띄울 "골프채" 종류만 골라내기 위한 키워드
+CLUB_KEYWORDS = ['드라이버', '아이언', '우드', '유틸', '웨지', '퍼터',
+                  'DRIVER', 'IRON', 'WOOD', 'UTILITY', 'WEDGE', 'PUTTER']
+
+
+def get_club_products(limit=3):
+    filters = [ShopProduct.title.ilike(f'%{kw}%') for kw in CLUB_KEYWORDS]
+    products = (
+        ShopProduct.query
+        .filter(or_(*filters))
+        .order_by(ShopProduct.created_at.desc())
+        .limit(limit)
+        .all()
+    )
+    return [product_to_dict(p) for p in products]
 
 
 # [추가] fetch로 호출되는 API용 로그인 체크 - 비로그인 시 리다이렉트 대신 JSON으로 응답
@@ -25,6 +43,7 @@ def shaft():
     form = RecommendForm()
     result = None
     flex = "-"  # [수정] flex도 기본값 미리 설정 (조건 분기 안 타는 경로 대비, result와 동일한 문제 방지)
+    shop_products = get_club_products()
 
     if form.validate_on_submit():
 
@@ -35,14 +54,14 @@ def shaft():
             form.iron7_selected.data
         ]):
             flash("추천받을 클럽을 하나 이상 선택해주세요.")
-            return render_template("recommend/recommend.html", form=form, result=result, flex=flex)
+            return render_template("recommend/recommend.html", form=form, result=result, flex=flex, shop_products=shop_products)
 
         result = {}
 
         if form.driver_selected.data:
             if not form.driver_distance.data:
                 flash("드라이버 목표 비거리를 입력해주세요.")
-                return render_template("recommend/recommend.html", form=form, result=result, flex=flex)
+                return render_template("recommend/recommend.html", form=form, result=result, flex=flex, shop_products=shop_products)
 
             distance = convert_distance(form.driver_distance.data, form.distance_unit.data)
             result["driver"] = recommend_shaft_weight(
@@ -53,7 +72,7 @@ def shaft():
         if form.wood5_selected.data:
             if not form.wood5_distance.data:
                 flash("5번 우드 목표 비거리를 입력해주세요.")
-                return render_template("recommend/recommend.html", form=form, result=result, flex=flex)
+                return render_template("recommend/recommend.html", form=form, result=result, flex=flex, shop_products=shop_products)
 
             distance = convert_distance(form.wood5_distance.data, form.distance_unit.data)
             result["wood5"] = recommend_shaft_weight(
@@ -64,7 +83,7 @@ def shaft():
         if form.utility4_selected.data:
             if not form.utility4_distance.data:
                 flash("4번 유틸 목표 비거리를 입력해주세요.")
-                return render_template("recommend/recommend.html", form=form, result=result, flex=flex)
+                return render_template("recommend/recommend.html", form=form, result=result, flex=flex, shop_products=shop_products)
 
             distance = convert_distance(form.utility4_distance.data, form.distance_unit.data)
             result["utility4"] = recommend_shaft_weight(
@@ -75,7 +94,7 @@ def shaft():
         if form.iron7_selected.data:
             if not form.iron7_distance.data:
                 flash("7번 아이언 목표 비거리를 입력해주세요.")
-                return render_template("recommend/recommend.html", form=form, result=result, flex=flex)
+                return render_template("recommend/recommend.html", form=form, result=result, flex=flex, shop_products=shop_products)
 
             distance = convert_distance(form.iron7_distance.data, form.distance_unit.data)
             result["iron7"] = recommend_shaft_weight(
@@ -106,9 +125,9 @@ def shaft():
         else:
             flex = "-"
 
-        return render_template("recommend/recommend.html", form=form, result=result, flex=flex)
+        return render_template("recommend/recommend.html", form=form, result=result, flex=flex, shop_products=shop_products)
 
-    return render_template("recommend/recommend.html", form=form, result=result, flex=flex)
+    return render_template("recommend/recommend.html", form=form, result=result, flex=flex, shop_products=shop_products)
 
 
 @bp.route('/api/save-recommend', methods=['POST'])

@@ -12,42 +12,53 @@
     background: #ffffff;
 }
 
-/* ===== 페이지 헤더 (join의 .j_head와 동일 구조) ===== */
+/* ===== 페이지 헤더 (join의 .j_head와 동일한 풀블리드 배경 이미지 구조) ===== */
 .rc_page_head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    position: relative;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    margin-top: -32px;
     margin-bottom: 24px;
+    padding: 24px 0 30px;
+    overflow: hidden;
+    background-image: linear-gradient(90deg, rgba(6, 10, 20, 0.82) 0%, rgba(6, 10, 20, 0.55) 45%, rgba(6, 10, 20, 0.25) 100%), url('/static/img/m_fitting_bg2.png');
+    background-size: cover;
+    background-position: center;
+}
+
+.rc_page_head_inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 24px;
 }
 
 .rc_page_title {
-    font-size: 26px;
-    font-weight: 700;
-    color: #16233f;
+    font-size: 34px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-top: 8px;
 }
 
 .rc_page_subtitle {
-    font-size: 13px;
-    color: #8a93a3;
-    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #e6e9ef;
+    line-height: 1.5;
+    margin-top: 12px;
     max-width: 480px;
 }
 
 .rc_live_status {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 12px;
-    color: #6b7280;
-    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
     white-space: nowrap;
-}
-
-.rc_live_dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #0f6e56;
 }
 
 .rc_wrap {
@@ -371,6 +382,7 @@
     padding: 10px;
     border: 1px solid #eceef1;
     border-radius: 10px;
+    min-width: 0;
     transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 
@@ -391,6 +403,9 @@
     font-size: 12px;
     color: #16233f;
     margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .rc_shop_price {
