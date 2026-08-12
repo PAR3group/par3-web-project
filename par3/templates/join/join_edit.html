@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block title %}
+PAR3 - JOIN EDIT
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/join_create.css') }}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="p_join_create">
+
+  <div class="jc_head">
+    <h1 class="jc_title">
+      <img src="{{ url_for('static', filename='img/join_imgs/join_icon.svg') }}" alt="" class="j_title_icon">
+      Join Edit
+    </h1>
+    <p class="jc_subtitle">조인 글을 수정하거나 관리할 수 있어요.</p>
+  </div>
+
+  {% if error %}
+  <div class="jc_error_box">{{ error }}</div>
+  {% endif %}
+
+  <form class="g_form" action="/join/edit/{{ join.id }}" method="POST" data-max-companions="0">
+
+    <!-- ===== 섹션 1. 기본 라운드 정보 ===== -->
+    <div class="g_form_section">
+      <div class="g_form_section_title">1. 기본 라운드 정보</div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">골프장 선택</label>
+        <div class="g_form_input jc_course_row">
+          <div class="jc_region_select" id="jc_region_select">
+            <button type="button" class="jc_region_bt">
+              <span class="jc_region_bt_text">{{ join.region }}</span>
+              <span class="jc_region_icon"></span>
+            </button>
+            <div class="jc_region_panel">
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="서울"> 서울</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="인천"> 인천</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="대전"> 대전</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="대구"> 대구</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="광주"> 광주</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="부산"> 부산</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="울산"> 울산</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="세종"> 세종</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="경기"> 경기</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="강원도"> 강원도</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="충청북도"> 충청북도</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="충청남도"> 충청남도</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="경상북도"> 경상북도</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="경상남도"> 경상남도</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="전라북도"> 전라북도</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="전라남도"> 전라남도</label>
+              <label class="jc_region_option"><input type="radio" name="region_radio" value="제주도"> 제주도</label>
+            </div>
+          </div>
+
+          <div class="jc_course_search_wrap">
+            <input type="text" class="g_form_input--text" id="jc_course_search_input"
+                   value="{{ join.course_name }}" placeholder="골프장 이름을 검색하거나, 지역을 선택하면 목록이 나와요" autocomplete="off" required>
+            <div class="jc_course_panel" id="jc_course_panel"></div>
+          </div>
+
+          <input type="hidden" name="course_name" id="jc_course_name_hidden" value="{{ join.course_name }}">
+          <input type="hidden" name="region" id="jc_region_hidden" value="{{ join.region }}">
+          <input type="hidden" name="thumb_img_url" id="jc_thumb_img_hidden" value="{{ join.thumb_img }}">
+        </div>
+      </div>
+
+      <div class="g_form_row jc_two_field_row">
+        <div class="jc_field_half">
+          <label class="g_form_label">티오프 시간</label>
+          <div class="g_form_input">
+            <div class="jc_time_wrap">
+              <span class="jc_time_icon"></span>
+              <input type="text" class="g_form_input--time" id="tee_time_picker" name="tee_time"
+                     value="{{ join.tee_time }}" placeholder="11:30" autocomplete="off" required>
+            </div>
+          </div>
+        </div>
+        <div class="jc_field_half">
+          <label class="g_form_label">코스 이름</label>
+          <div class="g_form_input">
+            <input type="text" class="g_form_input--text" name="course_info" value="{{ join.course_info }}" placeholder="코스 이름" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">라운드 날짜</label>
+        <div class="g_form_input">
+          <div class="jc_date_wrap">
+            <span class="jc_date_icon"></span>
+            <input type="text" class="g_form_input--date" id="round_date_picker" name="round_date"
+                   value="{{ join.round_date }}" placeholder="2026-08-09" autocomplete="off" required>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 섹션 2. 비용 및 인원 조건 ===== -->
+    <div class="g_form_section">
+      <div class="g_form_section_title">2. 비용 및 인원 조건</div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">그린피/캐디피</label>
+        <div class="g_form_input">
+          <input type="text" class="g_form_input--text" name="cost" value="{{ join.cost }}" placeholder="1인 기준 비용" required>
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">모집 인원</label>
+        <div class="g_form_input">
+          <div class="g_form_input--radio">
+            <label><input type="radio" name="recruit_count" value="3" {% if join.recruit_count == 3 %}checked{% endif %}> 3인 1팀</label>
+            <label><input type="radio" name="recruit_count" value="4" {% if join.recruit_count == 4 %}checked{% endif %}> 4인 필수</label>
+          </div>
+          <!-- ⚠️ 이미 신청한 인원(filled_count)보다 적게는 서버에서 막힘 -->
+          <p class="jc_hint_text">현재 참가자 {{ join.filled_count }}명 참여 중 (이보다 적게 설정할 수 없어요)</p>
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">성별 조건</label>
+        <div class="g_form_input g_form_input--radio">
+          <label><input type="radio" name="gender_condition" value="무관" {% if join.gender_condition == '무관' %}checked{% endif %}> 무관</label>
+          <label><input type="radio" name="gender_condition" value="남성만" {% if join.gender_condition == '남성만' %}checked{% endif %}> 남성만</label>
+          <label><input type="radio" name="gender_condition" value="여성만" {% if join.gender_condition == '여성만' %}checked{% endif %}> 여성만</label>
+          <label><input type="radio" name="gender_condition" value="부부" {% if join.gender_condition == '부부' %}checked{% endif %}> 부부</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 섹션 3. 상세 내용 및 소통 ===== -->
+    <div class="g_form_section">
+      <div class="g_form_section_title">3. 상세 내용 및 소통</div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">제목</label>
+        <div class="g_form_input">
+          <input type="text" class="g_form_input--text" name="title" value="{{ join.title }}" required>
+        </div>
+      </div>
+
+      <div class="g_form_row">
+        <label class="g_form_label">상세 내용</label>
+        <div class="g_form_input">
+          <textarea class="g_form_input--textarea" name="content" required>{{ join.content }}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 섹션 4. 신청자 목록 (작성자 전용 관리) ===== -->
+    <div class="g_form_section">
+      <div class="g_form_section_title">4. 신청자 목록 ({{ applies|length }}명)</div>
+
+      {% if applies|length == 0 %}
+      <p class="jc_hint_text jc_empty_applies">아직 신청자가 없어요.</p>
+      {% else %}
+      <div class="jc_applicant_manage_list">
+        {% for a in applies %}
+        <div class="jc_applicant_manage_row">
+          <span class="jc_applicant_manage_name">{{ a.applicant_name }}</span>
+          <span class="jc_applicant_manage_phone">{{ a.applicant_phone }}</span>
+          <button type="button" class="jc_cancel_applicant_bt" data-apply-id="{{ a.id }}">취소</button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="jc_form_actions">
+      {% if applies|length == 0 %}
+      <button type="button" class="jc_delete_bt" id="jc_delete_bt">글 삭제</button>
+      {% else %}
+      <button type="button" class="jc_delete_bt" disabled title="신청자가 있어 삭제할 수 없어요">글 삭제</button>
+      {% endif %}
+      <a href="{{ url_for('join.join_list') }}" class="jc_cancel_bt">취소</a>
+      <button type="submit" class="jc_submit_bt" id="jc_submit_bt">수정하기</button>
+    </div>
+
+  </form>
+</div>
+
+<!-- 신청자 취소용 숨김 폼 -->
+<form id="jc_cancel_applicant_form" method="POST" style="display:none;"></form>
+
+<!-- 글 삭제용 숨김 폼 -->
+<form id="jc_delete_form" action="/join/delete/{{ join.id }}" method="POST" style="display:none;"></form>
+
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="{{ url_for('static', filename='js/join_create.js') }}"></script>
+<script src="{{ url_for('static', filename='js/join_edit.js') }}"></script>
+{% endblock %}

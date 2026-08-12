@@ -17,14 +17,14 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
 .p_join_create {
   max-width: 900px;
   margin: 0 auto;
-  padding: 32px 24px 80px;
+  padding: 32px 24px 100px;
   background: #ffffff;
 }
 
 /* ===== jc_head : 페이지 상단 타이틀 영역 ===== */
 .jc_head { margin-bottom: 24px; }
 .jc_title {
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 800;
   font-family: 'Montserrat', sans-serif;
   letter-spacing: 1px;    /* 자간 간격 */
@@ -51,11 +51,11 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
    g_form : 공통 폼 컴포넌트 (join_apply.css와 동일 구조)
    ============================================ */
 .g_form_section {
-  margin-bottom: 20px;
+  margin-bottom: 22px;
   background: #ffffff;
   border: 1px solid #eceef1;
   border-radius: 14px;
-  overflow: visible;
+  overflow: hidden;
   box-shadow: 0 2px 4px rgba(16, 24, 40, 0.05), 0 4px 10px rgba(16, 35, 63, 0.05);
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
@@ -376,34 +376,59 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   text-align: center;
 }
 
-/* ===== jc_submit_bt : CREATE 버튼 ===== */
-.jc_submit_bt {
+/* ===== jc_form_actions : 취소 + 등록하기, 우측 정렬 2버튼 ===== */
+.jc_form_actions {
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  margin-top: 12px;
-  background: linear-gradient(135deg, #3f9a92 0%, #0f6e56 60%, #0c5a46 100%);
-  color: #fff;
-  padding: 14px;
-  border-radius: 14px;
-  border: none;
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: 0.3px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(15, 110, 86, 0.25);
-  transition: box-shadow 0.15s, transform 0.15s, opacity 0.15s;
-}
-.jc_submit_bt:hover {
-  box-shadow: 0 8px 20px rgba(15, 110, 86, 0.32);
-  transform: translateY(-2px);
+  gap: 10px;
+  margin-top: 32px;
 }
 
-.jc_submit_bt:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(15, 110, 86, 0.25);
+.g_form {
+  display: block;
+  padding-bottom: 90px;
+}
+
+.jc_cancel_bt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 22px;
+  border: 1px solid #dde3e0;
+  border-radius: 8px;
+  background: #fff;
+  color: #6b7671;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.jc_cancel_bt:hover {
+  border-color: #b5bdb9;
+  color: #3c463f;
+}
+
+.jc_submit_bt {
+  height: 48px;
+  padding: 0 34px;
+  border: none;
+  border-radius: 8px;
+  background: #16233f;
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.jc_submit_bt:hover {
+  background: #0037ff;
+}
+.jc_submit_bt:disabled {
+  background: #edf0ef;
+  color: #a3ada9;
+  cursor: default;
 }
 
 /* ===== jc_required_mark ===== */
@@ -412,6 +437,100 @@ body { font-family: 'Pretendard', -apple-system, sans-serif; background: #ffffff
   font-weight: 700;
   margin-left: 4px;
 }
+
+/* ===== jc_hint_text : 안내 문구 ===== */
+.jc_hint_text {
+  font-size: 12px;
+  color: #9099a8;
+  margin-top: 6px;
+  padding: 0 16px 12px;
+}
+
+/* ===== jc_error_box : 유효성 에러 메시지 ===== */
+.jc_error_box {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+/* ===== jc_applicant_manage_list : 신청자 목록 (수정 페이지 전용) ===== */
+.jc_applicant_manage_list {
+  padding: 8px 16px 16px;
+}
+
+.jc_applicant_manage_row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eceef1;
+}
+.jc_applicant_manage_row:last-child {
+  border-bottom: none;
+}
+
+.jc_applicant_manage_name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #16233f;
+  flex: 1;
+}
+.jc_applicant_manage_phone {
+  font-size: 12px;
+  color: #9099a8;
+}
+
+.jc_cancel_applicant_bt {
+  background: none;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.jc_cancel_applicant_bt:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* ===== jc_form_actions : 삭제 + 취소 + 수정하기, 3버튼 ===== */
+.jc_form_actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.jc_delete_bt {
+  height: 48px;
+  padding: 0 20px;
+  border: 1px solid #ef4444;
+  border-radius: 8px;
+  background: #fff;
+  color: #ef4444;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  margin-right: auto;   /* 왼쪽 끝으로 분리 */
+}
+.jc_delete_bt:hover {
+  background: #ef4444;
+  color: #fff;
+}
+.jc_delete_bt:disabled {
+  border-color: #d8dce4;
+  color: #d8dce4;
+  cursor: not-allowed;
+  background: #fff;
+}
+
+
 
 /* ============================================
    반응형

@@ -9,8 +9,9 @@ PAR3 - JOIN CREATE
 
   <!-- jc_head : 페이지 타이틀 영역 (join.html의 j_head와 동일 톤) -->
   <div class="jc_head">
-    <h1 class="jc_title"><img src="{{ url_for('static', filename='img/join_imgs/join_icon.svg') }}" alt="" class="j_title_icon">
-        Join </h1>
+    <h1 class="jc_title"><img src="{{ url_for('static', filename='img/join_imgs/join_icon.svg') }}" alt=""
+        class="j_title_icon">
+      Join </h1>
     <p class="jc_subtitle">라운딩 멤버를 모집해보세요.</p>
   </div>
 
@@ -151,11 +152,13 @@ PAR3 - JOIN CREATE
           </div>
         </div>
       </div>
-
-      <!-- jc_submit_bt : CREATE 버튼, join.html의 jt_join_bt와 동일 톤 -->
-      <button type="submit" class="jc_submit_bt">CREATE</button>
-
   </form>
+
+   <!-- jc_submit_bt : CREATE 버튼, join.html의 jt_join_bt와 동일 톤 -->
+  <div class="jc_form_actions">
+    <a href="{{ url_for('join.join_list') }}" class="jc_cancel_bt">취소</a>
+    <button type="submit" class="jc_submit_bt" id="jc_submit_bt">등록하기</button>
+  </div>
 
 </div>
 {% endblock %}
