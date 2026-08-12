@@ -45,20 +45,22 @@
         /* 검색 영역 */
         .search-bar-container {
             display: flex;
-            justify-content: flex-end;
+            flex-direction: column;
             align-items: center;
             margin: 25px 0;
+            justify-content: center;
         }
 
-        .shop-logo {
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
+        .shop_m_logo>img {
+            max-width: 700px;
+            height: auto;
+            margin-bottom: 20px;
         }
 
         .search-bar-right {
             display: flex;
             align-items: center;
+            margin-left: auto;
         }
 
         .search-bar {
@@ -398,6 +400,9 @@
     <div class="container">
         <!-- 검색창 -->
         <div class="search-bar-container">
+            <div class="shop_m_logo">
+                <img src="{{url_for('static', filename='logo/shop_logo.png')}}" alt="shop_logo">
+            </div>
             <div class="search-bar-right">
                 {% if g.user and g.user.is_admin %}
                 <a href="{{ url_for('shop.manage_products') }}" class="btn-nav" style="margin-right: 10px;">상품 관리</a>
