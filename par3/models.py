@@ -134,22 +134,22 @@ class Comment(db.Model):
 
     # 대댓글일 경우 부모 댓글 id
     # 일반 댓글이면 None
-    # parent_id = db.Column(
-    #     db.Integer,
-    #     db.ForeignKey('comment.id'),
-    #     nullable=True
-    # )
+    parent_id = db.Column(
+        db.Integer,
+        db.ForeignKey('comment.id'),
+        nullable=True
+    )
 
-    # author = db.Column(db.String(100), nullable=False)
-    # content = db.Column(db.Text, nullable=False)
-    # created_at = db.Column(db.DateTime, default=datetime.now)
+    author = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
-    # # 해당 댓글에 달린 대댓글
-    # replies = db.relationship(
-    #     'Comment',
-    #     backref=db.backref('parent', remote_side=[id]),
-    #     lazy=True
-    # )
+    # 해당 댓글에 달린 대댓글
+    replies = db.relationship(
+        'Comment',
+        backref=db.backref('parent', remote_side=[id]),
+        lazy=True
+    )
     author = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.now)

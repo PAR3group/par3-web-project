@@ -10,15 +10,13 @@ body {
     display: flex;
     justify-content: center;
     padding: 0;
-    background-color: #f5f5f5;
+    background-color: #fff;
 }
 
 /* 1. 전체 컨테이너 */
 .container {
     width: 100%;
-    max-width: 1160px;
-    /* background-color: #fff; */
-    /* border: 2px solid #fff; */
+    max-width: 1300px;
     min-height: 100vh;
     margin: 0 auto;
 }
@@ -33,26 +31,25 @@ body {
     margin: 14px 0;
 }
 
+.talk_main_container{
+    position: relative;
+    transform: translateY(-20px);
+    z-index: 1500;
+}
+
 /* [카테고리 탭 - 검색창 - 글쓰기 버튼] 컨트롤 바 */
 
 .action-bar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 25px;
+    gap: 2px;
+    margin-bottom: 20px;
     flex-wrap: nowrap;
-
-    /* 스크롤해도 상단에 고정 */
-    position: sticky;
-    top: 0;
-    z-index: 100;
-
-    /* 게시글이 뒤로 비치지 않도록 */
-    background-color: #ffffff;
-
-    /* 고정됐을 때 위아래 여백 */
-    padding: 12px 0;
+    border: 1px solid #e4e6ea;
+    border-radius: 14px;
+    background-color: #fff;
+    padding: 6px 10px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.06);
 }
 
 /* TALK 제목부터 검색/글쓰기까지 전체 고정 */
@@ -62,13 +59,12 @@ body {
    - TALK + 설명 + 검색/버튼 라인까지 포함
 ========================================= */
 .talk-sticky-header {
-    position: sticky;
+    position: relative;
     top: 0;
     z-index: 1000;
 
     /* 전체폭 배경을 만들기 위한 기준 */
-    position: sticky;
-    isolation: isolate;
+    /* isolation: isolate; */
 
     padding: 28px 20px 20px;
 }
@@ -90,10 +86,10 @@ body {
     transform: translateX(-50%);
 
     background-image:
-        linear-gradient(
+        /* linear-gradient(
             rgba(0, 0, 0, 0.30),
             rgba(0, 0, 0, 0.30)
-        ),
+        ), */
         url("../img/talk-header.png");
 
     background-size: cover;
@@ -116,6 +112,23 @@ body {
 }
 
 
+/* 최상단으로 이동 아이콘  */
+.up_icon{
+    position: fixed;
+    right: 50px;
+    bottom: 50px;
+    z-index: 1500;
+    cursor: pointer;
+}
+.up_icon > img{
+    width: 40px;
+    height: 40px;
+}
+
+.up_icon:hover {
+    transform: translateY(-5px)
+}
+
 /* =========================================
    검색/카테고리/글쓰기 라인도
    사진 배경 위에 놓이도록
@@ -126,61 +139,79 @@ body {
 }
 
 
-/* 카테고리 버튼 */
-.talk-sticky-header .tab-item {
-    background-color: rgba(255, 255, 255, 0.92);
-    color: #222222;
-    border-color: rgba(255, 255, 255, 0.9);
-}
-
-
-/* 선택된 카테고리 */
-.talk-sticky-header .tab-item.active {
-    background-color: #2f5d45;
-    color: #ffffff;
-    border-color: #2f5d45;
-}
-
-
 /* 검색창 */
-.talk-sticky-header .search-bar {
+.talk-sticky-header .j_filter_search_wrap {
     background-color: rgba(255, 255, 255, 0.94);
 }
 
 
 /* 글쓰기 버튼 */
-.talk-sticky-header .btn-write {
+.talk-sticky-header .jt_write_bt {
     background-color: rgba(255, 255, 255, 0.92);
     color: #222222;
-    border-color: rgba(255, 255, 255, 0.9);
 }
 
-.tabs {
+/* 카테고리 드롭다운 (필드후기 / 장비추천 / 골프팁 / 자유톡) */
+.j_dropdown { position: relative; flex-shrink: 0; }
+.j_dropdown_bt {
     display: flex;
-    gap: 6px;
-    flex-shrink: 0;
-    overflow-x: auto;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+    border-radius: 8px;
+    cursor: pointer;
     white-space: nowrap;
 }
+.j_dropdown_bt:hover { background: #f4f6f8; }
+.j_dropdown--open .j_dropdown_bt { background: #f4f6f8; }
 
-.tab-item {
-    background: transparent;
-    border: 1px solid #333;
-    padding: 8px 14px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 10px;
-    font-size: 13px;
-    text-decoration: none;
-    color: #333;
+.j_filter_select_icon {
+    width: 8px;
+    height: 8px;
+    border: solid #9099a8;
+    border-width: 0 1.5px 1.5px 0;
     display: inline-block;
+    padding: 2px;
+    transform: rotate(45deg);
+    transition: transform 0.2s;
 }
+.j_dropdown--open .j_filter_select_icon { transform: rotate(225deg); }
 
-.tab-item.active {
-    background-color: #2F5D45;
-    color: #fff;
-    border-color: #2F5D45;
+.j_dropdown_panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #ffffff;
+    border: 1px solid #e4e6ea;
+    border-radius: 10px;
+    padding: 8px;
+    min-width: 140px;
+    box-shadow: 0 8px 20px rgba(16, 24, 40, 0.1);
+    z-index: 20;
 }
+.j_dropdown--open .j_dropdown_panel { display: block; }
+.j_dropdown_option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    color: #16233f;
+    cursor: pointer;
+    white-space: nowrap;
+    border-radius: 6px;
+}
+.j_dropdown_option input[type="checkbox"] {
+    accent-color: #333;
+    cursor: pointer;
+}
+.j_dropdown_option:hover { background: #f4f6f8; }
 
 .sorts {
     display: flex;
@@ -203,54 +234,152 @@ body {
     display: inline-block;
 }
 
-/* 검색창 */
-.search-bar {
-    flex: 1;
-    min-width: 200px;
-    padding: 8px 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #fff;
-}
-
-.search-bar input {
-    border: none;
-    background: transparent;
-    width: 90%;
-    outline: none;
-    font-size: 14px;
-}
-
-.search_btn {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-}
-/* 검색창에 커서가 가면(focus) placeholder 글자 숨김 */
-.search-bar input:focus::placeholder {
-    color: transparent;
-}
-
-/* 우측 글쓰기 버튼 */
-.btn-write-link {
-    text-decoration: none;
+/* 조인 페이지의 필터바 구분선과 동일 */
+.j_filter_bar_divider {
+    width: 1px;
+    height: 20px;
+    background: #e4e6ea;
+    margin: 0 8px;
     flex-shrink: 0;
 }
 
-.btn-write {
+/* 검색창 (조인 페이지와 동일한 스타일: 바 안에 테두리 없이 자리만 차지) */
+.j_filter_search_wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.j_filter_search_icon {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #9099a8;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
     background: transparent;
-    border: 1px solid #333;
-    padding: 8px 16px;
-    font-weight: bold;
+    padding: 0;
     cursor: pointer;
+}
+.j_filter_search_icon::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 1.5px;
+    background: #9099a8;
+    transform: rotate(45deg);
+    bottom: -4px;
+    right: -4px;
+}
+
+.j_filter_search {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 8px 0;
+    font-size: 13px;
+    color: #16233f;
+}
+.j_filter_search::placeholder { color: #9099a8; }
+/* 검색창에 커서가 가면(focus) placeholder 글자 숨김 */
+.j_filter_search:focus::placeholder {
+    color: transparent;
+}
+
+/* 우측 글쓰기 버튼 (조인 페이지와 동일한 스타일, 바 안쪽에 이어서 배치) */
+.jt_write_bt {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 18px;
+    background: linear-gradient(135deg, #3f9a92, #0f6e56);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 9px;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+/* 적용된 필터 태그 + 초기화 (조인 페이지와 동일한 스타일) */
+.j_selected_tags_row {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.j_selected_tags_row--visible { display: flex; }
+.j_selected_tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.j_tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px 6px 14px;
+    background: #eaf2ee;
+    color: #2F5D45;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+}
+.j_tag_remove { cursor: pointer; font-weight: 700; }
+.j_tag:hover .j_tag_remove { color: #16382a; }
+
+.j_reset_bt {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #9099a8;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.j_reset_bt:hover { color: #16233f; }
+.j_reset_icon { font-size: 13px; display: inline-block; }
+
+/* 정렬 탭: 최신순 / 인기순 / 조회수순 (조인 페이지의 전체/날짜순/가격순/마감임박순과 동일한 스타일) */
+.j_sort_tabs {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    border-bottom: 1px solid #e4e6ea;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+.j_sort_tab {
     font-size: 14px;
-    border-radius: 10px;
-    color: #333;
-    width: 100%;
+    font-weight: 500;
+    color: #9099a8;
+    text-decoration: none;
+    cursor: pointer;
+    position: relative;
+    padding-bottom: 13px;
+    margin-bottom: -13px;
+}
+.j_sort_tab:hover { color: #16233f; }
+.j_sort_tab--active { color: #16233f; font-weight: 700; }
+.j_sort_tab--active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: #2F5D45;
+    border-radius: 2px;
 }
 
 /* 본문 영역과 사이드바 레이아웃 */
@@ -309,7 +438,7 @@ body {
 .post-grid {
     display: grid;
     /* 한 줄에 3개 */
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 18px;
     width: 100%;
     /* 헤더와 게시글 사이 여백 */
@@ -551,73 +680,51 @@ body {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    /* 상단 메뉴 반응형 */
+    /* 상단 메뉴 반응형 (조인 필터바와 동일하게 줄바꿈) */
     .action-bar {
-        display: grid;
-
-        /* 검색창 + 글쓰기 버튼 */
-        grid-template-columns: minmax(0, 1fr) auto;
-
-        column-gap: 12px;
-        row-gap: 12px;
-
-        align-items: center;
-
-        /* ★ 전체 너비 고정 */
+        flex-wrap: wrap;
+        gap: 6px;
         width: 100%;
         max-width: 100%;
-
-        padding: 0;
-        margin-left: 0;
-        margin-right: 0;
     }
 
-    /* 1줄째: 탭 전체 */
-     .tabs {
-        grid-column: 1 / -1;
-        grid-row: 1;
-
-        display: grid;
-
-        /* ★ 6개 버튼이 한 줄 전체를 정확하게 나눠 사용 */
-        grid-template-columns: repeat(6, 1fr);
-
-        gap: 6px;
-
-        width: 100%;
-
-        overflow: visible;
+    .j_dropdown {
+        flex: 1 1 auto;
+        min-width: 0;
     }
 
-    .tabs .tab-item {
+    .j_dropdown_bt {
         width: 100%;
-        text-align: center;
-        padding-left: 8px;
-        padding-right: 8px;
+        justify-content: center;
+        padding: 8px 8px;
+        font-size: 12px;
+    }
+
+    .j_filter_bar_divider {
+        display: none;
+    }
+
+    .j_sort_tabs {
+        gap: 16px;
+        overflow-x: auto;
         white-space: nowrap;
     }
 
-    /* 2줄째 왼쪽: 검색창 */
-    .search-bar {
-        grid-column: 1;
-        grid-row: 2;
-
-        width: 100%;
-        min-width: 0;
-
-        margin: 0;
+    /* 2줄째: 검색창 */
+    .j_filter_search_wrap {
+        flex-basis: 100%;
+        order: 3;
+        margin-top: 4px;
     }
 
-    /* 2줄째 오른쪽: 글쓰기 */
-    .btn-write-link {
-        grid-column: 2;
-        grid-row: 2;
-
-        margin: 0;
-
-        justify-self: stretch;
+    /* 3줄째: 글쓰기 */
+    .jt_write_bt {
+        order: 4;
+        flex-basis: 100%;
+        margin-top: 6px;
+        justify-content: center;
     }
-    
+
 
     /* 오른쪽 뉴스 */
     .right-sidebar {

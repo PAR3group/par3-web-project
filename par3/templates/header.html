@@ -1,23 +1,29 @@
 <header>
     <div class="header_container">
-        <a class="h_logo" href="{{url_for('main.inter_par3')}}">par3</a>
+        <a class="h_logo" href="{{url_for('main.inter_par3')}}"><img
+                src="{{ url_for('static', filename='logo/main_logo.png') }}" alt="logo"></a>
 
         <nav class="h_nav" id="h_nav">
             <ul class="h_nav_list">
                 <li class="h_nav_lists">
-                    <a href="{{url_for('main.index')}}" class="h_nav_info{{ ' active' if request.blueprint == 'main' else '' }}">INTRO</a>
+                    <a href="{{url_for('main.index')}}"
+                        class="h_nav_info{{ ' active' if request.blueprint == 'main' else '' }}">INTRO</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="{{url_for('talk.list')}}" class="h_nav_community{{ ' active' if request.blueprint == 'talk' else '' }}">TALK</a>
+                    <a href="{{url_for('recommend.shaft')}}"
+                        class="h_nav_membership{{ ' active' if request.blueprint == 'recommend' else '' }}">RECOMMEND</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="{{url_for('join.join_list')}}" class="h_nav_join{{ ' active' if request.blueprint == 'join' else '' }}">JOIN</a>
+                    <a href="{{url_for('talk.list')}}"
+                        class="h_nav_community{{ ' active' if request.blueprint == 'talk' else '' }}">TALK</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="{{url_for('shop.main')}}" class="h_nav_shop{{ ' active' if request.blueprint == 'shop' else '' }}">SHOP</a>
+                    <a href="{{url_for('join.join_list')}}"
+                        class="h_nav_join{{ ' active' if request.blueprint == 'join' else '' }}">JOIN</a>
                 </li>
                 <li class="h_nav_lists">
-                    <a href="{{url_for('recommend.shaft')}}" class="h_nav_membership{{ ' active' if request.blueprint == 'recommend' else '' }}">RECOMMEND</a>
+                    <a href="{{url_for('shop.main')}}"
+                        class="h_nav_shop{{ ' active' if request.blueprint == 'shop' else '' }}">SHOP</a>
                 </li>
             </ul>
         </nav>

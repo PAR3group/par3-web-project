@@ -8,6 +8,8 @@ from flask_socketio import join_room, leave_room, emit
 from par3 import socketio, db
 from par3.models import JoinApply, ChatMessage, User
 
+DEFAULT_PROFILE_IMG = "https://raw.githubusercontent.com/feathericons/feather/master/icons/user.svg"
+
 
 def _get_current_user():
     user_id = session.get('user_id')
@@ -73,6 +75,7 @@ def handle_send_message(data):
     emit('receive_message', {
         'sender_id': user.id,
         'sender_nickname': user.nickname,
+        'sender_profile_img': user.profile_img or DEFAULT_PROFILE_IMG,
         'message': text,
         'created_at': new_message.created_at.strftime('%H:%M'),
     }, room=room)

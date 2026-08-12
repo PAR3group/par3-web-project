@@ -8,168 +8,62 @@
 {% block content %}
 <div class="container">
     <div class="main-wrapper">
-        <div class="talk-sticky-header">            
+        <div class="talk-sticky-header">
             <div class="talk-header">
                 <h2>💬 TALK</h2>
                 <p>자유로운 노하우와 이야기를 나누는 공간</p>
             </div>
+        </div>
+        <section class="talk_main_container">
             <div class="action-bar">
 
-                <div class="tabs">
-                    <a href="?sort=latest"
-                    class="tab-item {% if not current_category or current_category == '전체' %}active{% endif %}">
-                        최신순
-                    </a>
-
-                    <a href="?sort=popular"
-                    class="tab-item {% if current_sort == 'popular' %}active{% endif %}">
-                        인기순
-                    </a>
-
-                    <a href="?category=필드후기"
-                    class="tab-item {% if current_category == '필드후기' %}active{% endif %}">
-                        필드후기
-                    </a>
-
-                    <a href="?category=장비추천"
-                    class="tab-item {% if current_category == '장비추천' %}active{% endif %}">
-                        장비추천
-                    </a>
-
-                    <a href="?category=골프팁"
-                    class="tab-item {% if current_category == '골프팁' %}active{% endif %}">
-                        골프팁
-                    </a>
-
-                    <a href="?category=자유톡"
-                    class="tab-item {% if current_category == '자유톡' %}active{% endif %}">
-                        자유톡
-                    </a>
+                <div class="j_dropdown" id="j_dropdown_talk_category">
+                    <button type="button" class="j_dropdown_bt">
+                        카테고리<span class="j_filter_select_icon"></span>
+                    </button>
+                    <div class="j_dropdown_panel">
+                        <label class="j_dropdown_option">
+                            <input type="checkbox" class="j_dropdown_checkbox" value="필드후기" {% if '필드후기' in current_categories %}checked{% endif %}>
+                            필드후기
+                        </label>
+                        <label class="j_dropdown_option">
+                            <input type="checkbox" class="j_dropdown_checkbox" value="장비추천" {% if '장비추천' in current_categories %}checked{% endif %}>
+                            장비추천
+                        </label>
+                        <label class="j_dropdown_option">
+                            <input type="checkbox" class="j_dropdown_checkbox" value="골프팁" {% if '골프팁' in current_categories %}checked{% endif %}>
+                            골프팁
+                        </label>
+                        <label class="j_dropdown_option">
+                            <input type="checkbox" class="j_dropdown_checkbox" value="자유톡" {% if '자유톡' in current_categories %}checked{% endif %}>
+                            자유톡
+                        </label>
+                    </div>
                 </div>
 
-                <form action="{{ url_for('talk.list') }}"
-                    method="GET"
-                    class="search-bar"
+                <span class="j_filter_bar_divider"></span>
+
+                <form action="{{ url_for('talk.list') }}" method="GET" class="j_filter_search_wrap"
                     onsubmit="return checkSearch(this)">
-
-                    <input type="text"
-                        placeholder="PAR3 TALK SEARCH"
-                        name="keyword"
-                        value="{{ request.args.get('keyword', '') }}"
-                        autocomplete="off">
-
-                    <button type="submit" class="search_btn">🔍</button>
+                    {% if current_sort and current_sort != 'latest' %}<input type="hidden" name="sort" value="{{ current_sort }}">{% endif %}
+                    {% for cat in current_categories %}<input type="hidden" name="category" value="{{ cat }}">{% endfor %}
+                    <button type="submit" class="j_filter_search_icon" aria-label="검색"></button>
+                    <input type="text" class="j_filter_search" placeholder="PAR3 TALK SEARCH" name="keyword"
+                        value="{{ request.args.get('keyword', '') }}" autocomplete="off">
                 </form>
 
-                <a href="{{ url_for('talk.write') }}" class="btn-write-link">
-                    <button type="button" class="btn-write">글쓰기</button>
-                </a>
+                <a href="{{ url_for('talk.write') }}" class="jt_write_bt">+ 글쓰기</a>
 
             </div>
-        </div>
-        <div class="content-body-wrapper">
-            <main class="left-content">
 
-                <div class="post-grid">
-
-                    {% for post in posts %}
-
-                        <div class="post-box"
-                            onclick="goDetail('{{ post.id }}')"
-                            style="cursor: pointer;">
-
-                            <!-- 1. 카테고리 -->
-                            <div class="post-category">
-                                <span class="badge">{{ post.category }}</span>
-                            </div>
-
-                            <!-- 2. 사진 -->
-                            <div class="post-img">
-                                {% if post.image_url %}
-
-                                    {% if post.is_video %}
-                                        <video
-                                            src="{{ post.image_url }}"
-                                            muted
-                                            autoplay
-                                            loop
-                                            playsinline>
-                                        </video>
-                                    {% else %}
-                                        <img
-                                            src="{{ post.image_url }}"
-                                            alt="첨부 이미지">
-                                    {% endif %}
-
-                                {% else %}
-
-                                    <div class="default-img"></div>
-
-                                {% endif %}
-                            </div>
-
-                            <!-- 3. 게시글 내용 -->
-                            <div class="post-info">
-
-                                <h3 class="post-title">
-                                    {{ post.title }}
-                                </h3>
-
-                                <p class="post-content">
-                                    {% if post.content|length > 45 %}
-                                        {{ post.content[:45] }}...
-                                    {% else %}
-                                        {{ post.content }}
-                                    {% endif %}
-                                </p>
-
-                            </div>
-
-                            <!-- 4. 작성자 + 조회수 + 댓글 + 좋아요 -->
-                            <div class="post-footer">
-
-                                <div class="author-info">
-                                    {{ post.author }} |
-                                    {{ post.created_at|timeago }}
-                                </div>
-
-                                <div class="post-stats">
-
-                                    <span class="stat-badge">
-                                        🔎 {{ post.views }}
-                                    </span>
-
-                                    <span class="stat-badge">
-                                        💬 {{ post.comments_count }}
-                                    </span>
-
-                                    <span class="stat-badge">
-                                        👍 {{ post.likes }}
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    {% else %}
-
-                        <div class="no-post">
-                            <p>등록된 게시글이 없습니다.</p>
-                        </div>
-
-                    {% endfor %}
-
-                </div>
-
-            </main>
-
-            {% include 'side_news.html' %}
-        </div>
+            <div id="talk_results">
+                {% include 'talk_results.html' %}
+            </div>
+        </section>
+        <div class="up_icon"><img src="{{ url_for('static', filename='icon/up_icon.png') }}" alt="최상단으로 가기"></div>
     </div>
 </div>
 
 <script src="{{ url_for('static', filename='js/talk.js') }}"></script>
 
-{% endblock %}
+{% endblock %} 
