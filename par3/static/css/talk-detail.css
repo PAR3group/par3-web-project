@@ -572,17 +572,40 @@
 
 /* =========================================
    댓글 버튼
-   답글 / 수정 / 삭제
+   작성일 / 답글 / 수정 / 삭제
 ========================================= */
 
-.comment-actions {
+/* 작성일 + 버튼 전체 영역 */
+.comment-action-area {
     display: flex;
-    align-items: center;
-    justify-content: flex-end;  /* 오른쪽 정렬 */
+    flex-direction: column;
+    align-items: flex-end;
 
     gap: 6px;
-
     margin-top: 10px;
+}
+
+
+/* 작성일 */
+.comment-date {
+    color: #9ca3af;
+
+    font-size: 12px;
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+
+/* 답글 / 수정 / 삭제 버튼 묶음 */
+.comment-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 6px;
+    margin: 0;
 }
 
 
@@ -621,10 +644,138 @@
 }
 
 
-/* hover */
+/* 버튼 hover */
 .comment-action-btn:hover {
     background-color: #1f2937;
     border-color: #1f2937;
 
     transform: translateY(-1px);
+}
+
+
+/* =========================================
+   댓글 프로필 사진 + 닉네임
+========================================= */
+
+.comment-item {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 24px;
+}
+
+
+/* 왼쪽 프로필 영역 */
+.comment-profile {
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    min-width: max-content;
+}
+
+
+/* 실제 프로필 사진 */
+.comment-profile-img {
+    width: 32px;
+    height: 32px;
+
+    display: block;
+
+    border: 1px solid #10b981;
+    border-radius: 50%;
+
+    object-fit: cover;
+
+    box-sizing: border-box;
+}
+
+
+/* 프로필 사진이 없을 때 */
+.comment-profile-default {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #f1f5f9;
+
+    border: 1px solid #10b981;
+    border-radius: 50%;
+
+    font-size: 14px;
+
+    box-sizing: border-box;
+}
+
+
+/* 닉네임 */
+.comment-profile-name {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #374151;
+
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+
+/* 오른쪽 댓글 전체 영역 */
+.comment-main {
+    flex: 1;
+    min-width: 0;
+}
+
+/* =========================================
+   댓글 하단 PAR3 TALK 버튼
+========================================= */
+
+.talk-list-bottom {
+    display: flex;
+    justify-content: center;
+
+    margin-top: 35px;
+    padding-top: 25px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.talk-list-bottom-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 120px;
+    height: 42px;
+    padding: 0 20px;
+
+    background-color: #ffffff;
+
+    border: 1px solid #10B981;
+    border-radius: 999px;
+
+    color: #374151;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.talk-list-bottom-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
 }

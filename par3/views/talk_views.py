@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, g, abort
 
-from par3.models import Post, Comment          # [수정] 실제 models.py 경로에 맞게 조정
+from par3.models import Post, Comment, User          # [수정] 실제 models.py 경로에 맞게 조정
 from par3.views.auth_views import login_required            # [수정] 기존 login_required 재사용
 from par3 import db, storage
 from par3.utils import get_golf_news_top3
@@ -95,9 +95,38 @@ def write():
 @bp.route('/<int:id>')
 def detail(id):
     post = Post.query.get_or_404(id)
+
     post.views = (post.views or 0) + 1
     db.session.commit()
-    return render_template('talk-detail.html', post=post)
+
+    # 댓글 작성자의 프로필 사진 연결
+    for comment in post.comments_list:
+        comment_user = User.query.filter_by(
+            nickname=comment.author
+        ).first()
+
+        comment.profile_img = (
+            comment_user.profile_img
+            if comment_user and comment_user.profile_img
+            else None
+        )
+
+        # 대댓글 프로필 사진도 연결
+        # for reply in comment.replies:
+        #     reply_user = User.query.filter_by(
+        #         nickname=reply.author
+        #     ).first()
+
+        #     reply.profile_img = (
+        #         reply_user.profile_img
+        #         if reply_user and reply_user.profile_img
+        #         else None
+        #     )
+
+    return render_template(
+        'talk-detail.html',
+        post=post
+    )
 
 @bp.route('/<int:id>/edit', methods=['GET', 'POST'])
 @login_required

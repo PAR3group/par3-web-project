@@ -553,6 +553,35 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // ======================================================
+    // 7. 비밀번호 변경 모달
+    // ======================================================
+
+    const passwordModal = document.getElementById('password-modal');
+    const openPasswordBtn = document.getElementById('btn-open-password');
+    const closePasswordBtn = document.getElementById('btn-close-password');
+
+    // 비밀번호 수정 버튼 → 모달 열기
+    if (openPasswordBtn && passwordModal) {
+        openPasswordBtn.addEventListener('click', function () {
+            passwordModal.classList.add('show');
+        });
+    }
+
+    // X 버튼 → 모달 닫기
+    if (closePasswordBtn && passwordModal) {
+        closePasswordBtn.addEventListener('click', function () {
+            passwordModal.classList.remove('show');
+
+            const passwordInputs = passwordModal.querySelectorAll('.password-input');
+
+            passwordInputs.forEach(input => {
+                input.value = '';
+                input.type = 'password';
+            });
+        });
+    }
+  
 }); // DOMContentLoaded 끝
 
 

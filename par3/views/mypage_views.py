@@ -1,12 +1,12 @@
 import re
+
 from flask import Blueprint, g, jsonify, render_template, request, session, url_for
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from par3 import db, storage
 from par3.models import Join, JoinApply, Post, ShaftRecommend, CartItem
 from par3.views.auth_views import login_required
-from werkzeug.security import generate_password_hash, check_password_hash
-from par3.forms import ChangePasswordForm
-
+from par3.views.mypage_password_form import ChangePasswordForm
 
 bp = Blueprint('mypage', __name__)
 
@@ -133,6 +133,7 @@ def build_activity_data(user):
 @login_required
 def mypage():
     user = g.user
+    password_form = ChangePasswordForm()
     profile = build_profile(user)
     activity_data = build_activity_data(user)
     equipments = get_recommended_equipments(user)
@@ -181,7 +182,8 @@ def mypage():
         my_posts=my_posts,
         my_join_posts=my_join_posts,
         my_join_participates=my_join_participates,
-        my_cart_items=my_cart_items
+        my_cart_items=my_cart_items,
+        password_form=password_form
     )
 
     
@@ -303,9 +305,57 @@ def reset_password():
             </script>
             """
 
+    # 비밀번호 오류가 있으면 마이페이지를 다시 보여주고
+    # 비밀번호 변경 모달을 자동으로 연다.
+    profile = build_profile(user)
+    activity_data = build_activity_data(user)
+    equipments = get_recommended_equipments(user)
+
+    # 내 장바구니
+    my_cart_items = CartItem.query.filter_by(
+        user_id=user.id
+    ).all()
+
+    # 내가 작성한 게시글
+    my_posts = Post.query.filter_by(
+        author=user.nickname
+    ).order_by(
+        Post.created_at.desc()
+    ).all()
+
+    # 내가 작성한 골프조인
+    my_join_posts = Join.query.filter_by(
+        writer_id=user.id
+    ).order_by(
+        Join.create_date.desc()
+    ).all()
+
+    # 내가 참여한 골프조인
+    my_join_applies = JoinApply.query.filter_by(
+        applicant_id=user.id
+    ).order_by(
+        JoinApply.create_date.desc()
+    ).all()
+
+    my_join_participates = []
+
+    for apply in my_join_applies:
+        joined = Join.query.get(apply.join_id)
+
+        if joined:
+            my_join_participates.append(joined)
+
     return render_template(
-        'reset-password.html',
-        form=form
+        'my-page.html',
+        profile=profile,
+        activity=activity_data,
+        equipments=equipments,
+        my_posts=my_posts,
+        my_join_posts=my_join_posts,
+        my_join_participates=my_join_participates,
+        my_cart_items=my_cart_items,
+        password_form=form,
+        open_password_modal=True
     )
 
 

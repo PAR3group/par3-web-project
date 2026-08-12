@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mypage_password.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/my-page.css') }}">
 
 <!-- 1. 국가코드 검색용 TomSelect 라이브러리 추가 -->
@@ -77,7 +78,11 @@
                             <div class="info-label">🔒 비밀번호</div>
                             <div class="info-value pw-value-group">
                                 <input type="password" value="********" readonly class="gray-readonly-input">
-                                <a href="{{ url_for('mypage.reset_password') }}" class="btn-pw-edit-green">수정</a>
+                                <button type="button"
+                                    class="btn-pw-edit-green"
+                                    id="btn-open-password">
+                                수정
+                            </button>
                             </div>
                         </div>
 
@@ -462,6 +467,80 @@
         data-quantity="{{ item.quantity }}"
     ></div>
     {% endfor %}
+</div>
+<!-- 비밀번호 변경 모달 -->
+<div id="password-modal"
+     class="password-modal-overlay{% if open_password_modal %} show{% endif %}">
+
+    <div class="password-modal">
+
+        <button type="button"
+                class="password-modal-close"
+                id="btn-close-password">
+            ✕
+        </button>
+
+        <h2 class="password-modal-title">
+            비밀번호 변경
+        </h2>
+
+        <form method="POST"
+              action="{{ url_for('mypage.reset_password') }}">
+
+            {{ password_form.csrf_token }}
+
+            <div class="password-field">
+                <label>현재 비밀번호</label>
+
+                {{ password_form.current_password(
+                    class="password-input"
+                ) }}
+
+                {% for error in password_form.current_password.errors %}
+                    <div class="password-error">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="password-field">
+                <label>새 비밀번호</label>
+
+                {{ password_form.new_password(
+                    class="password-input",
+                    placeholder="영문, 숫자, 특수문자 포함 8자 이상"
+                ) }}
+
+                {% for error in password_form.new_password.errors %}
+                    <div class="password-error">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="password-field">
+                <label>새 비밀번호 확인</label>
+
+                {{ password_form.confirm_password(
+                    class="password-input"
+                ) }}
+
+                {% for error in password_form.confirm_password.errors %}
+                    <div class="password-error">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit"
+                    class="password-submit">
+                변경하기
+            </button>
+
+        </form>
+
+    </div>
+
 </div>
 {% endblock %}
 
