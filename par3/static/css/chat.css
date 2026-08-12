@@ -170,6 +170,27 @@ body {
   color: #0f6e56;
 }
 
+/* 넓은 화면에서는 채팅방 목록 링크를 본문 왼쪽 여백으로 띄워 배치 */
+@media (min-width: 780px) {
+  .c_room_back {
+    position: fixed;
+    left: calc((100vw - 640px) / 2 - 120px);
+    top: 100px;
+    display: inline-flex;
+    align-items: center;
+    padding: 9px 16px;
+    background: #fff;
+    border: 1px solid #eceef1;
+    border-radius: 999px;
+    box-shadow: 0 2px 8px rgba(15, 35, 63, 0.08);
+    z-index: 10;
+  }
+
+  .c_room_back:hover {
+    border-color: #0f6e56;
+  }
+}
+
 .c_room_head_info {
   min-width: 0;
 }

@@ -48,7 +48,7 @@
                     {% if current_sort and current_sort != 'latest' %}<input type="hidden" name="sort" value="{{ current_sort }}">{% endif %}
                     {% for cat in current_categories %}<input type="hidden" name="category" value="{{ cat }}">{% endfor %}
                     <button type="submit" class="j_filter_search_icon" aria-label="검색"></button>
-                    <input type="text" class="j_filter_search" placeholder="PAR3 TALK SEARCH" name="keyword"
+                    <input type="text" class="j_filter_search" placeholder="검색어를 입력하세요" name="keyword"
                         value="{{ request.args.get('keyword', '') }}" autocomplete="off">
                 </form>
 

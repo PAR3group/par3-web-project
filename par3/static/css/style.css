@@ -73,12 +73,15 @@ header.hide {
 }
 
 .h_logo {
-    margin-right: 25px;
+    margin-right: 15px;
     margin-left: 70px;
 }
+
 .h_logo > img{
     display: inline-block;
-    height: 90px;
+    height: 60px;
+    flex-shrink: 0;
+    max-width: none;
 }
 
 .h_menu_toggle {
@@ -97,7 +100,7 @@ header.hide {
 
 .h_nav_list {
     display: flex;
-    width: 640px;
+    width: 800px;
     font-size: 14px;
 }
 
@@ -141,6 +144,7 @@ header.hide {
     display: flex;
     justify-content: center;
     gap: 25px;
+    margin-left: 15px;
     margin-right: 70px;
 }
 
