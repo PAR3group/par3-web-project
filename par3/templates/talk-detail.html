@@ -91,9 +91,7 @@
 
 
         <!-- 게시글 내용 -->
-        <div class="content-text">
-            {{ post.content }}
-        </div>
+        <div class="content-text">{{ post.content }}</div>
 
     </div>
 
@@ -129,14 +127,7 @@
                 삭제
             </button>
 
-        {% endif %}
-
-        <a
-            href="{{ url_for('talk.list') }}"
-            class="like-style-btn"
-        >
-            PAR3 TALK
-        </a>
+        {% endif %}        
 
     </div>
 
@@ -191,73 +182,109 @@
 
             {% for comment in post.comments_list %}
 
-                <li>
+                <li class="comment-item">
 
-                    <!-- 댓글 작성자 / 작성일 -->
-                    <div class="comment-meta">
+                    <!-- ========================================
+                        왼쪽 : 프로필 사진 + 닉네임
+                    ========================================= -->
+                    <div class="comment-profile">
 
-                        <strong>
+                        {% if comment.profile_img %}
+                            <img
+                                src="{{ comment.profile_img }}"
+                                alt="{{ comment.author }} 프로필"
+                                class="comment-profile-img"
+                            >
+                        {% else %}
+                            <div class="comment-profile-default">
+                                👤
+                            </div>
+                        {% endif %}
+
+                        <strong class="comment-profile-name">
                             {{ comment.author }}
                         </strong>
-
-                        <span>
-                            {{ comment.created_at|timeago }}
-                        </span>
 
                     </div>
 
 
-                    <!-- 댓글 내용 -->
-                    <div class="comment-content">
-                        {{ comment.content }}
+                    <!-- ========================================
+                        오른쪽 : 댓글 내용
+                    ========================================= -->
+                    <div class="comment-main">
 
-                        <div class="comment-actions">
-
-                            <!-- 답글은 누구나 누를 수 있음 -->
-                            <button
-                                type="button"
-                                class="comment-action-btn"
-                                disabled
-                                title="답글 기능은 준비 중입니다."
-                            >
-                                답글
-                            </button>
-
-                            <!-- 수정/삭제는 작성자 본인만 -->
-                            {% if g.user and comment.author == g.user.nickname %}
-
-                                <button
-                                    type="button"
-                                    class="comment-action-btn"
-                                    onclick="editComment('{{ comment.id }}')"
-                                >
-                                    수정
-                                </button>
-
-                                <button
-                                    type="button"
-                                    class="comment-action-btn"
-                                    onclick="deleteComment('{{ comment.id }}')"
-                                >
-                                    삭제
-                                </button>
-
-
-                            {% endif %}
+                        <!-- 댓글 내용 -->
+                        <div class="comment-content">
+                            {{ comment.content }}
                         </div>
 
 
-                        <!-- 대댓글 작성창 -->
+                        <!-- ====================================
+                            작성일 + 답글 / 수정 / 삭제
+                        ===================================== -->
+                        <div class="comment-action-area">
+
+                            <!-- 작성일 -->
+                            <span class="comment-date">
+                                {{ comment.created_at|timeago }}
+                            </span>
+
+                            <!-- 버튼 영역 -->
+                            <div class="comment-actions">
+
+                                <!-- 답글은 누구나 누를 수 있음 -->
+                                <button
+                                    type="button"
+                                    class="comment-action-btn"
+                                    disabled
+                                    title="답글 기능은 준비 중입니다."
+                                >
+                                    답글
+                                </button>
+
+
+                                <!-- 수정 / 삭제는 작성자 본인만 -->
+                                {% if g.user and comment.author == g.user.nickname %}
+
+                                    <button
+                                        type="button"
+                                        class="comment-action-btn"
+                                        onclick="editComment('{{ comment.id }}')"
+                                    >
+                                        수정
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="comment-action-btn"
+                                        onclick="deleteComment('{{ comment.id }}')"
+                                    >
+                                        삭제
+                                    </button>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ====================================
+                            대댓글 작성창
+                        ===================================== -->
                         <div
                             id="reply-form-{{ comment.id }}"
                             class="reply-write-box"
                             style="display: none;"
                         >
+
                             <input
                                 type="text"
                                 id="reply-input-{{ comment.id }}"
                                 placeholder="답글을 작성해 주세요."
                             >
+
 
                             <button
                                 type="button"
@@ -266,41 +293,59 @@
                                 등록
                             </button>
 
+
                             <button
                                 type="button"
                                 onclick="hideReplyForm('{{ comment.id }}')"
                             >
                                 취소
                             </button>
+
                         </div>
 
 
-                        <!-- 대댓글 목록 -->
+                        <!-- ====================================
+                            대댓글 목록
+                        ===================================== -->
                         {% for reply in comment.replies %}
 
                             <div class="reply-item">
 
+                                <!-- 대댓글 작성자 / 작성일 -->
                                 <div class="reply-meta">
-                                    <strong>{{ reply.author }}</strong>
-                                    <span>{{ reply.created_at }}</span>
+
+                                    <strong>
+                                        {{ reply.author }}
+                                    </strong>
+
+                                    <span>
+                                        {{ reply.created_at }}
+                                    </span>
+
                                 </div>
 
+
+                                <!-- 대댓글 내용 -->
                                 <div class="reply-content">
                                     {{ reply.content }}
                                 </div>
 
 
-                                <!-- 대댓글 수정/삭제는 작성자 본인만 -->
+                                <!-- 대댓글 수정 / 삭제는 작성자 본인만 -->
                                 {% if g.user and reply.author == g.user.nickname %}
 
                                     <div class="reply-actions">
 
                                         <button
                                             type="button"
-                                            onclick="editComment('{{ reply.id }}', '{{ reply.content|e }}')"
+                                            onclick="editComment(
+                                                '{{ reply.id }}',
+                                                '{{ reply.content|e }}'
+                                            )"
                                         >
                                             수정
                                         </button>
+
 
                                         <button
                                             type="button"
@@ -318,7 +363,7 @@
                         {% endfor %}
 
                     </div>
-                    
+
                 </li>
 
 
@@ -333,6 +378,19 @@
             {% endfor %}
 
         </ul>
+
+        <!-- PAR3 TALK 메인으로 이동 -->
+        <div class="talk-list-bottom">
+            <a
+                href="{{ url_for('talk.list') }}"
+                class="talk-list-bottom-btn"
+            >
+                PAR3 TALK
+            </a>
+        </div>
+
+
+        </div>
 
     </div>  
 

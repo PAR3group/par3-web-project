@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mypage_password.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/my-page.css') }}">
 
 <!-- 1. 국가코드 검색용 TomSelect 라이브러리 추가 -->
@@ -27,7 +28,7 @@
                 <div class="avatar-box">
                     <img id="profile-preview" src="{{ profile.profile_img }}" alt="프로필 사진" onclick="openProfileImageModal(this.src)" title="사진 크게 보기">
                     <label for="avatar-input" class="btn-avatar-edit" title="사진 변경">✏️</label>
-                    <input type="file" id="avatar-input" name="avatar_file" accept="image/*" style="display: none;">
+                    <input type="file" id="avatar-input" name="avatar_file" accept="image/*" data-upload-url="{{ url_for('mypage.update_avatar') }}" style="display: none;">
                 </div>
                 <p class="user-nickname">{{ profile.nickname }}</p>
             </div>
@@ -77,7 +78,11 @@
                             <div class="info-label">🔒 비밀번호</div>
                             <div class="info-value pw-value-group">
                                 <input type="password" value="********" readonly class="gray-readonly-input">
-                                <a href="{{ url_for('mypage.reset_password') }}" class="btn-pw-edit-green">수정</a>
+                                <button type="button"
+                                    class="btn-pw-edit-green"
+                                    id="btn-open-password">
+                                수정
+                            </button>
                             </div>
                         </div>
 
@@ -134,7 +139,46 @@
                                 </select>
                                 
                                 <!-- 전화번호 입력창 -->
-                                <input type="text" id="user-phone" name="phone" placeholder="010-0000-0000" maxlength="13" value="{{ profile.phone if profile.phone else '' }}">
+                                <div class="phone-number-fields">
+                                    <input
+                                        type="text"
+                                        id="phone-first"
+                                        class="phone-part"
+                                        maxlength="3"
+                                        inputmode="numeric"
+                                        placeholder="010"
+                                    >
+
+                                    <span class="phone-dash">-</span>
+
+                                    <input
+                                        type="text"
+                                        id="phone-middle"
+                                        class="phone-part"
+                                        maxlength="4"
+                                        inputmode="numeric"
+                                        placeholder="0000"
+                                    >
+
+                                    <span class="phone-dash">-</span>
+
+                                    <input
+                                        type="text"
+                                        id="phone-last"
+                                        class="phone-part"
+                                        maxlength="4"
+                                        inputmode="numeric"
+                                        placeholder="0000"
+                                    >
+
+                                    <!-- 백엔드로 실제 전송되는 전화번호 -->
+                                    <input
+                                        type="hidden"
+                                        id="user-phone"
+                                        name="phone"
+                                        value="{{ profile.phone if profile.phone else '' }}"
+                                    >
+                                </div>
                             </div>
                         </div>
                         
@@ -191,16 +235,18 @@
                     {% if equipments %}
                     <div class="equipment-grid">
                         {% for item in equipments %}
-                        <div class="equip-card">
-                            <p class="equip-card-label">{{ item.category }}</p>
-                            <div class="equip-img-box">
-                                <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.category }}">
+                        <a href="/shop" class="equipment-link">
+                            <div class="equip-card">
+                                <p class="equip-card-label">{{ item.category }}</p>
+                                <div class="equip-img-box">
+                                    <img src="{{ url_for('static', filename=item.image) }}" alt="{{ item.category }}">
+                                </div>
+                                <p class="equip-card-sub">추천 샤프트 무게</p>
+                                <p class="equip-card-value">{{ item.weight }}g</p>
+                                <p class="equip-card-sub">추천 플렉스</p>
+                                <span class="equip-card-flex">{{ item.flex }}</span>
                             </div>
-                            <p class="equip-card-sub">추천 샤프트 무게</p>
-                            <p class="equip-card-value">{{ item.weight }}g</p>
-                            <p class="equip-card-sub">추천 플렉스</p>
-                            <span class="equip-card-flex">{{ item.flex }}</span>
-                        </div>
+                        </a>
                         {% endfor %}
                     </div>
                     {% else %}
@@ -218,62 +264,125 @@
                 <div class="card-header">
                     <h3>이력관리</h3>
                 </div>
+
                 <div class="card-body">
                     <div class="activity-card-grid">
-                        
-                        <!-- 1. 커뮤니티 게시글 카드 (블루 톤) -->
-                        <div class="act-group-card blue-card">
-                            <div class="act-group-left">
-                                <span class="act-group-total">{{ activity.posts_count }}</span>
-                                <span class="act-group-label">게시글</span>
-                            </div>
-                            <div class="act-group-right">
-                                <div class="act-item-row btn-act-check" data-type="posts">
-                                    <span class="act-item-title">📝 작성한 게시글</span>
-                                    <span class="act-item-num">{{ activity.posts_count }}개</span>
+
+                        <!-- =========================
+                            왼쪽 영역
+                            게시글 + 쇼핑
+                        ========================== -->
+                        <div class="activity-left-column">
+
+                            <!-- 1. 커뮤니티 게시글 카드 -->
+                            <div class="act-group-card blue-card">
+                                <div class="act-group-left">
+                                    <span class="act-group-total">
+                                        {{ activity.posts_count }}
+                                    </span>
+                                    <span class="act-group-label">게시글</span>
+                                </div>
+
+                                <div class="act-group-right">
+                                    <div class="act-item-row btn-act-check"
+                                        data-type="posts">
+                                        <span class="act-item-title">
+                                            📝 작성한 게시글
+                                        </span>
+                                        <span class="act-item-num">
+                                            {{ activity.posts_count }}개
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- 2. 골프조인 카드 (그린 톤) -->
-                        <div class="act-group-card green-card">
+
+                            <!-- 2. 쇼핑 카드 -->
+                            <div class="act-group-card pink-card">
+                                <div class="act-group-left">
+                                    <span class="act-group-total">
+                                        {{ activity.shop_likes_count + activity.shop_orders_count }}
+                                    </span>
+                                    <span class="act-group-label">쇼핑</span>
+                                </div>
+
+                                <div class="act-group-right">
+
+                                    <div class="act-item-row btn-act-check"
+                                        data-type="shop_likes">
+                                        <span class="act-item-title">
+                                            🛒 장바구니
+                                        </span>
+                                        <span class="act-item-num">
+                                            {{ activity.shop_likes_count }}개
+                                        </span>
+                                    </div>
+
+                                    <div class="act-item-row btn-act-check"
+                                        data-type="shop_orders">
+                                        <span class="act-item-title">
+                                            📦 쇼핑 내역
+                                        </span>
+                                        <span class="act-item-num">
+                                            {{ activity.shop_orders_count }}회
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <!-- 왼쪽 영역 끝 -->
+
+
+                        <!-- =========================
+                            오른쪽 영역
+                            골프조인
+                        ========================== -->
+                        <div class="act-group-card green-card activity-join-card">
+
                             <div class="act-group-left">
-                                <span class="act-group-total">{{ activity.join_likes_count + activity.join_posts_count + activity.join_participate_count }}</span>
+                                <span class="act-group-total">
+                                    {{ activity.join_likes_count + activity.join_posts_count + activity.join_participate_count }}
+                                </span>
                                 <span class="act-group-label">골프조인</span>
                             </div>
-                            <div class="act-group-right">
-                                <div class="act-item-row btn-act-check" data-type="join_likes">
-                                    <span class="act-item-title">⭐ 찜 내역</span>
-                                    <span class="act-item-num">{{ activity.join_likes_count }}건</span>
-                                </div>
-                                <div class="act-item-row btn-act-check" data-type="join_posts">
-                                    <span class="act-item-title">⛳ 글올리기</span>
-                                    <span class="act-item-num">{{ activity.join_posts_count }}건</span>
-                                </div>
-                                <div class="act-item-row btn-act-check" data-type="join_participate">
-                                    <span class="act-item-title">🤝 참여 내역</span>
-                                    <span class="act-item-num">{{ activity.join_participate_count }}건</span>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- 3. 쇼핑 카드 (핑크/레드 톤) -->
-                        <div class="act-group-card pink-card">
-                            <div class="act-group-left">
-                                <span class="act-group-total">{{ activity.shop_likes_count + activity.shop_orders_count }}</span>
-                                <span class="act-group-label">쇼핑</span>
-                            </div>
                             <div class="act-group-right">
-                                <div class="act-item-row btn-act-check" data-type="shop_likes">
-                                    <span class="act-item-title">🛍️ 쇼핑 찜</span>
-                                    <span class="act-item-num">{{ activity.shop_likes_count }}개</span>
+
+                                <div class="act-item-row btn-act-check"
+                                    data-type="join_likes">
+                                    <span class="act-item-title">
+                                        ⭐ 찜 내역
+                                    </span>
+                                    <span class="act-item-num">
+                                        {{ activity.join_likes_count }}건
+                                    </span>
                                 </div>
-                                <div class="act-item-row btn-act-check" data-type="shop_orders">
-                                    <span class="act-item-title">📦 쇼핑 내역</span>
-                                    <span class="act-item-num">{{ activity.shop_orders_count }}회</span>
+
+                                <div class="act-item-row btn-act-check"
+                                    data-type="join_posts">
+                                    <span class="act-item-title">
+                                        ⛳ 글올리기
+                                    </span>
+                                    <span class="act-item-num">
+                                        {{ activity.join_posts_count }}건
+                                    </span>
                                 </div>
+
+                                <div class="act-item-row btn-act-check"
+                                    data-type="join_participate">
+                                    <span class="act-item-title">
+                                        🤝 참여 내역
+                                    </span>
+                                    <span class="act-item-num">
+                                        {{ activity.join_participate_count }}건
+                                    </span>
+                                </div>
+
                             </div>
                         </div>
+                        <!-- 골프조인 끝 -->
 
                     </div>
                 </div>
@@ -284,13 +393,13 @@
 </div>
 
 <!-- 상세 모달 팝업 -->
-<!-- <div id="detail-modal" class="modal-overlay">
+<div id="detail-modal" class="modal-overlay">
     <div class="modal-content">
         <h4 id="modal-title">상세 이력 내용</h4>
         <div id="modal-body" class="modal-body-list"></div>
         <button id="btn-modal-close" class="btn-save btn-modal-close">닫기</button>
     </div>
-</div> -->
+</div>
 
 <!-- 프로필 이미지 확대 팝업 -->
 <div id="image-view-modal" class="profile-image-modal" onclick="closeProfileImageModal()">
@@ -305,64 +414,137 @@
         </button>
     </div>
 </div>
+
+<!-- 내가 작성한 게시글 실제 데이터 -->
+<div id="my-posts-data" style="display: none;">
+    {% for post in my_posts %}
+    <div
+        class="my-post-data"
+        data-id="{{ post.id }}"
+        data-title="{{ post.title }}"        
+        data-content="{{ post.content[:35] }}{% if post.content|length > 35 %}...{% endif %}"
+        data-date="{{ post.created_at.strftime('%Y.%m.%d') }}"
+    ></div>    
+    {% endfor %}
+</div>
+
+<!-- 내가 작성한 골프조인 글 실제 데이터 -->
+<div id="my-join-posts-data" style="display: none;">
+    {% for join in my_join_posts %}
+    <div
+        class="my-join-post-data"
+        data-id="{{ join.id }}"
+        data-title="{{ join.title }}"
+        data-course="{{ join.course_name }}"
+        data-date="{{ join.round_date.strftime('%Y-%m-%d') }}"
+        data-time="{{ join.tee_time }}"
+    ></div>
+    {% endfor %}
+</div>
+
+<!-- 내가 참여한 골프조인 실제 데이터 -->
+<div id="my-join-participates-data" style="display: none;">
+    {% for join in my_join_participates %}
+    <div
+        class="my-join-participate-data"
+        data-id="{{ join.id }}"
+        data-title="{{ join.title }}"
+        data-course="{{ join.course_name }}"
+        data-date="{{ join.round_date }}"
+        data-time="{{ join.tee_time }}"
+    ></div>
+    {% endfor %}
+</div>
+
+<!-- 내 장바구니 실제 데이터 -->
+<div id="my-cart-data" style="display: none;">
+    {% for item in my_cart_items %}
+    <div
+        class="my-cart-item-data"
+        data-id="{{ item.product.id }}"
+        data-title="{{ item.product.title }}"
+        data-brand="{{ item.product.brand }}"
+        data-quantity="{{ item.quantity }}"
+    ></div>
+    {% endfor %}
+</div>
+<!-- 비밀번호 변경 모달 -->
+<div id="password-modal"
+     class="password-modal-overlay{% if open_password_modal %} show{% endif %}">
+
+    <div class="password-modal">
+
+        <button type="button"
+                class="password-modal-close"
+                id="btn-close-password">
+            ✕
+        </button>
+
+        <h2 class="password-modal-title">
+            비밀번호 변경
+        </h2>
+
+        <form method="POST"
+              action="{{ url_for('mypage.reset_password') }}">
+
+            {{ password_form.csrf_token }}
+
+            <div class="password-field">
+                <label>현재 비밀번호</label>
+
+                {{ password_form.current_password(
+                    class="password-input"
+                ) }}
+
+                {% for error in password_form.current_password.errors %}
+                    <div class="password-error">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="password-field">
+                <label>새 비밀번호</label>
+
+                {{ password_form.new_password(
+                    class="password-input",
+                    placeholder="영문, 숫자, 특수문자 포함 8자 이상"
+                ) }}
+
+                {% for error in password_form.new_password.errors %}
+                    <div class="password-error">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="password-field">
+                <label>새 비밀번호 확인</label>
+
+                {{ password_form.confirm_password(
+                    class="password-input"
+                ) }}
+
+                {% for error in password_form.confirm_password.errors %}
+                    <div class="password-error">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit"
+                    class="password-submit">
+                변경하기
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 {% endblock %}
 
 {% block js %}
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="{{ url_for('static', filename='js/my-page.js') }}"></script>
-<script>
-    // 프로필 사진 크게 보기 모달
-    function openProfileImageModal(imgSrc) {
-        const modal = document.getElementById('image-view-modal');
-        const modalImg = document.getElementById('enlarged-profile-img');
-        if (modal && modalImg) {
-            modalImg.src = imgSrc;
-            modal.style.display = 'flex';
-        }
-    }
-
-    function closeProfileImageModal() {
-        const modal = document.getElementById('image-view-modal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    }
-
-    // 프로필 비동기 이미지 업로드
-    const avatarInput = document.getElementById('avatar-input');
-    if (avatarInput) {
-        avatarInput.addEventListener('change', function () {
-            const file = this.files && this.files[0];
-            if (!file) return;
-
-            const preview = document.getElementById('profile-preview');
-            const previousSrc = preview.src;
-            preview.src = window.URL.createObjectURL(file);
-
-            const formData = new FormData();
-            formData.append('avatar_file', file);
-
-            fetch("{{ url_for('mypage.update_avatar') }}", {
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    preview.src = data.profile_img;
-                } else {
-                    alert(data.message || '프로필 사진 저장에 실패했습니다.');
-                    preview.src = previousSrc;
-                }
-            })
-            .catch(() => {
-                alert('프로필 사진 저장 중 오류가 발생했습니다.');
-                preview.src = previousSrc;
-            })
-            .finally(() => {
-                document.getElementById('avatar-input').value = '';
-            });
-        });
-    }
-</script>
 {% endblock %}
