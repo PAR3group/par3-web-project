@@ -86,14 +86,16 @@ body {
     transform: translateX(-50%);
 
     background-image:
-        /* linear-gradient(
-            rgba(0, 0, 0, 0.30),
-            rgba(0, 0, 0, 0.30)
-        ), */
+        linear-gradient(
+            100deg,
+            rgba(4, 10, 8, 0.6) 0%,
+            rgba(4, 10, 8, 0.1) 40%,
+            rgba(4, 10, 8, 0.1) 75%
+        ),
         url("../img/talk-header.png");
 
     background-size: cover;
-    background-position: center;
+    background-position: center 50%;
     background-repeat: no-repeat;
 
     z-index: -1;

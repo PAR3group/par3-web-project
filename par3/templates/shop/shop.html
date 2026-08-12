@@ -589,7 +589,7 @@
             applySort();
         }
 
-        // 브랜드 클릭 이벤트
+        // 브랜드 클릭 이벤트 (한번 클릭: 필터 적용 / 더블 클릭: 필터 해제)
         document.querySelectorAll('.brand-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -597,9 +597,15 @@
                 currentList = products.filter(product => product.brand.toLowerCase() === selectedBrand);
                 applySort();
             });
+
+            item.addEventListener('dblclick', (e) => {
+                e.preventDefault();
+                currentList = [...products];
+                applySort();
+            });
         });
 
-        // 카테고리 클릭 이벤트
+        // 카테고리 클릭 이벤트 (한번 클릭: 필터 적용 / 더블 클릭: 필터 해제)
         document.querySelectorAll('.category-item').forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -607,14 +613,20 @@
 
                 currentList = products.filter(product => {
                     const title = product.title;
-                    if (category === '골프채') return /아이언|드라이버|IRON|DRIVER|웨지|Hybrid/.test(title);
-                    if (category === '골프백') return /백|스탠드백|캐디백|카트백/.test(title);
+                    if (category === '골프채') return /아이언|드라이버|IRON|DRIVER|웨지|Hybrid|하이브리드|우드|퍼터/.test(title);
+                    if (category === '골프백') return /백|스탠드백|캐디백|카트백|파우치/.test(title);
                     if (category === '골프 웨어') return /티셔츠|블루종|큐롯|팬츠/.test(title);
-                    if (category === '골프화') return /골프화|신발/.test(title);
-                    if (category === '기타용품') return /골프공|버킷햇|우산/.test(title);
+                    if (category === '골프화') return /골프화|신발|스파이크/.test(title);
+                    if (category === '기타용품') return /골프공|버킷햇|우산|커버/.test(title);
                     return true;
                 });
 
+                applySort();
+            });
+
+            item.addEventListener('dblclick', (e) => {
+                e.preventDefault();
+                currentList = [...products];
                 applySort();
             });
         });
