@@ -27,34 +27,60 @@ def join_list():
 
     today = date.today()
     weekday_kr = ['월', '화', '수', '목', '금', '토', '일']
+
+    # ------------------------------------------------
+    # 반복문 밖에서 필요한 데이터를 미리 한 번에 다 가져옴
+    # ------------------------------------------------
+    join_ids = [j.id for j in joins]
+    writer_ids = [j.writer_id for j in joins]
+
+    # 작성자 정보 한 번에 조회 (딕셔너리로 만들어서 빠르게 찾기)
+    users = User.query.filter(User.id.in_(writer_ids)).all()
+    user_map = {u.id: u for u in users}
+
+    # 모든 신청 기록 한 번에 조회
+    all_applies = JoinApply.query.filter(JoinApply.join_id.in_(join_ids)).all()
+
+    # join_id별로 신청자 목록을 미리 그룹핑
+    applies_by_join = {}
+    for a in all_applies:
+        applies_by_join.setdefault(a.join_id, []).append(a)
+
+    # 로그인 사용자의 좋아요 목록 한 번에 조회
+    if g.user is not None:
+        liked_join_ids = set(
+            like.join_id for like in JoinLike.query.filter(
+                JoinLike.join_id.in_(join_ids), JoinLike.user_id == g.user.id
+            ).all()
+        )
+    else:
+        liked_join_ids = set()
+
+    # ------------------------------------------------
+    # 이제 반복문 안에서는 DB 쿼리 없이, 미리 가져온 데이터에서만 조회
+    # ------------------------------------------------
     for j in joins:
         j.dday = (j.round_date - today).days
         j.weekday = weekday_kr[j.round_date.weekday()]
-        writer = User.query.get(j.writer_id)
+
+        writer = user_map.get(j.writer_id)
         j.writer_nickname = writer.nickname if writer else '알 수 없음'
-        # 이 조인 글에 실제로 신청한 사람들 목록 조회 (JoinApply 테이블에서)
-        applies = JoinApply.query.filter_by(join_id=j.id).all()
+
+        applies = applies_by_join.get(j.id, [])
         j.applicant_initials = [a.applicant_name[0].upper() for a in applies if a.applicant_name]
-        # ------------------------------------------------
-        # 참여하기 버튼 상태 계산
-        # is_owner   : 로그인한 사용자가 이 글의 작성자인지
-        # is_applied : 로그인한 사용자가 이미 신청했는지
-        # is_full    : 정원이 다 찼는지
-        # ------------------------------------------------
+
         if g.user is not None:
             j.is_owner = (j.writer_id == g.user.id)
-            j.is_applied = JoinApply.query.filter_by(join_id=j.id, applicant_id=g.user.id).first() is not None
-            # 추가: 로그인 사용자가 이 글에 좋아요를 눌렀는지 확인
-            j.is_liked = JoinLike.query.filter_by(join_id=j.id, user_id=g.user.id).first() is not None
+            j.is_applied = any(a.applicant_id == g.user.id for a in applies)
+            j.is_liked = j.id in liked_join_ids
         else:
             j.is_owner = False
             j.is_applied = False
             j.is_liked = False
 
-        j.is_full = j.filled_count >= j.recruit_count
+        j.is_full = j.filled_count >= j.recruit_count or j.round_date < today
 
     return render_template('join/join.html', joins=joins)
-
 # ------------------------------------------------
 # 조인 개설(모집) 폼 페이지
 # 접속 주소: /join/create
