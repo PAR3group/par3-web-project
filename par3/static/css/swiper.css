@@ -51,7 +51,7 @@
 /* 모바일 */
 @media (max-width: 860px) {
     .swiper {
-        height: 60vh;
+        height: 50vh;
     }
 
     .swiper_text {
@@ -75,4 +75,8 @@
     height: 100%;
     object-fit: contain;
 }
+}
+
+@media (max-width: 600px) {
+    .swiper{height: 35vh;}
 }

@@ -68,11 +68,6 @@
     align-items: start;
 }
 
-@media (max-width: 860px) {
-    .rc_wrap {
-        grid-template-columns: 1fr;
-    }
-}
 
 /* ===== 공통 패널 ===== */
 .rc_form_panel,
@@ -436,11 +431,6 @@
     margin-top: 10px;
 }
 
-@media (max-width: 500px) {
-    .rc_shop_cards {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
 
 .rc_shop_card {
     display: flex;
@@ -513,4 +503,21 @@
 .rc_reset_bt:hover {
     background-color: #f4f6f8;
     border-color: #39e07a;
+}
+
+
+@media (max-width: 860px) {
+    .rc_wrap {
+        grid-template-columns: 1fr;
+    }
+
+    .rc_form_panel {
+        position: relative;
+    }
+}
+
+@media (max-width: 500px) {
+    .rc_shop_cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
