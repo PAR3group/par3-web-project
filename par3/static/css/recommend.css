@@ -84,6 +84,14 @@
     box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.06);
 }
 
+.rc_form_panel {
+    position: sticky;    /*스크롤해도 화면에 붙어서 따라 내려옴 */
+    top: 24px;
+    align-self: start;
+    height: fit-content; 
+}
+
+
 .rc_form_title,
 .rc_result_title {
     font-size: 18px;
@@ -133,6 +141,56 @@
     display: flex;
     align-items: center;
     gap: 16px;
+}
+
+.rc_field_row {
+    display: flex;
+    gap: 20px;
+    align-items: stretch;   
+    margin-bottom: 28px;
+}
+
+.rc_field_row .rc_field {
+    flex: 1;   
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;                     
+}
+
+.rc_field_row .rc_field--inline {
+    flex: 0.8;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0px;
+}
+
+.rc_field_row .rc_field--inline .rc_label {
+    margin-left: 4px;   }
+
+/* 성별 select를 다른 input들과 완전히 같은 스타일로 통일 */
+.rc_field_row .rc_field--inline select {
+    width: 100%;
+    padding: 8px 4px;         
+    border: 1px solid #e4e6ea; 
+    border-radius: 8px;      
+    font-size: 14px;
+    background: #fff;
+    color: #16233f;
+    box-sizing: border-box;
+    height: 100%;
+    cursor: pointer;
+}
+.rc_label--gender { margin-left: 4px; }
+
+/* rc_radio_group 자체는 박스 스타일 제거 - 그냥 select를 감싸는 wrapper 역할만 */
+.rc_field_row .rc_field--inline .rc_radio_group {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: none;
 }
 
 .rc_label {
@@ -249,7 +307,7 @@
     font-size: 15px;
     font-weight: 700;
     cursor: pointer;
-    margin-top: 8px;
+    margin-top: 4px;
     transition: background 0.15s;
 }
 
@@ -259,8 +317,10 @@
 
 /* ===== 우측 결과: placeholder ===== */
 .rc_result_placeholder {
-    height: 300px;
+    min-height: 300px;
     display: flex;
+    flex-direction: column;
+    gap: 16px;
     align-items: center;
     justify-content: center;
     color: #9099a8;
@@ -268,6 +328,13 @@
     background: #fafbfc;
     border: 1px dashed #e4e6ea;
     border-radius: 10px;
+    padding-bottom: 10px;
+}
+
+.rc_placeholder_img {
+    width: 700px;           
+    height: 500px;
+    opacity: 0.8;               /* 살짝 흐릿하게 해서 빈 상태 느낌 유지 (원하면 제거) */
 }
 
 /* ===== 우측 결과: 카드 (join의 jt_row와 동일 톤: hover 시 그린 테두리로 떠오름) ===== */
