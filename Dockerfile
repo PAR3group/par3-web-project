@@ -26,5 +26,6 @@ ENV FLASK_ENV=production
 # 포트 오픈
 EXPOSE 5100
 
-# 앱 실행
-CMD ["python", "app.py"]
+# 컨테이너 기동 스크립트 (DB 마이그레이션 적용 후 앱 실행)
+RUN chmod +x entrypoint.sh
+CMD ["./entrypoint.sh"]
