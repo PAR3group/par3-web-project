@@ -20,218 +20,220 @@ PAR3 - FITTING ZONE
         </div>
     </div>
 
-<div class="rc_wrap">
+    <div class="rc_wrap">
 
-    <!-- 좌측: 입력 폼 -->
-    <div class="rc_form_panel">
-        <form method="POST" id="recommend-form">
-            {{ form.hidden_tag() }}
+        <!-- 좌측: 입력 폼 -->
+        <div class="rc_form_panel">
+            <form method="POST" id="recommend-form">
+                {{ form.hidden_tag() }}
 
-            <!-- 1. 기본정보 -->
-            <div class="rc_section">
-                <h3 class="rc_section_title">1. 기본정보</h3>
-                <div class="rc_field_row">
-                    <div class="rc_field rc_field--inline">
-                        {{ form.gender.label(class_="rc_label rc_label--gender") }}
-                    <div class="rc_radio_group">
-                            {{ form.gender }}
-                        </div>rc_field--inline
-                    </div>
-
-                    <div class="rc_field">
-                        {{ form.user_height.label(class_="rc_label") }}
-                        {{ form.user_height(class_="rc_input") }}
-                    </div>
-                    
-                    <div class="rc_field">
-                        {{ form.user_weight.label(class_="rc_label") }}
-                        {{ form.user_weight(class_="rc_input") }}
-                    </div>
-                </div>
-
-                <div class="rc_field">
-                    {{ form.swing_speed.label(class_="rc_label") }}
-                    <div class="rc_speed_row">
-                        <div class="rc_radio_group">
-                            {{ form.speed_unit }}
+                <!-- 1. 기본정보 -->
+                <div class="rc_section">
+                    <h3 class="rc_section_title">1. 기본정보</h3>
+                    <div class="rc_field_row">
+                        <div class="rc_field rc_field--inline">
+                            {{ form.gender.label(class_="rc_label rc_label--gender") }}
+                            <div class="rc_radio_group">
+                                {{ form.gender }}
+                            </div>
                         </div>
-                        {{ form.swing_speed(class_="rc_input rc_input--small", placeholder="선택 입력",
-                        id="swing-speed-input") }}
+
+                        <div class="rc_field">
+                            {{ form.user_height.label(class_="rc_label") }}
+                            {{ form.user_height(class_="rc_input") }}
+                        </div>
+
+                        <div class="rc_field">
+                            {{ form.user_weight.label(class_="rc_label") }}
+                            {{ form.user_weight(class_="rc_input") }}
+                        </div>
                     </div>
-                    <label class="rc_speed_unknown">
-                        {{ form.swing_speed_unknown(id="swing-speed-unknown") }} 스윙스피드를 모르겠어요
-                    </label>
+
+                    <div class="rc_field">
+                        {{ form.swing_speed.label(class_="rc_label") }}
+                        <div class="rc_speed_row">
+                            <div class="rc_radio_group">
+                                {{ form.speed_unit }}
+                            </div>
+                            {{ form.swing_speed(class_="rc_input rc_input--small", placeholder="선택 입력",
+                            id="swing-speed-input") }}
+                        </div>
+                        <label class="rc_speed_unknown">
+                            {{ form.swing_speed_unknown(id="swing-speed-unknown") }} 스윙스피드를 모르겠어요
+                        </label>
+                    </div>
                 </div>
+
+                <hr class="rc_divider">
+
+                <!-- 2. 클럽 선택 -->
+                <div class="rc_section">
+                    <h3 class="rc_section_title">2. 추천받을 클럽 선택 <span class="rc_section_hint">(복수 선택 가능)</span></h3>
+
+                    <div class="rc_club_checks">
+                        <label class="rc_club_check">
+                            {{ form.driver_selected(class_="rc_club_toggle", data_target="driver-box") }} 드라이버
+                        </label>
+                        <label class="rc_club_check">
+                            {{ form.wood5_selected(class_="rc_club_toggle", data_target="wood-box") }} 우드(5번)
+                        </label>
+                        <label class="rc_club_check">
+                            {{ form.utility4_selected(class_="rc_club_toggle", data_target="utility-box") }} 유틸(4번)
+                        </label>
+                        <label class="rc_club_check">
+                            {{ form.iron7_selected(class_="rc_club_toggle", data_target="iron-box") }} 아이언(7번)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 3. 목표 비거리 (체크된 클럽만 노출) -->
+                <div class="rc_section">
+                    <h3 class="rc_section_title">3. 목표 비거리</h3>
+                    <div class="rc_field">
+                        {{ form.distance_unit.label(class_="rc_label") }}
+                        <div class="rc_radio_group">
+                            {{ form.distance_unit }}
+                        </div>
+                    </div>
+
+                    <div class="rc_distance_grid">
+                        <div id="driver-box" class="rc_distance_box">
+                            {{ form.driver_distance.label(class_="rc_label") }}
+                            {{ form.driver_distance(class_="rc_input rc_input--unit") }}
+                        </div>
+
+                        <div id="wood-box" class="rc_distance_box">
+                            {{ form.wood5_distance.label(class_="rc_label") }}
+                            {{ form.wood5_distance(class_="rc_input rc_input--unit") }}
+                        </div>
+
+                        <div id="utility-box" class="rc_distance_box">
+                            {{ form.utility4_distance.label(class_="rc_label") }}
+                            {{ form.utility4_distance(class_="rc_input rc_input--unit") }}
+                        </div>
+
+                        <div id="iron-box" class="rc_distance_box">
+                            {{ form.iron7_distance.label(class_="rc_label") }}
+                            {{ form.iron7_distance(class_="rc_input rc_input--unit") }}
+                        </div>
+                    </div>
+                </div>
+
+                {{ form.submit(class_="rc_submit_bt") }}
+            </form>
+        </div>
+
+        <!-- 우측: 결과 -->
+        <div class="rc_result_panel">
+            <h2 class="rc_result_title">추천 결과</h2>
+            <p class="rc_result_sub">입력하신 정보를 기반으로 추천된 샤프트 무게와 플렉스 입니다.</p>
+
+            {% if result %}
+            <div class="rc_result_cards">
+                {% if result.driver %}
+                <div class="rc_result_card">
+                    <p class="rc_card_label">드라이버</p>
+                    <div class="rc_card_img">
+                        <img src="{{ url_for('static', filename='img/rec_D.jpg') }}" alt="젝시오14 드라이버">
+                    </div>
+                    <p class="rc_card_sub">추천 샤프트 무게</p>
+                    <p class="rc_card_value">{{ result.driver }}g</p>
+                    <p class="rc_card_sub">추천 플렉스</p>
+                    <span class="rc_card_flex">{{ flex }}</span>
+                </div>
+                {% endif %}
+
+                {% if result.wood5 %}
+                <div class="rc_result_card">
+                    <p class="rc_card_label">5번 우드</p>
+                    <div class="rc_card_img">
+                        <img src="{{ url_for('static', filename='img/rec_W.jpg') }}" alt="젝시오14 우드">
+                    </div>
+                    <p class="rc_card_sub">추천 샤프트 무게</p>
+                    <p class="rc_card_value">{{ result.wood5 }}g</p>
+                    <p class="rc_card_sub">추천 플렉스</p>
+                    <span class="rc_card_flex">{{ flex }}</span>
+                </div>
+                {% endif %}
+
+                {% if result.utility4 %}
+                <div class="rc_result_card">
+                    <p class="rc_card_label">4번 유틸</p>
+                    <div class="rc_card_img">
+                        <img src="{{ url_for('static', filename='img/rec_U.jpg') }}" alt="젝시오14 하이브리드">
+                    </div>
+                    <p class="rc_card_sub">추천 샤프트 무게</p>
+                    <p class="rc_card_value">{{ result.utility4 }}g</p>
+                    <p class="rc_card_sub">추천 플렉스</p>
+                    <span class="rc_card_flex">{{ flex }}</span>
+                </div>
+                {% endif %}
+
+                {% if result.iron7 %}
+                <div class="rc_result_card">
+                    <p class="rc_card_label">7번 아이언</p>
+                    <div class="rc_card_img">
+                        <img src="{{ url_for('static', filename='img/rec_I.jpg') }}" alt="젝시오14 아이언">
+                    </div>
+                    <p class="rc_card_sub">추천 샤프트 무게</p>
+                    <p class="rc_card_value">{{ result.iron7 }}g</p>
+                    <p class="rc_card_sub">추천 플렉스</p>
+                    <span class="rc_card_flex">{{ flex }}</span>
+                </div>
+                {% endif %}
             </div>
 
-            <hr class="rc_divider">
-
-            <!-- 2. 클럽 선택 -->
-            <div class="rc_section">
-                <h3 class="rc_section_title">2. 추천받을 클럽 선택 <span class="rc_section_hint">(복수 선택 가능)</span></h3>
-
-                <div class="rc_club_checks">
-                    <label class="rc_club_check">
-                        {{ form.driver_selected(class_="rc_club_toggle", data_target="driver-box") }} 드라이버
-                    </label>
-                    <label class="rc_club_check">
-                        {{ form.wood5_selected(class_="rc_club_toggle", data_target="wood-box") }} 우드(5번)
-                    </label>
-                    <label class="rc_club_check">
-                        {{ form.utility4_selected(class_="rc_club_toggle", data_target="utility-box") }} 유틸(4번)
-                    </label>
-                    <label class="rc_club_check">
-                        {{ form.iron7_selected(class_="rc_club_toggle", data_target="iron-box") }} 아이언(7번)
-                    </label>
-                </div>
+            <!-- 계산 근거 -->
+            <div class="rc_info_box">
+                <h4 class="rc_info_title">계산 근거</h4>
+                <p class="rc_info_text">
+                    입력하신 키, 몸무게, 목표 비거리, 스윙스피드를 기준으로
+                    클럽별 표준 계산식에 따라 산출된 결과입니다. 상세 계산 항목은 준비 중입니다.
+                </p>
             </div>
 
-            <!-- 3. 목표 비거리 (체크된 클럽만 노출) -->
-            <div class="rc_section">
-                <h3 class="rc_section_title">3. 목표 비거리</h3>
-                <div class="rc_field">
-                    {{ form.distance_unit.label(class_="rc_label") }}
-                    <div class="rc_radio_group">
-                        {{ form.distance_unit }}
-                    </div>
-                </div>
-
-                <div class="rc_distance_grid">
-                    <div id="driver-box" class="rc_distance_box">
-                        {{ form.driver_distance.label(class_="rc_label") }}
-                        {{ form.driver_distance(class_="rc_input rc_input--unit") }}
-                    </div>
-
-                    <div id="wood-box" class="rc_distance_box">
-                        {{ form.wood5_distance.label(class_="rc_label") }}
-                        {{ form.wood5_distance(class_="rc_input rc_input--unit") }}
-                    </div>
-
-                    <div id="utility-box" class="rc_distance_box">
-                        {{ form.utility4_distance.label(class_="rc_label") }}
-                        {{ form.utility4_distance(class_="rc_input rc_input--unit") }}
-                    </div>
-
-                    <div id="iron-box" class="rc_distance_box">
-                        {{ form.iron7_distance.label(class_="rc_label") }}
-                        {{ form.iron7_distance(class_="rc_input rc_input--unit") }}
-                    </div>
-                </div>
+            <!-- 안내사항 -->
+            <div class="rc_info_box">
+                <h4 class="rc_info_title">안내사항</h4>
+                <p class="rc_info_text">
+                    본 추천 결과는 참고용이며, 실제 피팅은 전문 피터와의 상담을 권장합니다.
+                </p>
             </div>
 
-            {{ form.submit(class_="rc_submit_bt") }}
-        </form>
+            <!-- 클럽 구매 -->
+            <div class="rc_info_box">
+                <h4 class="rc_info_title">클럽 구매</h4>
+                <div class="rc_shop_cards">
+                    {% for p in shop_products %}
+                    <div class="rc_shop_card">
+                        <img src="{{ p.mainImg or url_for('static', filename='img/no_image.png') }}"
+                            alt="{{ p.title }}">
+                        <p>{{ p.title }}</p>
+                        <p class="rc_shop_price">{{ '{:,}'.format(p.price) }}원</p>
+                        <a href="{{ url_for('shop.detail', id=p.id) }}">바로 구매하기</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <button type="button" onclick="saveRecommend()" class="rc_reset_bt">결과 저장하기</button>
+            {% else %}
+            <div class="rc_result_placeholder">
+                <img src="{{ url_for('static', filename='img/recommend_bg2.png') }}" alt="결과 미리보기"
+                    class="rc_placeholder_img">
+                <p>* 이곳에 결과를 표시합니다 *</p>
+            </div>
+            {% endif %}
+        </div>
+
     </div>
-
-    <!-- 우측: 결과 -->
-    <div class="rc_result_panel">
-        <h2 class="rc_result_title">추천 결과</h2>
-        <p class="rc_result_sub">입력하신 정보를 기반으로 추천된 샤프트 무게와 플렉스 입니다.</p>
-
-        {% if result %}
-        <div class="rc_result_cards">
-            {% if result.driver %}
-            <div class="rc_result_card">
-                <p class="rc_card_label">드라이버</p>
-                <div class="rc_card_img">
-                    <img src="{{ url_for('static', filename='img/rec_D.jpg') }}" alt="젝시오14 드라이버">
-                </div>
-                <p class="rc_card_sub">추천 샤프트 무게</p>
-                <p class="rc_card_value">{{ result.driver }}g</p>
-                <p class="rc_card_sub">추천 플렉스</p>
-                <span class="rc_card_flex">{{ flex }}</span>
-            </div>
-            {% endif %}
-
-            {% if result.wood5 %}
-            <div class="rc_result_card">
-                <p class="rc_card_label">5번 우드</p>
-                <div class="rc_card_img">
-                    <img src="{{ url_for('static', filename='img/rec_W.jpg') }}" alt="젝시오14 우드">
-                </div>
-                <p class="rc_card_sub">추천 샤프트 무게</p>
-                <p class="rc_card_value">{{ result.wood5 }}g</p>
-                <p class="rc_card_sub">추천 플렉스</p>
-                <span class="rc_card_flex">{{ flex }}</span>
-            </div>
-            {% endif %}
-
-            {% if result.utility4 %}
-            <div class="rc_result_card">
-                <p class="rc_card_label">4번 유틸</p>
-                <div class="rc_card_img">
-                    <img src="{{ url_for('static', filename='img/rec_U.jpg') }}" alt="젝시오14 하이브리드">
-                </div>
-                <p class="rc_card_sub">추천 샤프트 무게</p>
-                <p class="rc_card_value">{{ result.utility4 }}g</p>
-                <p class="rc_card_sub">추천 플렉스</p>
-                <span class="rc_card_flex">{{ flex }}</span>
-            </div>
-            {% endif %}
-
-            {% if result.iron7 %}
-            <div class="rc_result_card">
-                <p class="rc_card_label">7번 아이언</p>
-                <div class="rc_card_img">
-                    <img src="{{ url_for('static', filename='img/rec_I.jpg') }}" alt="젝시오14 아이언">
-                </div>
-                <p class="rc_card_sub">추천 샤프트 무게</p>
-                <p class="rc_card_value">{{ result.iron7 }}g</p>
-                <p class="rc_card_sub">추천 플렉스</p>
-                <span class="rc_card_flex">{{ flex }}</span>
-            </div>
-            {% endif %}
-        </div>
-
-        <!-- 계산 근거 -->
-        <div class="rc_info_box">
-            <h4 class="rc_info_title">계산 근거</h4>
-            <p class="rc_info_text">
-                입력하신 키, 몸무게, 목표 비거리, 스윙스피드를 기준으로
-                클럽별 표준 계산식에 따라 산출된 결과입니다. 상세 계산 항목은 준비 중입니다.
-            </p>
-        </div>
-
-        <!-- 안내사항 -->
-        <div class="rc_info_box">
-            <h4 class="rc_info_title">안내사항</h4>
-            <p class="rc_info_text">
-                본 추천 결과는 참고용이며, 실제 피팅은 전문 피터와의 상담을 권장합니다.
-            </p>
-        </div>
-
-        <!-- 클럽 구매 -->
-        <div class="rc_info_box">
-            <h4 class="rc_info_title">클럽 구매</h4>
-            <div class="rc_shop_cards">
-                {% for p in shop_products %}
-                <div class="rc_shop_card">
-                    <img src="{{ p.mainImg or url_for('static', filename='img/no_image.png') }}" alt="{{ p.title }}">
-                    <p>{{ p.title }}</p>
-                    <p class="rc_shop_price">{{ '{:,}'.format(p.price) }}원</p>
-                    <a href="{{ url_for('shop.detail', id=p.id) }}">바로 구매하기</a>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <button type="button" onclick="saveRecommend()" class="rc_reset_bt">결과 저장하기</button>
-        {% else %}
-        <div class="rc_result_placeholder">
-            <img src="{{ url_for('static', filename='img/recommend_bg.png') }}" alt="결과 미리보기" class="rc_placeholder_img">
-             <p>* 이곳에 결과를 표시합니다 *</p>
-        </div>
-        {% endif %}
-    </div>
-
-</div>
 
 </div>
 
 <script>
-window.RECOMMEND_DATA = {
-    isLoggedIn: {{ 'true' if g.user else 'false' }},
-    result: {{ result | tojson if result else 'null' }},
-    flex: {{ flex | tojson if flex else 'null' }}
+    window.RECOMMEND_DATA = {
+        isLoggedIn: {{ 'true' if g.user else 'false' }},
+    result: { { result | tojson if result else 'null' } },
+    flex: { { flex | tojson if flex else 'null' } }
     };
 </script>
 {% endblock %}
