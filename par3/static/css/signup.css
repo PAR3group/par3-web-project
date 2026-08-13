@@ -111,4 +111,14 @@ a {
         flex-wrap: wrap;
         gap: 10px 20px;
     }
+
+    .signup_title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .su_section_title {
+        font-size: 13px;
+        padding: 7px 12px;
+    }
 }

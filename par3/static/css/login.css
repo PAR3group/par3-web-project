@@ -13,13 +13,6 @@ a {
     box-sizing: border-box;
 }
 
-@media (max-width: 480px) {
-    .login_form_container {
-        width: calc(100% - 24px);
-        margin: 16px auto;
-        padding: 24px 16px 32px;
-    }
-}
 .login_title{
     text-align: center;
     font-size: 24px;
@@ -27,6 +20,74 @@ a {
     margin-bottom: 28px;
 }
 .form_login_btn{
-   width: 100%; 
+   width: 100%;
    margin-bottom: 20px;
+}
+
+.find_id_pw {
+    margin-top: 4px;
+}
+
+.find_text {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+.find_text a:hover {
+    text-decoration: underline;
+}
+
+.find_text span {
+    color: #d5d5d5;
+}
+
+.find_result_box {
+    text-align: center;
+    background: #f7f7f7;
+    border-radius: 8px;
+    padding: 20px 16px;
+    margin-bottom: 20px;
+    word-break: break-word;
+}
+
+.find_result_label {
+    font-size: 13px;
+    color: #888;
+    margin: 0 0 6px;
+}
+
+.find_result_value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #16233f;
+    margin: 0;
+    word-break: break-all;
+}
+
+@media (max-width: 480px) {
+    .login_form_container {
+        width: calc(100% - 24px);
+        margin: 16px auto;
+        padding: 24px 16px 32px;
+    }
+
+    .login_title {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .find_text {
+        font-size: 13px;
+        gap: 6px;
+    }
+
+    .find_result_value {
+        font-size: 16px;
+    }
 }
