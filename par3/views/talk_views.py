@@ -111,6 +111,17 @@ def detail(id):
     post.views = (post.views or 0) + 1
     db.session.commit()
 
+# 게시글 작성자의 프로필 사진 연결
+    post_user = User.query.filter_by(
+        nickname=post.author
+    ).first()
+
+    post.profile_img = (
+        post_user.profile_img
+        if post_user and post_user.profile_img
+        else None
+    )
+
     # 댓글 작성자의 프로필 사진 연결
     for comment in post.comments_list:
         comment_user = User.query.filter_by(
@@ -124,16 +135,16 @@ def detail(id):
         )
 
         # 대댓글 프로필 사진도 연결
-        # for reply in comment.replies:
-        #     reply_user = User.query.filter_by(
-        #         nickname=reply.author
-        #     ).first()
+        for reply in comment.replies:
+            reply_user = User.query.filter_by(
+                nickname=reply.author
+            ).first()
 
-        #     reply.profile_img = (
-        #         reply_user.profile_img
-        #         if reply_user and reply_user.profile_img
-        #         else None
-        #     )
+            reply.profile_img = (
+                reply_user.profile_img
+                if reply_user and reply_user.profile_img
+                else None
+            )
 
     return render_template(
         'talk-detail.html',

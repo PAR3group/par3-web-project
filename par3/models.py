@@ -150,9 +150,9 @@ class Comment(db.Model):
         backref=db.backref('parent', remote_side=[id]),
         lazy=True
     )
-    author = db.Column(db.String(100), nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now)
+    # author = db.Column(db.String(100), nullable=False)
+    # content = db.Column(db.Text, nullable=False)
+    # created_at = db.Column(db.DateTime, default=datetime.now)
 
 # 조인페이지 관련
 class Join(db.Model):

@@ -28,24 +28,39 @@
 
         <!-- 게시글 정보 -->
         <div class="detail-meta">
-            <span>
-                작성자:
-                <strong>{{ post.author }}</strong>
-            </span>
+            <div class="detail-author-profile">
 
-            <span>|</span>
+                {% if post.profile_img %}
+                    <img
+                        src="{{ post.profile_img }}"
+                        alt="{{ post.author }} 프로필"
+                        class="detail-author-img"
+                    >
+                {% else %}
+                    <div class="detail-author-default">
+                        👤
+                    </div>
+                {% endif %}
+
+                <span class="detail-author-name">
+                    {{ post.author }}
+                </span>
+
+            </div>
+
+            <span class="detail-meta-divider">|</span>
 
             <span>
                 작성일: {{ post.created_at|timeago }}
             </span>
 
-            <span>|</span>
+            <span class="detail-meta-divider">|</span>
 
             <span>
                 조회수 🔎 {{ post.views }}
             </span>
-        </div>
 
+        </div>
     </div>
 
 
@@ -132,12 +147,12 @@
     </div>
 
 
-    <!-- 구분선 -->
+   <!-- 구분선 -->
     <hr>
 
 
     <!-- ========================================
-         4. 댓글 영역
+        4. 댓글 영역
     ========================================= -->
     <div class="comments-section">
 
@@ -149,7 +164,7 @@
 
 
         <!-- ====================================
-             댓글 작성
+            댓글 작성
         ===================================== -->
         <div class="comment-write-box">
 
@@ -170,178 +185,97 @@
             >
                 등록
             </button>
-            
 
         </div>
 
 
         <!-- ====================================
-             댓글 목록
+            댓글 목록
         ===================================== -->
         <ul id="comment-list">
 
-            {% for comment in post.comments_list %}
+            <!--
+                일반 댓글만 출력
+                대댓글은 아래 comment.replies에서 따로 출력
+            -->
+            {% for comment in post.comments_list if comment.parent_id is none %}
 
+                <!-- ========================================
+                    큰 박스
+                    댓글박스 + 대댓글작성창 + 대댓글박스
+                ========================================= -->
                 <li class="comment-item">
 
-                    <!-- ========================================
-                        왼쪽 : 프로필 사진 + 닉네임
-                    ========================================= -->
-                    <div class="comment-profile">
-
-                        {% if comment.profile_img %}
-                            <img
-                                src="{{ comment.profile_img }}"
-                                alt="{{ comment.author }} 프로필"
-                                class="comment-profile-img"
-                            >
-                        {% else %}
-                            <div class="comment-profile-default">
-                                👤
-                            </div>
-                        {% endif %}
-
-                        <strong class="comment-profile-name">
-                            {{ comment.author }}
-                        </strong>
-
-                    </div>
-
 
                     <!-- ========================================
-                        오른쪽 : 댓글 내용
+                        1. 댓글 박스
                     ========================================= -->
-                    <div class="comment-main">
-
-                        <!-- 댓글 내용 -->
-                        <div class="comment-content">
-                            {{ comment.content }}
-                        </div>
+                    <div class="comment-box">
 
 
-                        <!-- ====================================
-                            작성일 + 답글 / 수정 / 삭제
-                        ===================================== -->
-                        <div class="comment-action-area">
+                        <!-- 왼쪽 : 프로필 사진 + 닉네임 -->
+                        <div class="comment-profile">
 
-                            <!-- 작성일 -->
-                            <span class="comment-date">
-                                {{ comment.created_at|timeago }}
-                            </span>
+                            {% if comment.profile_img %}
 
-                            <!-- 버튼 영역 -->
-                            <div class="comment-actions">
-
-                                <!-- 답글은 누구나 누를 수 있음 -->
-                                <button
-                                    type="button"
-                                    class="comment-action-btn"
-                                    disabled
-                                    title="답글 기능은 준비 중입니다."
+                                <img
+                                    src="{{ comment.profile_img }}"
+                                    alt="{{ comment.author }} 프로필"
+                                    class="comment-profile-img"
                                 >
-                                    답글
-                                </button>
+
+                            {% else %}
+
+                                <div class="comment-profile-default">
+                                    👤
+                                </div>
+
+                            {% endif %}
 
 
-                                <!-- 수정 / 삭제는 작성자 본인만 -->
-                                {% if g.user and comment.author == g.user.nickname %}
+                            <strong class="comment-profile-name">
+                                {{ comment.author }}
+                            </strong>
 
-                                    <button
-                                        type="button"
-                                        class="comment-action-btn"
-                                        onclick="editComment('{{ comment.id }}')"
-                                    >
-                                        수정
-                                    </button>
+                        </div>
 
 
-                                    <button
-                                        type="button"
-                                        class="comment-action-btn"
-                                        onclick="deleteComment('{{ comment.id }}')"
-                                    >
-                                        삭제
-                                    </button>
+                        <!-- 오른쪽 : 댓글 내용 -->
+                        <div class="comment-main">
 
-                                {% endif %}
-
+                            <!-- 댓글 내용 -->
+                            <div class="comment-content">
+                                {{ comment.content }}
                             </div>
 
-                        </div>
+
+                            <!-- 작성일 + 답글 / 수정 / 삭제 -->
+                            <div class="comment-action-area">
+
+                                <span class="comment-date">
+                                    {{ comment.created_at|timeago }}
+                                </span>
 
 
-                        <!-- ====================================
-                            대댓글 작성창
-                        ===================================== -->
-                        <div
-                            id="reply-form-{{ comment.id }}"
-                            class="reply-write-box"
-                            style="display: none;"
-                        >
+                                <div class="comment-actions">
 
-                            <input
-                                type="text"
-                                id="reply-input-{{ comment.id }}"
-                                placeholder="답글을 작성해 주세요."
-                            >
+                                    <!-- 답글 -->
+                                    <button
+                                        type="button"
+                                        class="comment-action-btn"
+                                        onclick="showReplyForm('{{ comment.id }}')"
+                                    >
+                                        답글
+                                    </button>
 
 
-                            <button
-                                type="button"
-                                onclick="addReply('{{ post.id }}', '{{ comment.id }}')"
-                            >
-                                등록
-                            </button>
-
-
-                            <button
-                                type="button"
-                                onclick="hideReplyForm('{{ comment.id }}')"
-                            >
-                                취소
-                            </button>
-
-                        </div>
-
-
-                        <!-- ====================================
-                            대댓글 목록
-                        ===================================== -->
-                        {% for reply in comment.replies %}
-
-                            <div class="reply-item">
-
-                                <!-- 대댓글 작성자 / 작성일 -->
-                                <div class="reply-meta">
-
-                                    <strong>
-                                        {{ reply.author }}
-                                    </strong>
-
-                                    <span>
-                                        {{ reply.created_at }}
-                                    </span>
-
-                                </div>
-
-
-                                <!-- 대댓글 내용 -->
-                                <div class="reply-content">
-                                    {{ reply.content }}
-                                </div>
-
-
-                                <!-- 대댓글 수정 / 삭제는 작성자 본인만 -->
-                                {% if g.user and reply.author == g.user.nickname %}
-
-                                    <div class="reply-actions">
+                                    <!-- 수정 / 삭제는 작성자 본인만 -->
+                                    {% if g.user and comment.author == g.user.nickname %}
 
                                         <button
                                             type="button"
-                                            onclick="editComment(
-                                                '{{ reply.id }}',
-                                                '{{ reply.content|e }}'
-                                            )"
+                                            class="comment-action-btn"
+                                            onclick="editComment('{{ comment.id }}')"
                                         >
                                             수정
                                         </button>
@@ -349,22 +283,177 @@
 
                                         <button
                                             type="button"
-                                            onclick="deleteComment('{{ reply.id }}')"
+                                            class="comment-action-btn"
+                                            onclick="deleteComment('{{ comment.id }}')"
                                         >
                                             삭제
                                         </button>
 
-                                    </div>
+                                    {% endif %}
 
-                                {% endif %}
+                                </div>
 
                             </div>
 
-                        {% endfor %}
+                        </div>
+                        <!-- comment-main 끝 -->
+
+
+                    </div>
+                    <!-- comment-box 끝 -->
+
+
+                    <!-- ========================================
+                        2. 대댓글 작성창
+                    ========================================= -->
+                    <div
+                        id="reply-form-{{ comment.id }}"
+                        class="reply-write-box"
+                        style="display: none;"
+                    >
+
+                        <input
+                            type="text"
+                            id="reply-input-{{ comment.id }}"
+                            placeholder="답글을 작성해 주세요."
+                            onkeydown="
+                                if(event.key === 'Enter') {
+                                    addReply('{{ post.id }}', '{{ comment.id }}')
+                                }
+                            "
+                        >
+
+
+                        <button
+                            type="button"
+                            onclick="addReply('{{ post.id }}', '{{ comment.id }}')"
+                        >
+                            등록
+                        </button>
+
+
+                        <button
+                            type="button"
+                            onclick="hideReplyForm('{{ comment.id }}')"
+                        >
+                            취소
+                        </button>
 
                     </div>
 
+
+                    <!-- ========================================
+                        3. 등록된 대댓글 목록
+                    ========================================= -->
+                    {% if comment.replies %}
+
+                        <div class="reply-list">
+
+                            {% for reply in comment.replies %}
+
+                                <div class="reply-item">
+
+
+                                    <!-- └ 계단 연결 표시 -->
+                                    <div class="reply-connector"></div>
+
+
+                                    <!-- ========================================
+                                        대댓글 박스
+                                    ========================================= -->
+                                    <div class="reply-body">
+
+
+                                        <!-- 프로필 사진 -->
+                                        <div class="reply-profile">
+
+                                            {% if reply.profile_img %}
+
+                                                <img
+                                                    src="{{ reply.profile_img }}"
+                                                    alt="{{ reply.author }} 프로필"
+                                                    class="reply-profile-img"
+                                                >
+
+                                            {% else %}
+
+                                                <div class="reply-profile-default">
+                                                    👤
+                                                </div>
+
+                                            {% endif %}
+
+                                        </div>
+
+
+                                        <!-- 닉네임 + 대댓글 내용 -->
+                                        <div class="reply-main">
+
+                                            <strong class="reply-author">
+                                                {{ reply.author }}
+                                            </strong>
+
+
+                                            <div class="reply-content">
+                                                {{ reply.content }}
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- 작성시간 + 수정 / 삭제 -->
+                                        <div class="reply-action-area">
+
+                                            <span class="comment-date">
+                                                {{ reply.created_at|timeago }}
+                                            </span>
+
+
+                                            {% if g.user and reply.author == g.user.nickname %}
+
+                                                <div class="comment-actions">
+
+                                                    <button
+                                                        type="button"
+                                                        class="comment-action-btn reply-action-btn"
+                                                        onclick="editComment('{{ reply.id }}')"
+                                                    >
+                                                        수정
+                                                    </button>
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="comment-action-btn reply-action-btn"
+                                                        onclick="deleteComment('{{ reply.id }}')"
+                                                    >
+                                                        삭제
+                                                    </button>
+
+                                                </div>
+
+                                            {% endif %}
+
+                                        </div>
+
+
+                                    </div>
+                                    <!-- reply-body 끝 -->
+
+
+                                </div>
+                                <!-- reply-item 끝 -->
+
+                            {% endfor %}
+
+                        </div>
+                        <!-- reply-list 끝 -->
+
+                    {% endif %}
+
+
                 </li>
+                <!-- comment-item 큰 박스 끝 -->
 
 
             {% else %}
@@ -379,26 +468,27 @@
 
         </ul>
 
+
         <!-- PAR3 TALK 메인으로 이동 -->
         <div class="talk-list-bottom">
+
             <a
                 href="{{ url_for('talk.list') }}"
                 class="talk-list-bottom-btn"
             >
                 PAR3 TALK
             </a>
-        </div>
-
 
         </div>
 
-    </div>  
+
+    </div>
+    <!-- comments-section 끝 -->
 
 
-</div>
-{% endblock %}
+    {% endblock %}
 
 
-{% block js %}
-<script src="{{ url_for('static', filename='js/talk-detail.js') }}"></script>
-{% endblock %}
+    {% block js %}
+    <script src="{{ url_for('static', filename='js/talk-detail.js') }}"></script>
+    {% endblock %}

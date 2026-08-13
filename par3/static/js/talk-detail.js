@@ -336,96 +336,87 @@ async function deleteComment(commentId) {
     }
 }
 
-// ======================================================
-// 대댓글 작성창 열기
-// ======================================================
+// =========================================
+// 대댓글 입력창 열기
+// =========================================
+function showReplyForm(commentId) {
+    const form = document.getElementById(`reply-form-${commentId}`);
+    const input = document.getElementById(`reply-input-${commentId}`);
 
-// function showReplyForm(commentId) {
-//     const replyForm = document.getElementById(`reply-form-${commentId}`);
+    if (!form) return;
 
-//     if (replyForm) {
-//         replyForm.style.display = 'flex';
-//     }
-// }
+    form.style.display = 'flex';
 
-
-// ======================================================
-// 대댓글 작성창 닫기
-// ======================================================
-
-// function hideReplyForm(commentId) {
-//     const replyForm = document.getElementById(`reply-form-${commentId}`);
-//     const replyInput = document.getElementById(`reply-input-${commentId}`);
-
-//     if (replyForm) {
-//         replyForm.style.display = 'none';
-//     }
-
-//     if (replyInput) {
-//         replyInput.value = '';
-//     }
-// }
+    if (input) {
+        input.focus();
+    }
+}
 
 
-// ======================================================
+// =========================================
+// 대댓글 입력창 닫기
+// =========================================
+function hideReplyForm(commentId) {
+    const form = document.getElementById(`reply-form-${commentId}`);
+    const input = document.getElementById(`reply-input-${commentId}`);
+
+    if (!form) return;
+
+    form.style.display = 'none';
+
+    if (input) {
+        input.value = '';
+    }
+}
+
+
+// =========================================
 // 대댓글 등록
-// ======================================================
+// =========================================
+async function addReply(postId, parentId) {
+    const input = document.getElementById(`reply-input-${parentId}`);
 
-// async function addReply(postId, commentId) {
-//     const replyInput =
-//         document.getElementById(`reply-input-${commentId}`);
+    if (!input) return;
 
-//     if (!replyInput) {
-//         return;
-//     }
+    const content = input.value.trim();
 
-//     const content = replyInput.value.trim();
+    if (!content) {
+        alert('답글 내용을 입력해 주세요.');
+        input.focus();
+        return;
+    }
 
-//     if (!content) {
-//         alert('답글 내용을 입력해 주세요.');
-//         return;
-//     }
+    try {
+        const response = await fetch(
+            `/talk/${postId}/comment/${parentId}/reply`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    content: content
+                })
+            }
+        );
 
-//     try {
-//         const response = await fetch(
-//             `/talk/${postId}/comment/${commentId}/reply`,
-//             {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json'
-//                 },
-//                 body: JSON.stringify({
-//                     content: content
-//                 })
-//             }
-//         );
+        const data = await response.json();
 
-//         const data = await response.json();
+        if (response.status === 401 && data.need_login) {
+            alert('로그인이 필요합니다.');
+            location.href = '/auth/login/';
+            return;
+        }
 
-//         if (response.status === 401 || data.need_login) {
-//             alert('로그인이 필요한 기능입니다.');
-//             return;
-//         }
+        if (!data.success) {
+            alert(data.message || '답글 등록에 실패했습니다.');
+            return;
+        }
 
-//         if (!response.ok || !data.success) {
-//             alert(data.message || '답글 등록 중 오류가 발생했습니다.');
-//             return;
-//         }
+        location.reload();
 
-//         window.location.reload();
-
-//     } catch (error) {
-//         console.error('대댓글 등록 오류:', error);
-//         alert('답글 등록 중 오류가 발생했습니다.');
-//     }
-// }
-
-
-/* ======================================================
-   3. 댓글 입력창 Enter 처리
-   ====================================================== */
-
-/*
-   HTML의 onkeydown에서도 Enter 처리가 되어 있기 때문에
-   현재는 별도의 이벤트 코드를 추가하지 않습니다.
-*/
+    } catch (error) {
+        console.error(error);
+        alert('답글 등록 중 오류가 발생했습니다.');
+    }
+}
