@@ -394,7 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 주문 모델 연결 전
         shop_orders: {
             title: "쇼핑 내역",
-            items: ["드라이버 구매", "골프공 구매"]
+            items: []
         }
     };
 

@@ -10,7 +10,7 @@
 .talk-detail-container {
     max-width: 1000px;
     margin: 10px auto 80px;
-    padding: 28px 45px;
+    padding: 15px 45px;
 
     background-color: #ffffff;
     border: 1px solid #e5e7eb;
@@ -554,7 +554,8 @@
         width: calc(100% - 30px);
 
         margin: 25px auto 50px;
-        padding: 25px 20px;
+        /* 위쪽 여백 줄임 */
+        padding: 15px 20px;
 
         border-radius: 12px;
     }

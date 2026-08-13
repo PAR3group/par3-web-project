@@ -363,7 +363,7 @@
                                 <div class="act-item-row btn-act-check"
                                     data-type="join_posts">
                                     <span class="act-item-title">
-                                        ⛳ 글올리기
+                                        ⛳ 등록한 조인
                                     </span>
                                     <span class="act-item-num">
                                         {{ activity.join_posts_count }}건
@@ -457,24 +457,25 @@
 </div>
 
 
-<!-- 내가 작성한 게시글 실제 데이터 -->
-<div id="my-posts-data" style="display: none;">
-    {% for post in my_posts %}
-    <div
-        class="my-post-data"
-        data-id="{{ post.id }}"
-        data-title="{{ post.title }}"        
-        data-content="{{ post.content[:35] }}{% if post.content|length > 35 %}...{% endif %}"
-        data-date="{{ post.created_at.strftime('%Y.%m.%d') }}"
-    ></div>    
-    {% endfor %}
-</div>
-
 <!-- 내가 작성한 골프조인 글 실제 데이터 -->
 <div id="my-join-posts-data" style="display: none;">
     {% for join in my_join_posts %}
     <div
         class="my-join-post-data"
+        data-id="{{ join.id }}"
+        data-title="{{ join.title }}"
+        data-course="{{ join.course_name }}"
+        data-date="{{ join.round_date.strftime('%Y-%m-%d') }}"
+        data-time="{{ join.tee_time }}"
+    ></div>
+    {% endfor %}
+</div>
+
+<!-- 내가 참여한 골프조인 실제 데이터 -->
+<div id="my-join-participates-data" style="display: none;">
+    {% for join in my_join_participates %}
+    <div
+        class="my-join-participate-data"
         data-id="{{ join.id }}"
         data-title="{{ join.title }}"
         data-course="{{ join.course_name }}"
@@ -496,6 +497,7 @@
     ></div>
     {% endfor %}
 </div>
+
 <!-- 비밀번호 변경 모달 -->
 <div id="password-modal"
      class="password-modal-overlay{% if open_password_modal %} show{% endif %}">
