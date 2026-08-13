@@ -333,7 +333,7 @@
 
 .rc_placeholder_img {
     width: 700px;           
-    height: 500px;
+    height: 410px;
     opacity: 0.8;               /* 살짝 흐릿하게 해서 빈 상태 느낌 유지 (원하면 제거) */
 }
 
