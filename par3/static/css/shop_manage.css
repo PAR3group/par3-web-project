@@ -106,3 +106,20 @@
     color: #8a93a3;
     padding: 40px 0;
 }
+
+@media (max-width: 768px) {
+    .sm_wrap {
+        padding: 20px 16px 60px;
+    }
+
+    .sm_title {
+        font-size: 22px;
+    }
+
+    /* 표는 가로 스크롤로 처리 (열 구조 유지) */
+    .sm_table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}

@@ -3,12 +3,22 @@ a {
     color: inherit;
 }
 .login_form_container{
-    width: 800px;
+    max-width: 800px;
+    width: calc(100% - 32px);
     height: auto;
     margin: 30px auto;
     border: 1px solid #e5e5e5;
     border-radius: 10px;
     padding: 32px 28px 40px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+    .login_form_container {
+        width: calc(100% - 24px);
+        margin: 16px auto;
+        padding: 24px 16px 32px;
+    }
 }
 .login_title{
     text-align: center;
