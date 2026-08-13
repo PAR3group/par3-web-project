@@ -140,3 +140,21 @@
 .sa_detail_add_bt:hover {
     background: #e2e7ed;
 }
+
+@media (max-width: 480px) {
+    .sa_wrap {
+        padding: 20px 16px 60px;
+    }
+
+    .sa_form {
+        padding: 16px;
+    }
+
+    .sa_detail_add_bts {
+        flex-wrap: wrap;
+    }
+
+    .sa_detail_add_bt {
+        flex: 1 1 auto;
+    }
+}

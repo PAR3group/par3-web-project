@@ -520,4 +520,12 @@
     .rc_shop_cards {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .rc_distance_grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rc_input--unit {
+        max-width: none;
+    }
 }

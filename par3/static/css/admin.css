@@ -255,3 +255,43 @@
     color: #8a93a3;
     text-decoration: underline;
 }
+
+/* ============================================
+   반응형
+   ============================================ */
+@media (max-width: 768px) {
+    .a_wrap {
+        padding: 20px 16px 60px;
+    }
+
+    .a_title {
+        font-size: 22px;
+    }
+
+    .a_card {
+        padding: 16px;
+    }
+
+    /* 표는 가로 스크롤로 처리 (열 구조 유지) */
+    .a_table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .a_search_form {
+        flex-wrap: wrap;
+    }
+
+    .a_search_input {
+        flex: 1 1 100%;
+        max-width: none;
+        order: 1;
+    }
+
+    .a_search_bt,
+    .a_search_reset {
+        order: 2;
+    }
+}
