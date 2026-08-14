@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, jsonify, g, abort
 
-from par3.models import Post, Comment, User          # [수정] 실제 models.py 경로에 맞게 조정
+from par3.models import Post, Comment, User, PostLike       # [수정] 실제 models.py 경로에 맞게 조정
 from par3.views.auth_views import login_required            # [수정] 기존 login_required 재사용
 from par3 import db, storage
 from par3.utils import get_golf_news_top3
@@ -68,7 +68,7 @@ def list():
 
 
 @bp.route('/write', methods=['GET', 'POST'])
-@login_required  # [추가] 글쓰기는 로그인 필요, 페이지 이동 방식이라 리다이렉트형 사용
+@login_required
 def write():
     if request.method == 'GET':
         return render_template('talk-form.html')
@@ -76,7 +76,9 @@ def write():
     category = request.form.get('category')
     title = request.form.get('title')
     content = request.form.get('content')
-    author = request.form.get('author') or '골프인'
+
+    # 현재 로그인 회원의 닉네임
+    author = g.user.nickname
 
     files = request.files.getlist('media')
     image_url = url_for('static', filename='img/PAR3-AMB.png')
@@ -89,6 +91,9 @@ def write():
             break
 
     new_post = Post(
+        # 실제 작성 회원의 고유 ID
+        user_id=g.user.id,
+
         category=category,
         title=title,
         content=content,
@@ -98,6 +103,7 @@ def write():
         views=0,
         likes=0,
     )
+
     db.session.add(new_post)
     db.session.commit()
 
@@ -112,9 +118,19 @@ def detail(id):
     db.session.commit()
 
 # 게시글 작성자의 프로필 사진 연결
-    post_user = User.query.filter_by(
-        nickname=post.author
-    ).first()
+    if post.user_id is not None:
+        post_user = User.query.get(post.user_id)
+    else:
+        # 기존 user_id가 없는 게시글은 기존 닉네임 방식 사용
+        post_user = User.query.filter_by(
+            nickname=post.author
+        ).first()
+
+    post.profile_img = (
+        post_user.profile_img
+        if post_user and post_user.profile_img
+        else None
+    )
 
     post.profile_img = (
         post_user.profile_img
@@ -156,20 +172,46 @@ def detail(id):
 def edit_post(id):
     post = Post.query.get_or_404(id)
 
+    # --------------------------------------------------
     # 본인이 작성한 게시글만 수정 가능
-    if post.author != g.user.nickname:
-        abort(403)
+    # --------------------------------------------------
+    # user_id가 있는 새 게시글
+    if post.user_id is not None:
+        if post.user_id != g.user.id:
+            abort(403)
 
+    # user_id가 없는 기존 게시글
+    # 기존 방식대로 닉네임이 같은 경우에만 수정 가능
+    else:
+        if post.author != g.user.nickname:
+            abort(403)
+
+    # --------------------------------------------------
     # 수정 화면 열기
+    # --------------------------------------------------
     if request.method == 'GET':
-        return render_template('talk-form.html', post=post, edit_mode=True)
+        return render_template(
+            'talk-form.html',
+            post=post,
+            edit_mode=True
+        )
 
+    # --------------------------------------------------
     # 수정 내용 저장
+    # --------------------------------------------------
     post.category = request.form.get('category')
     post.title = request.form.get('title')
     post.content = request.form.get('content')
 
+    # 기존 게시글도 수정하는 순간 현재 로그인 회원의 고유 ID 연결
+    post.user_id = g.user.id
+
+    # 현재 닉네임으로 작성자 표시
+    post.author = g.user.nickname
+
+    # --------------------------------------------------
     # 새 사진/동영상을 선택했을 경우에만 기존 파일 교체
+    # --------------------------------------------------
     file = request.files.get('media')
 
     if file and file.filename:
@@ -178,7 +220,8 @@ def edit_post(id):
 
     db.session.commit()
 
-    return redirect(url_for('talk.detail', id=post.id))
+    return redirect(
+        url_for('talk.detail', id=post.id))
 
 
 @bp.route('/<int:id>/delete', methods=['POST'])
@@ -186,21 +229,89 @@ def edit_post(id):
 def delete_post(id):
     post = Post.query.get_or_404(id)
 
-    if post.author != g.user.nickname:
-        return jsonify({'success': False, 'message': '삭제 권한이 없습니다.'}), 403
+    # --------------------------------------------------
+    # 본인이 작성한 게시글만 삭제 가능
+    # --------------------------------------------------
+
+    # user_id가 연결된 게시글
+    if post.user_id is not None:
+        if post.user_id != g.user.id:
+            return jsonify({
+                'success': False,
+                'message': '삭제 권한이 없습니다.'
+            }), 403
+
+    # 기존 user_id가 없는 게시글
+    else:
+        if post.author != g.user.nickname:
+            return jsonify({
+                'success': False,
+                'message': '삭제 권한이 없습니다.'
+            }), 403
 
     db.session.delete(post)
     db.session.commit()
-    return jsonify({'success': True})
+
+    return jsonify({
+        'success': True
+    })
 
 
 @bp.route('/<int:id>/like', methods=['POST'])
 @api_login_required
 def like_post(id):
     post = Post.query.get_or_404(id)
+
+    # 이 사용자가 이 게시글에 이미 좋아요를 눌렀는지 확인
+    existing_like = PostLike.query.filter_by(
+        post_id=post.id,
+        user_id=g.user.id
+    ).first()
+
+    # 이미 눌렀으면 좋아요 증가시키지 않음
+    if existing_like:
+        return jsonify({
+            'success': False,
+            'already_liked': True,
+            'message': '이미 좋아요를 누른 게시글입니다.',
+            'likes': post.likes
+        }), 409
+
+    # 처음 누르는 좋아요라면 기록 저장
+    new_like = PostLike(
+        post_id=post.id,
+        user_id=g.user.id
+    )
+
+    db.session.add(new_like)
+
+    # 좋아요 숫자 +1
     post.likes = (post.likes or 0) + 1
+
     db.session.commit()
-    return jsonify({'success': True, 'likes': post.likes})
+
+    return jsonify({
+        'success': True,
+        'likes': post.likes
+    })
+
+    # 좋아요 기록 저장
+    new_like = PostLike(
+        post_id=post.id,
+        user_id=g.user.id
+    )
+
+    db.session.add(new_like)
+
+    # 기존 좋아요 숫자 +1
+    post.likes = (post.likes or 0) + 1
+
+    db.session.commit()
+
+    return jsonify({
+        'success': True,
+        'likes': post.likes
+    })
 
 
 @bp.route('/<int:id>/comment', methods=['POST'])
