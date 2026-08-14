@@ -92,7 +92,7 @@ def build_recent_activities(user, limit=3):
     # TALK 작성 게시글
     for post in (
         Post.query
-        .filter_by(author=user.nickname)
+        .filter_by(user_id=user.id)
         .order_by(Post.created_at.desc())
         .limit(limit)
         .all()
@@ -247,7 +247,7 @@ def build_activity_data(user):
         "posts_count": (
             Post.query
             .filter_by(
-                author=user.nickname
+                user_id=user.id
             )
             .count()
         ),
@@ -332,21 +332,20 @@ def mypage():
     )
 
 
-    # ------------------------------------------------------
-    # 내가 작성한 TALK 게시글
+   # ------------------------------------------------------
+   # 내가 작성한 TALK 게시글
     # ------------------------------------------------------
 
     my_posts = (
         Post.query
         .filter_by(
-            author=user.nickname
+            user_id=user.id
         )
         .order_by(
             Post.created_at.desc()
         )
         .all()
     )
-
 
     # ------------------------------------------------------
     # 내가 찜한 골프조인

@@ -98,10 +98,22 @@ class Post(db.Model):
     __tablename__ = 'post'
 
     id = db.Column(db.Integer, primary_key=True)
+
+    # 지금부터 작성하는 TALK 게시글의 실제 작성 회원
+    # 기존 수작업 게시글은 user_id가 없어도 유지되도록 nullable=True
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id'),
+        nullable=True
+    )
+
     category = db.Column(db.String(50), nullable=False)
     title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text, nullable=False)
     author = db.Column(db.String(100), nullable=False)  # 작성자 닉네임 (g.user.nickname 저장)
+
+    # 화면에 보여줄 작성자 닉네임
+    author = db.Column(db.String(100), nullable=False)
 
     image_url = db.Column(db.String(500))   # 첨부 이미지/동영상 경로
     is_video = db.Column(db.Boolean, default=False)
@@ -119,6 +131,38 @@ class Post(db.Model):
         cascade='all, delete-orphan'  # 게시글 삭제 시 딸린 댓글도 같이 삭제됨
     )
 
+
+# 게시글 좋아요
+class PostLike(db.Model):
+    __tablename__ = 'post_like'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    post_id = db.Column(
+        db.Integer,
+        db.ForeignKey('post.id', ondelete='CASCADE'),
+        nullable=False
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('user.id', ondelete='CASCADE'),
+        nullable=False
+    )
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.now
+    )
+
+    # 한 사용자가 같은 게시글에 좋아요를 두 번 저장하지 못하게 함
+    __table_args__ = (
+        db.UniqueConstraint(
+            'post_id',
+            'user_id',
+            name='uq_post_like_post_user'
+        ),
+    )
 
 # 댓글
 class Comment(db.Model):

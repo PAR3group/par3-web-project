@@ -37,9 +37,8 @@
                 <input
                     type="text"
                     id="author"
-                    name="author"
-                    value="{{ post.author if post else '' }}"
-                    placeholder="닉네임을 입력하세요 (미입력 시 '골프인')"
+                    value="{{ g.user.nickname }}"
+                    readonly
                 >
             </div>
 

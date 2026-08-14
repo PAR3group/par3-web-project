@@ -9,87 +9,49 @@
    ====================================================== */
 
 async function likePost(postId) {
-
     try {
-
         const response = await fetch(`/talk/${postId}/like`, {
             method: 'POST',
-
             headers: {
                 'Content-Type': 'application/json'
             }
         });
 
-
-        // 서버에서 받은 데이터
         const data = await response.json();
 
-
-        // ------------------------------------------
-        // 로그인이 안 되어 있는 경우
-        // ------------------------------------------
+        // 로그인 필요
         if (response.status === 401 || data.need_login) {
-
-            alert('로그인이 필요한 기능입니다.');
-
-            window.location.href =
-            `/auth/login/?next=${encodeURIComponent(window.location.pathname)}`;
-
+            alert('로그인이 필요합니다.');
             return;
         }
 
+        // 이미 좋아요를 누른 경우
+        if (data.already_liked) {
+            alert('이미 좋아요를 누른 게시글입니다.');
+            return;
+        }
 
-        // ------------------------------------------
-        // 좋아요 처리 실패
-        // ------------------------------------------
+        // 기타 오류
         if (!response.ok || !data.success) {
-
             alert(
                 data.message ||
                 '좋아요 처리 중 오류가 발생했습니다.'
             );
-
             return;
         }
 
-
-        // ------------------------------------------
-        // 좋아요 숫자 화면에 바로 반영
-        // ------------------------------------------
+        // 좋아요 숫자 갱신
         const likeCount =
             document.getElementById('like-count');
 
         if (likeCount) {
-
             likeCount.textContent = data.likes;
-
         }
-
-
-        // 좋아요 버튼 활성화 표시
-        const likeButton =
-            document.getElementById('like-btn');
-
-        if (likeButton) {
-
-            likeButton.classList.add('active');
-
-        }
-
 
     } catch (error) {
-
-        console.error(
-            '좋아요 오류:',
-            error
-        );
-
-        alert(
-            '좋아요 처리 중 오류가 발생했습니다.'
-        );
-
+        console.error(error);
+        alert('좋아요 처리 중 오류가 발생했습니다.');
     }
-
 }
 
 /* ======================================================
